@@ -19,12 +19,13 @@ export const ROUTES = {
   volunteer: '/volunteer',
   faq: '/faq',
   blog: '/news-and-events',
+  gallery: '/gallery',
   stories: '/success-stories',
   privacy: '/privacy-policy',
   terms: '/terms-and-conditions'
 } as const;
 
-export type NavKey = 'Home' | 'Causes' | 'Stories' | 'News' | 'About' | 'Contact' | '';
+export type NavKey = 'Home' | 'Causes' | 'Gallery' | 'Stories' | 'News' | 'About' | 'Contact' | '';
 
 /** Cause list in the order used by the header mega menu. */
 export const CAUSE_NAV = [

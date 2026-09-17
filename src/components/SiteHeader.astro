@@ -9,6 +9,7 @@ interface Props {
 
 const { active = '', dark = false } = Astro.props;
 const NAV = [
+  { label: 'Gallery', href: ROUTES.gallery, key: 'Gallery' },
   { label: 'Blog', href: ROUTES.blog, key: 'News' },
   { label: 'About', href: ROUTES.about, key: 'About' },
   { label: 'Contact', href: ROUTES.contact, key: 'Contact' }

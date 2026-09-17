@@ -83,12 +83,15 @@ export function initLightbox(root: ParentNode = document) {
     const imgs = [...group.querySelectorAll<HTMLImageElement>('img')].filter((i) => !i.closest('header, nav'));
     if (!imgs.length) return;
     let idx = 0;
+    let list: string[] = [];
     let overlay: HTMLDivElement | null = null;
     let view: HTMLImageElement | null = null;
 
-    const srcs = () => imgs.map((i) => i.currentSrc || i.src);
+    // Only ever page through images that are actually on screen, so a filtered
+    // gallery does not jump to something the visitor cannot see.
+    const onScreen = () => imgs.filter((i) => i.offsetParent !== null);
     const show = (i: number) => {
-      const list = srcs();
+      if (!list.length) return;
       idx = (i + list.length) % list.length;
       if (view) view.src = list[idx];
     };
@@ -114,7 +117,10 @@ export function initLightbox(root: ParentNode = document) {
       b.addEventListener('click', (ev) => { ev.stopPropagation(); onClick(ev); });
       return b;
     };
-    function open(i: number) {
+    function open(from: HTMLImageElement) {
+      const visible = onScreen();
+      list = visible.map((i) => i.currentSrc || i.src);
+      const startAt = Math.max(0, visible.indexOf(from));
       overlay = document.createElement('div');
       overlay.className = 'lb';
       overlay.setAttribute('role', 'dialog');
@@ -127,15 +133,15 @@ export function initLightbox(root: ParentNode = document) {
       overlay.appendChild(button('lb__next', ICON_NEXT, 'Next image', () => show(idx + 1)));
       overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
       document.body.appendChild(overlay);
-      show(i);
+      show(startAt);
       requestAnimationFrame(() => overlay && overlay.classList.add('is-on'));
       document.addEventListener('keydown', onKey);
     }
 
-    imgs.forEach((img, i) => {
+    imgs.forEach((img) => {
       if (img.dataset.lbBound) return;
       img.dataset.lbBound = '1';
-      img.addEventListener('click', () => open(i));
+      img.addEventListener('click', () => open(img));
     });
   });
 }

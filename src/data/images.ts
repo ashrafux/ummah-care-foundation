@@ -32,6 +32,12 @@ export const IMG = {
   aoaFood: `${WP}/2024/08/IMG_20240610_132833_820.jpg`,
   aoaWater: `${WP}/2024/09/IMG_20240903_115525.jpg`,
   aoaHumanitarian: `${WP}/2024/09/IMG_20240903_103251.jpg`,
+  eduAid2: `${WP}/2024/10/%E2%9C%858.jpg`,
+  eduAid3: `${WP}/2024/09/IMG_20240903_101856-1.jpg`,
+  selfReliance2: `${WP}/2024/10/%E2%9C%852.jpg`,
+  medical2: `${WP}/2024/10/%E2%9C%855.jpg`,
+  humanitarian2: `${WP}/2024/10/%E2%9C%8510.jpg`,
+  emergency2: `${WP}/2024/10/%E2%9C%85-1.jpg`,
   avatars: [
     'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces',
     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces',
