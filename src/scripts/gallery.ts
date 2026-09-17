@@ -36,7 +36,8 @@ if (root) {
 
   const spy = () => {
     if (Date.now() < holdUntil) return;
-    let key = 'all';
+    // Above the first section the first cause stays lit, so the rail is never blank.
+    let key = sections.length ? sections[0].id : '';
     for (const section of sections) {
       if (section.getBoundingClientRect().top - SPY_LINE <= 0) key = section.id;
     }
@@ -55,7 +56,7 @@ if (root) {
 
   links.forEach((a) => {
     a.addEventListener('click', () => {
-      setActive(a.dataset.spy || 'all');
+      setActive(a.dataset.spy || '');
       holdUntil = Date.now() + 700;
     });
   });

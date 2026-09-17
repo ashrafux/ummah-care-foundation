@@ -18,13 +18,8 @@ const SECTIONS = CAUSE_NAV
       <aside class="gal__side" data-no-reveal>
         <p class="gal__sideLabel">Causes</p>
         <nav class="gal__cats" aria-label="Jump to a cause">
-          <a href="#gallery-top" class="gal__cat is-on" data-spy="all">
-            <span class="gal__bar" aria-hidden="true"></span>
-            <span class="gal__catName">All photos</span>
-            <span class="gal__count">{GALLERY.length}</span>
-          </a>
-          {SECTIONS.map((c) => (
-            <a href={`#${c.slug}`} class="gal__cat" data-spy={c.slug}>
+          {SECTIONS.map((c, i) => (
+            <a href={`#${c.slug}`} class:list={['gal__cat', { 'is-on': i === 0 }]} data-spy={c.slug}>
               <span class="gal__bar" aria-hidden="true"></span>
               <span class="gal__catName">{c.name}</span>
               <span class="gal__count">{c.shots.length}</span>
@@ -33,7 +28,7 @@ const SECTIONS = CAUSE_NAV
         </nav>
       </aside>
 
-      <div class="gal__main" id="gallery-top" data-lightbox="gallery">
+      <div class="gal__main" data-lightbox="gallery">
         {SECTIONS.map((c) => (
           <section class="gal__sec" id={c.slug} data-gal-section>
             <div class="gal__secHead">
@@ -72,10 +67,10 @@ const SECTIONS = CAUSE_NAV
   .gal__count { margin-left: auto; font: 600 12.5px/1 var(--font); color: var(--grey-4); }
   .gal__cat.is-on .gal__count { color: var(--teal); }
 
-  .gal__main { min-width: 0; scroll-margin-top: 40px; }
+  .gal__main { min-width: 0; }
 
   .gal__sec { scroll-margin-top: 40px; }
-  .gal__sec + .gal__sec { margin-top: 76px; }
+  .gal__sec + .gal__sec { margin-top: 144px; }
   .gal__secHead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
   .gal__secTitle { margin: 0; font: 700 30px/1.2 var(--font); letter-spacing: -.025em; color: var(--ink); }
   .gal__secCount { flex: none; font: 500 14px/1 var(--font); color: var(--grey-4); }
@@ -94,7 +89,7 @@ const SECTIONS = CAUSE_NAV
     .gal__cat.is-on { border-color: var(--teal); }
     .gal__bar { display: none; }
     .gal__sec { scroll-margin-top: 84px; }
-    .gal__main { scroll-margin-top: 84px; }
+    .gal__sec + .gal__sec { margin-top: 96px; }
     .gal__secTitle { font-size: 26px; }
   }
   @media (max-width: 620px) {
