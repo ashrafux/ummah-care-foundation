@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { IMG } from '../data/images';
+
+const POSTS = [
+  { img: IMG.wheelchair, title: 'Medical Assistance for Over 50 Patients: Expanding Support to 200 by 2027', delay: '0' },
+  { img: IMG.students, title: 'Supporting Education for Over 200 Meritorious Students: A Vision for 1,000 by 2027', delay: '90' },
+  { img: IMG.foodDistribution, title: 'Basic Food Assistance Program 2024: Supporting Over 200 Families in Naogaon and Pabna', delay: '0' },
+  { img: IMG.sewing, title: 'Empowering Families & Individuals in Naogaon and Pabna: Van, Goat and Sewing Machine Distribution 2023', delay: '90' },
+  { img: IMG.goats, title: 'Winter Clothing Distribution 2023 in Naogaon and Pabna: Supporting Over 500 Families', delay: '0' },
+  { img: IMG.community, title: 'Flood Relief: Reaching Over 600 Affected Families with Emergency Aid', delay: '90' }
+];
+const RECENT = POSTS.slice(0, 3);
+---
+<Base title="Blog" active="News" description="Stories from the field, in our own words.">
+  <PageHero crumb="Blog" title="Stories from the field, in our own words" />
+
+  <section class="blog">
+    <div class="blog__inner">
+      <div class="blog__grid">
+        {POSTS.map((p) => (
+          <article class="post" data-reveal={p.delay}>
+            <span class="zoom post__img"><img src={p.img} alt="" loading="lazy" /></span>
+            <div class="post__body">
+              <h3>{p.title}</h3>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <aside class="side">
+        <form class="search" role="search" onsubmit="return false">
+          <input type="search" placeholder="Search for:" aria-label="Search" />
+          <button type="submit" aria-label="Search" class="btn-fx"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg></button>
+        </form>
+        <div class="recent">
+          <h4>Recent posts</h4>
+          <div class="recent__list">
+            {RECENT.map((p) => (
+              <div class="recent__item">
+                <img src={p.img} alt="" loading="lazy" />
+                <p>{p.title}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .blog { background: #fff; }
+  .blog__inner { max-width: 1290px; margin: 0 auto; padding: 88px 24px 104px; display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 56px; align-items: start; }
+  .blog__grid { min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 26px; }
+  .post { display: flex; flex-direction: column; background: #fff; border: 1px solid #E6E6E9; border-radius: 20px; overflow: hidden; transition: border-color .25s ease, background .25s ease; }
+  .post:hover { border-color: #008F76; background: #F7F7F7; }
+  .post__img { width: 100%; height: 240px; }
+  .post__body { padding: 28px 28px 32px; display: flex; flex-direction: column; flex: 1; }
+  .post h3 { margin: 0; font: 700 19px/1.35 var(--font); letter-spacing: -.02em; color: #1B1E26; text-wrap: pretty; }
+
+  .side { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+  .search { display: flex; align-items: center; gap: 8px; background: #F7F7F7; border: 1px solid #E6E6E9; border-radius: 999px; padding: 7px 7px 7px 22px; }
+  .search input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font: 400 14.5px/1 var(--font); color: #1B1E26; padding: 11px 0; }
+  .search button { flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; border: 0; background: #008F76; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+  .recent { padding: 30px 28px; background: #F7F7F7; border: 1px solid #E6E6E9; border-radius: 20px; }
+  .recent h4 { margin: 0 0 20px; font: 700 18px/1.3 var(--font); color: #1B1E26; }
+  .recent__list { display: flex; flex-direction: column; gap: 18px; }
+  .recent__item { display: flex; gap: 14px; align-items: flex-start; }
+  .recent__item img { flex: 0 0 auto; width: 64px; height: 64px; object-fit: cover; border-radius: 10px; display: block; }
+  .recent__item p { margin: 0; font: 600 14px/1.5 var(--font); color: #1B1E26; }
+
+  @media (max-width: 1079px) {
+    .blog__inner { display: flex; flex-direction: column; gap: 48px; }
+  }
+</style>

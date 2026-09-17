@@ -1,0 +1,15 @@
+---
+interface Props {
+  crumb: string;
+  title?: string;
+  subtitle?: string;
+}
+const { crumb, title, subtitle } = Astro.props;
+---
+<section class="page-hero">
+  <div class="page-hero__inner">
+    <p class="eyebrow">{crumb}</p>
+    {title && <h1 class="page-hero__title">{title}</h1>}
+    {subtitle && <p class="page-hero__sub">{subtitle}</p>}
+  </div>
+</section>

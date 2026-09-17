@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+
+const TOC = ['Terms of Use', 'Trademarks', 'Copyright', 'Account Security', 'License and Website Use', 'User-Submitted Content', 'Limitation of Liability', 'Refund Policy'];
+const LICENSE = 'grants you a limited, non-transferable license to use the website. This license does not allow you to download, modify, reproduce, distribute, sell, or commercially exploit any part of the website without prior permission, except for regular page caching. Any unauthorized use, including the use of meta tags or hidden text containing the Foundation’s name or trademarks, is strictly prohibited. Unauthorized use will result in immediate termination of this license.';
+---
+<Base title="Terms and Conditions" description="The terms that guide our work together.">
+  <PageHero crumb="Terms and conditions" title="The terms that guide our work together" />
+
+  <section class="legal">
+    <div class="legal__inner">
+      <aside class="panel toc">
+        <p class="toc__label">Contents</p>
+        <p class="toc__date"><strong>Last modified:</strong> April 15, 2024</p>
+        <nav class="toc__nav" aria-label="Contents">
+          {TOC.map((t, i) => <a href={`#section${i + 1}`}><span>{i + 1}</span>{t}</a>)}
+        </nav>
+      </aside>
+
+      <div class="legal__body">
+        <section id="section1" class="legal__section">
+          <h3 class="h3">Terms of Use</h3>
+          <div class="legal__copy"><p class="lead">By visiting the <strong>Ummah Care Foundation</strong> website, you agree to these Terms of Use. We recommend that you read them carefully before using the website.</p></div>
+        </section>
+        <section id="section2" class="legal__section">
+          <h3 class="h3">Trademarks</h3>
+          <div class="legal__copy"><p class="lead">All trademarks, logos, and service marks displayed on this website are the property of <strong>Ummah Care Foundation</strong>. These trademarks may not be used without prior written permission for any products or services not associated with the Foundation, or in a way that may cause confusion or harm the Foundation’s reputation.</p></div>
+        </section>
+        <section id="section3" class="legal__section">
+          <h3 class="h3">Copyright</h3>
+          <div class="legal__copy"><p class="lead">All content on this website—including text, graphics, logos, icons, images, audio/video clips, digital downloads, and software—is the property of <strong>Ummah Care Foundation</strong> and is protected under Bangladesh and international copyright laws. Unauthorized use, reproduction, or distribution of any content may result in legal action.</p></div>
+        </section>
+        <section id="section4" class="legal__section">
+          <h3 class="h3">Account Security</h3>
+          <div class="legal__copy"><p class="lead">Some sections of the website require account registration, with a username and password. You are solely responsible for maintaining the confidentiality of your account information. You are fully responsible for all activities conducted through your account.</p></div>
+        </section>
+        <section id="section5" class="legal__section">
+          <h3 class="h3">License and Website Use</h3>
+          <div class="legal__copy"><p class="lead"><strong>Ummah Care Foundation</strong> {LICENSE}</p></div>
+        </section>
+        <section id="section6" class="legal__section">
+          <h3 class="h3">User-Submitted Content</h3>
+          <div class="legal__copy"><p class="lead"><strong>Ummah Care Foundation</strong> {LICENSE}</p></div>
+        </section>
+        <section id="section7" class="legal__section">
+          <h3 class="h3">Limitation of Liability</h3>
+          <div class="legal__copy"><p class="lead">This website is provided “as is.” <strong>Ummah Care Foundation</strong> makes no warranties regarding the functionality, reliability, or accuracy of the content. You agree to use the website at your own risk. The Foundation does not guarantee that the website, its servers, or email communications are free of viruses. <strong>Ummah Care Foundation</strong> shall not be liable for any damages arising from the use of the website.</p></div>
+        </section>
+        <section id="section8" class="legal__section">
+          <h3 class="h3">Refund Policy</h3>
+          <div class="legal__copy"><p class="lead">If a donor wishes to request a refund, the request must be submitted within 10 days of the donation date with proper evidence. Donations allocated to specific projects that have already been used within this period are non-refundable. For general donations not yet used in projects, refund requests may be submitted within the stipulated time. For Qurbani donations, refunds may be requested up to 7 days before the event; no refunds will be accepted within 6 days of the event. Approved refund amounts will be disbursed to the donor’s respective account within 7–10 working days.</p></div>
+        </section>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .legal { background: #fff; }
+  .legal__inner { max-width: 1290px; margin: 0 auto; padding: 80px 24px 104px; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; align-items: start; }
+  .toc { position: sticky; top: 120px; padding: 26px 20px; }
+  .toc__label { margin: 0 0 6px 18px; font: 700 12.5px/1 var(--font); letter-spacing: .12em; text-transform: uppercase; color: #008F76; }
+  .toc__date { margin: 14px 0 18px 18px; font: 500 13.5px/1 var(--font); color: #8B92A0; }
+  .toc__date strong { color: #1B1E26; font-weight: 700; }
+  .toc__nav { display: flex; flex-direction: column; gap: 2px; }
+  .toc__nav a { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 20px; font: 600 14.5px/1.4 var(--font); color: #3A3F4B; transition: background .18s ease, color .18s ease; }
+  .toc__nav a:hover { background: #EDF7F4; color: #008F76; }
+  .toc__nav span { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: #F1EBFB; color: #008F76; font: 700 12px/1 var(--font); }
+  .legal__body { min-width: 0; display: flex; flex-direction: column; gap: 52px; }
+  .legal__section { scroll-margin-top: 120px; }
+  .legal__copy { margin-top: 18px; display: flex; flex-direction: column; gap: 16px; }
+  @media (max-width: 1019px) {
+    .legal__inner { display: flex; flex-direction: column; gap: 44px; }
+    .toc { position: static; }
+  }
+</style>

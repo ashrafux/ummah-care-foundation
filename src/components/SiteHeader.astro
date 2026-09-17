@@ -1,0 +1,150 @@
+---
+import { CAUSE_NAV, ROUTES, type NavKey } from '../data/site';
+import { IMG } from '../data/images';
+
+interface Props {
+  active?: NavKey;
+  dark?: boolean;
+}
+
+const { active = '', dark = false } = Astro.props;
+const NAV = [
+  { label: 'Blog', href: ROUTES.blog, key: 'News' },
+  { label: 'About', href: ROUTES.about, key: 'About' },
+  { label: 'Contact', href: ROUTES.contact, key: 'Contact' }
+];
+---
+<header class:list={['site-header', { 'site-header--dark': dark }]} data-site-header>
+  <div class="site-header__bar">
+    <a href={ROUTES.home} class="site-header__logo" aria-label="Ummah Care Foundation — home">
+      <img src={dark ? IMG.logoLight : IMG.logoDark} alt="Ummah Care Foundation" width="180" height="48" />
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary">
+      <div class="nav-item nav-item--mega" data-mega>
+        <a href="#causes" class="nav-link nav-link--mega" data-mega-toggle aria-haspopup="true" aria-expanded="false">Our Causes
+          <svg class="nav-chevron" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.5L5.5 5.5L10 1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </a>
+        {active === 'Causes' && <span class="nav-dot" />}
+        <div class="mega-wrap">
+          <div class="mega" data-mega-menu>
+            {CAUSE_NAV.map((c) => (
+              <a href={c.href} class="mega-tile" data-mega-tile>
+                <span class="mega-tile__img"><img src={c.img} alt="" loading="lazy" /></span>
+                <span class="mega-tile__label">{c.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+      {NAV.map((n) => (
+        <div class="nav-item">
+          <a href={n.href} class="nav-link">{n.label}</a>
+          {active === n.key && <span class="nav-dot" />}
+        </div>
+      ))}
+    </nav>
+
+    <div class="site-header__cta">
+      <a href={ROUTES.membership} class="hdr-btn hdr-btn--outline">Get Involved</a>
+      <a href={ROUTES.donate} class="hdr-btn hdr-btn--solid btn-fx">Donate</a>
+    </div>
+
+    <button type="button" class="burger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu" data-burger>
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-mobile-menu>
+    <button type="button" class="mobile-menu__causes" data-mobile-causes aria-expanded="false">Our Causes
+      <svg width="12" height="8" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.5L5.5 5.5L10 1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </button>
+    <div class="mobile-menu__sub" data-mobile-sub>
+      {CAUSE_NAV.map((c) => <a href={c.href}>{c.name}</a>)}
+    </div>
+    {NAV.map((n) => <a href={n.href} class="mobile-menu__link">{n.label}</a>)}
+    <div class="mobile-menu__cta">
+      <a href={ROUTES.membership} class="mobile-menu__outline">Get Involved</a>
+      <a href={ROUTES.donate} class="mobile-menu__solid btn-fx">Donate</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 500; background: transparent; }
+  .site-header__bar { max-width: 1290px; margin: 0 auto; padding: 0 24px; height: 92px; display: flex; align-items: center; gap: 28px; }
+  .site-header__logo { flex: 0 0 auto; display: block; line-height: 0; }
+  .site-header__logo img { height: 48px; width: auto; display: block; }
+
+  .site-header__nav { display: flex; align-items: center; gap: 30px; margin: 0 auto; }
+  .nav-item { position: relative; display: flex; align-items: center; height: 48px; }
+  .nav-link { font: 600 15.5px/1 var(--font); color: #1B1E26; text-decoration: none; letter-spacing: -.01em; transition: color .18s ease; }
+  .nav-link:hover { color: #008F76; }
+  .nav-link--mega { display: flex; align-items: center; gap: 6px; cursor: default; }
+  .nav-chevron { display: block; flex: none; margin-top: 1px; transition: transform .25s var(--ease); }
+  .nav-item--mega:hover .nav-chevron, .nav-item--mega.is-open .nav-chevron { transform: rotate(180deg); }
+  .nav-dot { position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%); width: 18px; height: 2px; border-radius: 2px; background: #008F76; }
+
+  .mega-wrap { display: none; position: absolute; top: 100%; left: 0; padding-top: 22px; }
+  .nav-item--mega:hover .mega-wrap, .nav-item--mega.is-open .mega-wrap { display: block; }
+  .mega { width: 600px; background: #F6F6F4; border: 1px solid #E6E6E2; border-radius: 20px; box-shadow: 0 40px 80px -20px rgba(0, 0, 0, .55), 0 16px 36px -12px rgba(0, 0, 0, .35), 0 0 0 1px rgba(0, 0, 0, .06); padding: 18px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px 14px; animation: megaIn .35s var(--ease) both; }
+  .mega-tile { display: flex; flex-direction: column; gap: 8px; text-decoration: none; min-width: 0; animation: megaTile .4s var(--ease) both; }
+  .mega-tile:nth-child(1) { animation-delay: .085s; }
+  .mega-tile:nth-child(2) { animation-delay: .12s; }
+  .mega-tile:nth-child(3) { animation-delay: .155s; }
+  .mega-tile:nth-child(4) { animation-delay: .19s; }
+  .mega-tile:nth-child(5) { animation-delay: .225s; }
+  .mega-tile:nth-child(6) { animation-delay: .26s; }
+  .mega-tile:nth-child(7) { animation-delay: .295s; }
+  .mega-tile:nth-child(8) { animation-delay: .33s; }
+  .mega-tile__img { display: block; width: 100%; height: 88px; border-radius: 10px; overflow: hidden; flex: none; }
+  .mega-tile__img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .55s var(--ease); transform-origin: 50% 50%; }
+  .mega-tile:hover .mega-tile__img img { transform: scale(1.1); }
+  .mega-tile__label { font: 600 13px/1.3 var(--font); color: #1B1E26; transition: color .3s ease; }
+  .mega-tile:hover .mega-tile__label { color: #008F76; }
+
+  .site-header__cta { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
+  .hdr-btn { display: inline-flex; align-items: center; height: 48px; border-radius: 999px; font: 700 14.5px/1 var(--font); text-decoration: none; letter-spacing: -.01em; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+  .hdr-btn--outline { padding: 0 24px; border: 1.5px solid #1B1E26; color: #1B1E26; }
+  .hdr-btn--outline:hover { background: #1B1E26; color: #fff; }
+  .hdr-btn--solid { padding: 0 26px; background: #008F76; color: #fff; box-shadow: 0 10px 24px -12px rgba(0, 143, 118, .8); }
+  .hdr-btn--solid:hover { background: #1B1E26; color: #fff; }
+
+  .burger { display: none; margin-left: auto; flex-direction: column; justify-content: center; align-items: center; gap: 5px; width: 46px; height: 46px; padding: 0; border: 1.5px solid #DFE9E5; border-radius: 20px; background: #fff; cursor: pointer; }
+  .burger span { display: block; width: 20px; height: 2px; background: #1B1E26; border-radius: 2px; }
+
+  /* Dark (hero) variant */
+  .site-header--dark .nav-link { color: #fff; }
+  .site-header--dark .nav-link:hover { color: rgba(255, 255, 255, .72); }
+  .site-header--dark .nav-dot { background: #fff; }
+  .site-header--dark .hdr-btn--outline { border-color: rgba(255, 255, 255, .45); color: #fff; }
+  .site-header--dark .hdr-btn--outline:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .7); color: #fff; }
+  .site-header--dark .hdr-btn--solid { background: #fff; color: #003E33; box-shadow: none; }
+  .site-header--dark .hdr-btn--solid:hover { background: #DCEDE7; color: #003E33; }
+  .site-header--dark .burger { border-color: rgba(255, 255, 255, .4); background: transparent; }
+  .site-header--dark .burger span { background: #fff; }
+
+  /* Mobile menu */
+  .mobile-menu { display: none; border-top: 1px solid #E4EDE9; background: #fff; padding: 18px 24px 26px; flex-direction: column; gap: 2px; max-height: 70vh; overflow: auto; }
+  .site-header.is-open .mobile-menu { display: flex; }
+  .mobile-menu__causes { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 13px 4px; background: none; border: 0; border-bottom: 1px solid #EEF4F1; font: 600 16px/1 var(--font); color: #1B1E26; cursor: pointer; text-align: left; }
+  .mobile-menu__causes svg { transition: transform .25s var(--ease); }
+  .mobile-menu__causes[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .mobile-menu__sub { display: none; flex-direction: column; gap: 2px; padding: 6px 0 6px 14px; }
+  .mobile-menu__sub.is-open { display: flex; }
+  .mobile-menu__sub a { padding: 10px 4px; font: 500 15px/1 var(--font); color: #4E5462; text-decoration: none; }
+  .mobile-menu__link { padding: 13px 4px; font: 600 16px/1 var(--font); color: #1B1E26; text-decoration: none; border-bottom: 1px solid #EEF4F1; }
+  .mobile-menu__cta { display: flex; gap: 10px; padding-top: 18px; }
+  .mobile-menu__cta a { flex: 1; display: inline-flex; align-items: center; justify-content: center; height: 48px; border-radius: 999px; font: 700 14.5px/1 var(--font); text-decoration: none; }
+  .mobile-menu__outline { border: 1.5px solid #1B1E26; color: #1B1E26; }
+  .mobile-menu__solid { background: #008F76; color: #fff; }
+
+  @media (max-width: 1139px) {
+    .site-header__nav, .site-header__cta { display: none; }
+    .burger { display: flex; }
+  }
+</style>
+
+<script>
+  import '../scripts/header';
+</script>

@@ -1,0 +1,25 @@
+---
+interface Props {
+  crumb: string;
+  title: string;
+  tiles: readonly string[];
+}
+const { crumb, title, tiles } = Astro.props;
+---
+<section class="cause-hero">
+  <div class="page-hero__inner">
+    <p class="eyebrow">{crumb}</p>
+    <h1 class="page-hero__title">{title}</h1>
+  </div>
+  <div class="cause-hero__tiles">
+    {tiles.slice(0, 3).map((src) => (
+      <figure class="cause-hero__tile zoom"><img src={src} alt="" /></figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .cause-hero { background: #fff; }
+  .cause-hero__tiles { max-width: 1290px; margin: 72px auto 0; padding: 0 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; height: clamp(240px, 34vw, 440px); }
+  .cause-hero__tile { position: relative; margin: 0; overflow: hidden; border-radius: 16px; background: #F7F7F7; }
+</style>

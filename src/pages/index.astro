@@ -1,0 +1,452 @@
+---
+import Base from '../layouts/Base.astro';
+import { IMG } from '../data/images';
+import { ROUTES, causeHref } from '../data/site';
+
+// Mirrors the prototype's "showDonationBox" toggle (off by default).
+const SHOW_DONATION_BOX = false;
+
+const HERO_GRID = [
+  { src: IMG.fieldWork, alt: 'Ummah Care Foundation field work', cls: 'hero-grid__item--wide-tall' },
+  { src: IMG.students, alt: 'Scholarship recipients', cls: '' },
+  { src: IMG.winterDistribution, alt: 'Distribution programme', cls: 'hero-grid__item--tall' },
+  { src: IMG.community, alt: 'Community support', cls: '' },
+  { src: IMG.wheelchair, alt: 'Aid distribution', cls: '' },
+  { src: IMG.relief, alt: 'Community programme', cls: '' },
+  { src: IMG.goats, alt: 'Volunteers at work', cls: 'hero-grid__item--wide' }
+];
+
+const BIG_CAUSES = [
+  { href: causeHref('educational-aid'), pill: 'Education', title: 'Educational Aid', text: 'Education is a gateway to hope and solace for children in unfortunate circumstances. We provide monthly scholarships so that no child is held back by poverty.', img: IMG.students, alt: 'Students receiving educational aid', bg: '#1F3D3B' },
+  { href: causeHref('medical-care'), pill: 'Healthcare', title: 'Medical Care', text: 'We help extremely low-income & poor people in Bangladesh get proper treatment, covering medicine, surgery and hospital costs they could never afford alone.', img: IMG.wheelchair, alt: 'Medical care programme', bg: '#5C91A4' },
+  { href: causeHref('self-reliance'), pill: 'Livelihood', title: 'Self-Reliance', text: 'We support & empower ambitious individuals by providing tools like sewing machines, rickshaws and small capital so they can earn a dignified living.', img: IMG.sewing, alt: 'Self-reliance programme', bg: '#495B29' }
+];
+
+const SMALL_CAUSES = [
+  { href: causeHref('winter-clothes'), pill: 'Seasonal relief', title: 'Winter Clothing', text: 'Winter is joyous for some but harsh for the poor. We have supplied warm clothes to over 300 families.', img: IMG.winterClothing, alt: 'Winter clothing distribution' },
+  { href: causeHref('food-assistance'), pill: 'Nutrition', title: 'Basic Food Assistance', text: 'Food is essential for growth, repair and energy. We provide basic food assistance to those in need.', img: IMG.foodCheck, alt: 'Food assistance' },
+  { href: causeHref('water-aid'), pill: 'Clean water', title: 'Water Aid', text: 'Clean water prevents disease. We have installed tubewells in several areas to provide safe drinking water.', img: IMG.waterCheck, alt: 'Water aid tubewell' }
+];
+
+const STATS: [number, string][] = [[200, 'Students Helping'], [3000, 'Serving Poor People'], [100, 'Self-reliance'], [45, 'Volunteers']];
+
+const FEATURES = [
+  { img: IMG.students, alt: 'Scholarship recipients', title: 'We seek to unlock the possibility', text: 'Monthly scholarships keep talented children from low-income families in the classroom.' },
+  { img: IMG.fieldWork, alt: 'Relief distribution', title: 'We seek to drive change on large scale', text: 'Food, winter clothing and clean water reach thousands of families across Bangladesh every year.' },
+  { img: IMG.sewing, alt: 'Sewing machine handover', title: 'We are focused on results', text: 'Sewing machines, rickshaws and seed capital help individuals earn a dignified living.' }
+];
+
+const GALLERY: [string, string][] = [
+  [IMG.foodDistribution, 'Food distribution'], [IMG.wheelchair, 'Aid recipient in wheelchair'], [IMG.relief, 'Relief distribution'],
+  [IMG.goats, 'Self-reliance goat programme'], [IMG.sewing, 'Sewing machine handover'], [IMG.fieldWork, 'Field work'],
+  [IMG.students, 'Scholarship recipients'], [IMG.winterDistribution, 'Distribution programme'], [IMG.community, 'Community support']
+];
+
+const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care', 'Winter Clothing', 'Food Assistance', 'Water Aid', 'Humanitarian Aid', 'Emergency Assistance'];
+---
+<Base title="Home" active="Home" dark>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__mesh"><mesh-gradient fill colors="#081C15,#2D6A4F,#95D5B2,#FFF3B0" seed="1" scale="1.26" grain="0.042" fallback="#003E33"></mesh-gradient></div>
+    <div class="hero__shade"></div>
+    <div class="hero__inner">
+      <h1 class="hero__title">Committed to human social welfare &amp; progress.</h1>
+      <p class="hero__sub">Your donation has the power to change lives with impactful projects.</p>
+      <a href={ROUTES.donate} class="hero__cta">Donate now
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg>
+      </a>
+
+      <div class="hero-card">
+        <div class="hero-grid">
+          {HERO_GRID.map((g) => (
+            <span class:list={['zoom', 'hero-grid__item', g.cls]}><img src={g.src} alt={g.alt} /></span>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {SHOW_DONATION_BOX && (
+      <div class="dn" data-donation-box>
+        <div class="dn__card">
+          <div class="dn__glow dn__glow--tr"></div>
+          <div class="dn__glow dn__glow--bl"></div>
+
+          <div class="dn__stage">
+            <h2 class="dn__title">Make your donation</h2>
+            <form class="dn__form" data-donation-form novalidate>
+              <div class="dn__field">
+                <label for="dn-fund">Fund <span>*</span></label>
+                <select id="dn-fund" class="dn__input">
+                  <option value="">Select a fund</option>
+                  {FUNDS.map((f) => <option value={f}>{f}</option>)}
+                </select>
+                <p class="dn__err" data-error="fund" hidden></p>
+              </div>
+              <div class="dn__field">
+                <label for="dn-contact">Mobile / Email <span>*</span></label>
+                <input id="dn-contact" type="text" class="dn__input" placeholder="Mobile number or email" />
+                <p class="dn__err" data-error="contact" hidden></p>
+              </div>
+              <div class="dn__field">
+                <label for="dn-amount">Amount <span>*</span></label>
+                <input id="dn-amount" type="text" inputmode="numeric" class="dn__input" placeholder="৳ Enter amount" />
+                <p class="dn__err" data-error="amount" hidden></p>
+              </div>
+              <div class="dn__field">
+                <span class="dn__spacer" aria-hidden="true">.</span>
+                <button type="submit" class="dn__submit btn-fx">Donate now</button>
+              </div>
+            </form>
+            <p class="dn__note">Donations to Ummah Care Foundation are eligible for tax rebate. <a href={ROUTES.donate}>Click to learn more.</a></p>
+          </div>
+
+          <div class="dn__done" data-donation-done hidden>
+            <span class="dn__check"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></span>
+            <h2 class="dn__title">Thank you for your generosity!</h2>
+            <p class="dn__summary">Complete your donation of <strong data-sum-amount></strong> to the <strong data-sum-fund></strong> using any method below. Please use <strong data-sum-contact></strong> as the payment reference.</p>
+            <div class="dn__methods">
+              <div class="dn__method">
+                <h3>bKash / Mobile Banking</h3>
+                <p>Merchant No: <strong>01310-188834</strong></p>
+                <p class="dn__hint">(Send from Payment Option)</p>
+              </div>
+              <div class="dn__method">
+                <h3>Bank Transfer</h3>
+                <p>Standard Chartered Bank Limited<br />A/C Name: <strong>UMMAH CARE FOUNDATION</strong><br />A/C No: <strong>01-2375033-01</strong> · Routing: <strong>215261726</strong></p>
+              </div>
+            </div>
+            <div class="dn__actions">
+              <a href={ROUTES.donate} class="dn__link btn-fx">View full payment details</a>
+              <button type="button" class="dn__reset" data-donation-reset>Make another donation</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </section>
+
+  <!-- Story -->
+  <section class="story">
+    <div class="story__inner">
+      <div class="story__row">
+        <div class="story__card">
+          <div>
+            <h2>Empowering through Charity</h2>
+            <div class="story__rule"></div>
+          </div>
+          <p>Ummah Care Foundation is a non-profit, non-political charitable organization dedicated to human welfare. Grateful to the Almighty for our success, it's now time to give back to the community around us.</p>
+        </div>
+        <span class="zoom story__img"><img src={IMG.fieldWork} alt="Ummah Care Foundation programme" loading="lazy" /></span>
+      </div>
+
+      <div class="story__row story__row--flip">
+        <span class="zoom story__img"><img src={IMG.students} alt="Founders of Ummah Care Foundation" loading="lazy" /></span>
+        <div class="story__card">
+          <div>
+            <h2>History of our Formation</h2>
+            <div class="story__rule"></div>
+          </div>
+          <p>Founded in 2020 by Md. Tareq Hasan and Md. Nizam Uddin, Ummah Care Foundation is a government-registered non-profit (Reg. S-13339/2020). Md. Tareq Hasan serves as Chairman and Md. Nizam Uddin as General Secretary, guiding our work in serving humanity and social reform.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Area of Activity -->
+  <section class="aoa">
+    <div class="aoa__bg" data-no-zoom></div>
+    <div class="aoa__shade"></div>
+    <div class="aoa__sticky">
+      <div class="aoa__head" data-aoa-head>
+        <h2>Area of Activity</h2>
+        <p>Committed to bringing hope—small contributions, big impact.</p>
+        <a href={ROUTES.donate} class="aoa__cta btn-fx">Support a cause</a>
+      </div>
+    </div>
+
+    <div class="aoa__body" data-aoa-body>
+      <div class="aoa__spacer"></div>
+
+      {BIG_CAUSES.map((c) => (
+        <a href={c.href} class="bigcause">
+          <div class="bigcause__text">
+            <span class="pill">{c.pill}</span>
+            <h3>{c.title}</h3>
+            <p>{c.text}</p>
+            <span class="bigcause__btn btn-fx">View program
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg>
+            </span>
+          </div>
+          <div class="bigcause__media" style={`background:${c.bg}`}>
+            <span class="zoom bigcause__img"><img src={c.img} alt={c.alt} loading="lazy" /></span>
+          </div>
+        </a>
+      ))}
+
+      <div class="smallcauses">
+        {SMALL_CAUSES.map((c) => (
+          <a href={c.href} class="smallcause">
+            <span class="zoom smallcause__img"><img src={c.img} alt={c.alt} loading="lazy" /></span>
+            <div class="smallcause__body">
+              <span class="pill">{c.pill}</span>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+              <span class="smallcause__link">View program
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg>
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stats__inner">
+      <div class="stats__copy">
+        <p class="stats__eyebrow"><span></span>About the Foundation</p>
+        <h2>We make it easy for anyone to change a life.</h2>
+        <p class="stats__lead">We stand beside underprivileged communities in Bangladesh with education support, healthcare, and self-reliance programs that help families overcome poverty.</p>
+      </div>
+      <div class="stats__grid">
+        {STATS.map(([n, label]) => (
+          <div class="stat">
+            <p class="stat__num"><span data-count={n}>0</span><span class="stat__plus">+</span></p>
+            <p class="stat__label">{label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature cards -->
+  <section class="features">
+    <div class="features__inner">
+      <div class="features__grid">
+        {FEATURES.map((f) => (
+          <div class="feature">
+            <span class="zoom feature__img"><img src={f.img} alt={f.alt} loading="lazy" /></span>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="gallery" data-lightbox="gallery">
+    <div class="gallery__pad">
+      <div class="gallery__track" data-gallery-track>
+        {GALLERY.map(([src, alt]) => (
+          <span class="zoom gallery__item"><img src={src} alt={alt} loading="lazy" /></span>
+        ))}
+      </div>
+    </div>
+    <div class="gallery__fade gallery__fade--l"></div>
+    <div class="gallery__fade gallery__fade--r"></div>
+  </section>
+
+  <!-- Volunteer CTA -->
+  <section class="vol">
+    <div class="vol__glow"></div>
+    <div class="vol__inner">
+      <div class="fan" data-fan>
+        <img src={IMG.students} alt="" class="fan__img fan__img--l" loading="lazy" />
+        <img src={IMG.wheelchair} alt="" class="fan__img fan__img--r" loading="lazy" />
+        <img src={IMG.sewing} alt="" class="fan__img fan__img--c" loading="lazy" />
+      </div>
+      <h2>Join as volunteer</h2>
+      <p>Join us in making a difference! Volunteer with our charity organization and help bring hope and support to those in need. Your time and skills can create a lasting impact.</p>
+      <div class="vol__actions">
+        <a href={ROUTES.volunteer} class="vol__btn vol__btn--white btn-fx">Join us
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg>
+        </a>
+        <a href={ROUTES.donate} class="vol__btn vol__btn--outline">Donate
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---- Hero ---- */
+  .hero { position: relative; overflow: hidden; background: radial-gradient(ellipse 80% 60% at 65% 45%, #95D5B2 0%, #2D6A4F 32%, #0B2B22 68%, #0D0D0D 100%); }
+  .hero__mesh { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13, 13, 13, .55) 0%, rgba(0, 62, 51, .1) 30%, rgba(0, 0, 0, 0) 55%); pointer-events: none; }
+  .hero__inner { max-width: 1290px; margin: 0 auto; padding: 196px 24px 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
+  .hero__title { margin: 0; font: 700 clamp(44px, 5.4vw, 72px)/1.08 var(--font); letter-spacing: -.035em; color: #fff; text-align: center; max-width: 1060px; text-wrap: balance; }
+  .hero__sub { margin: 30px 0 0; font: 400 19px/1.65 var(--font); color: rgba(255, 255, 255, .78); text-align: center; max-width: 620px; text-wrap: pretty; }
+  .hero__cta { margin-top: 42px; display: inline-flex; align-items: center; gap: 11px; height: 60px; padding: 0 36px; border-radius: 999px; color: #fff; font: 700 17px/1 var(--font); letter-spacing: -.01em; box-shadow: 0 22px 44px -18px rgba(0, 143, 118, .6); transition: background .2s ease; background: #55B984; }
+  .hero__cta:hover { background: #00A98C; color: #fff; }
+  .hero-card { margin-top: 88px; width: 100%; background: #fff; border-radius: 20px; padding: 14px; box-shadow: 0 60px 120px -50px rgba(0, 30, 22, .45), 0 24px 48px -30px rgba(0, 30, 22, .3); }
+  .hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 186px; gap: 12px; }
+  .hero-grid__item { border-radius: 20px; }
+  .hero-grid__item--wide-tall { grid-column: span 2; grid-row: span 2; }
+  .hero-grid__item--tall { grid-row: span 2; }
+  .hero-grid__item--wide { grid-column: span 2; }
+
+  /* ---- Donation box (optional) ---- */
+  .dn { max-width: 1290px; margin: 0 auto; padding: 0 24px 100px; position: relative; }
+  .dn__card { position: relative; overflow: hidden; background: #0D0D0D; border-radius: 20px; padding: 60px 54px 54px; }
+  .dn__glow { position: absolute; border-radius: 50%; pointer-events: none; }
+  .dn__glow--tr { top: -140px; right: -120px; width: 440px; height: 440px; background: radial-gradient(circle, rgba(0, 143, 118, .28), transparent 70%); }
+  .dn__glow--bl { bottom: -160px; left: -120px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 143, 118, .16), transparent 70%); }
+  .dn__stage { position: relative; }
+  .dn__title { margin: 0; font: 700 40px/1.15 var(--font); letter-spacing: -.03em; color: #fff; text-align: center; }
+  .dn__form { margin-top: 44px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; align-items: start; }
+  .dn__field { display: flex; flex-direction: column; gap: 10px; }
+  .dn__field label { font: 600 15px/1 var(--font); color: #fff; }
+  .dn__field label span { color: #FFB4A2; }
+  .dn__input { height: 58px; padding: 0 18px; border: 0; border-radius: 20px; background: #fff; font: 500 15.5px/1 var(--font); color: #1B1E26; width: 100%; }
+  select.dn__input { cursor: pointer; }
+  .dn__err { margin: 0; font: 500 13.5px/1.4 var(--font); color: #FFB4A2; }
+  .dn__spacer { font: 600 15px/1 var(--font); color: transparent; user-select: none; }
+  .dn__submit { height: 58px; padding: 0 34px; border: 0; border-radius: 20px; background: #008F76; color: #fff; font: 700 16px/1 var(--font); letter-spacing: -.01em; cursor: pointer; transition: background .2s ease; width: 100%; }
+  .dn__submit:hover { background: #00A98C; }
+  .dn__note { margin: 34px 0 0; font: 400 15px/1.7 var(--font); color: rgba(255, 255, 255, .7); text-align: center; }
+  .dn__note a { color: #7FCDBB; text-decoration: underline; }
+  .dn__done { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .dn__check { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: #008F76; }
+  .dn__done .dn__title { margin-top: 26px; }
+  .dn__summary { margin: 16px 0 0; font: 400 16.5px/1.75 var(--font); color: rgba(255, 255, 255, .78); text-align: center; max-width: 640px; text-wrap: pretty; }
+  .dn__summary strong { color: #fff; }
+  .dn__methods { margin-top: 38px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; width: 100%; max-width: 820px; }
+  .dn__method { background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .16); border-radius: 20px; padding: 28px 30px; }
+  .dn__method h3 { margin: 0; font: 700 20px/1.3 var(--font); color: #fff; }
+  .dn__method p { margin: 14px 0 0; font: 400 15px/1.7 var(--font); color: rgba(255, 255, 255, .75); }
+  .dn__method strong { color: #fff; }
+  .dn__hint { margin: 6px 0 0 !important; font: 600 13.5px/1.6 var(--font) !important; color: #7FCDBB !important; font-style: italic !important; }
+  .dn__actions { margin-top: 36px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .dn__link { display: inline-flex; align-items: center; height: 52px; padding: 0 28px; border-radius: 20px; background: #fff; color: #0D0D0D; font: 700 15px/1 var(--font); transition: background .2s ease; }
+  .dn__link:hover { background: #DCEDE7; color: #0D0D0D; }
+  .dn__reset { height: 52px; padding: 0 28px; border: 1.5px solid rgba(255, 255, 255, .35); border-radius: 20px; background: transparent; color: #fff; font: 700 15px/1 var(--font); cursor: pointer; transition: background .2s ease; }
+  .dn__reset:hover { background: rgba(255, 255, 255, .1); }
+
+  /* ---- Story ---- */
+  .story { background: #fff; }
+  .story__inner { max-width: 1290px; margin: 0 auto; padding: 100px 24px; display: flex; flex-direction: column; gap: 50px; }
+  .story__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); grid-template-rows: 530px; gap: 30px; align-items: stretch; height: 530px; }
+  .story__row--flip { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); }
+  .story__card { background: #F7F7F7; border-radius: 20px; padding: 44px 48px 40px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; min-width: 0; min-height: 0; height: 530px; overflow: hidden; }
+  .story__card h2 { margin: 0; font: 700 40px/1.15 var(--font); letter-spacing: -.02em; color: #1B1E26; text-wrap: balance; }
+  .story__rule { margin-top: 22px; width: 74%; border-top: 1.5px dashed #C9C9CC; }
+  .story__card p { margin: 0; font: 400 19px/1.65 var(--font); color: #1B1E26; text-wrap: pretty; }
+  .story__img { width: 100%; height: 530px; border-radius: 20px; }
+
+  /* ---- Area of Activity ---- */
+  .aoa { position: relative; background: #0A0A0A; overflow: clip; overflow-clip-margin: 0; }
+  .aoa__bg { position: absolute; inset: -40px; pointer-events: none; background: url('/images/sunset-bg.jpg') center 42% / cover no-repeat; filter: blur(18px); transform: scale(1.04); }
+  .aoa__shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(10, 10, 10, .5) 0%, rgba(10, 10, 10, .3) 40%, rgba(10, 10, 10, .62) 100%); }
+  .aoa__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .aoa__head { position: relative; max-width: 1290px; margin: 0 auto; padding: 30vh 24px 0; display: flex; flex-direction: column; align-items: center; text-align: center; will-change: opacity, transform; }
+  .aoa__head h2 { margin: 0; font: 700 clamp(40px, 4.4vw, 56px)/1.1 var(--font); letter-spacing: -.03em; color: #fff; text-wrap: balance; }
+  .aoa__head p { margin: 18px 0 0; font: 400 16.5px/1.75 var(--font); color: rgba(255, 255, 255, .78); max-width: 520px; text-wrap: pretty; }
+  .aoa__cta { margin-top: 26px; display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border-radius: 999px; background: #008F76; color: #fff; font: 700 14px/1 var(--font); text-decoration: none; transition: background .2s ease; }
+  .aoa__cta:hover { background: #00A98C; color: #fff; }
+  .aoa__body { position: relative; max-width: 1290px; margin: -100vh auto 0; padding: 0 24px 14vh; }
+  .aoa__spacer { height: 80vh; }
+
+  .pill { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #F3F3F4; border: 1px solid #E2E2E5; font: 600 12.5px/1 var(--font); color: #4B505B; }
+
+  .bigcause { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); height: 500px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .6); text-decoration: none; color: inherit; margin-bottom: 22px; }
+  .bigcause__text { padding: 28px 44px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+  .bigcause h3 { margin: 18px 0 0; font: 700 30px/1.2 var(--font); letter-spacing: -.025em; color: #1B1E26; }
+  .bigcause p { margin: 12px 0 0; font: 400 15px/1.7 var(--font); color: #5E6470; max-width: 440px; text-wrap: pretty; }
+  .bigcause__btn { margin-top: 20px; display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 22px; border-radius: 20px; background: #008F76; color: #fff; font: 700 14px/1 var(--font); }
+  .bigcause__media { height: 500px; padding: 34px; display: flex; align-items: center; justify-content: center; min-width: 0; }
+  .bigcause__img { width: min(280px, 70%); aspect-ratio: 1; border-radius: 20px; }
+
+  .smallcauses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .smallcause { display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .6); text-decoration: none; color: inherit; min-width: 0; }
+  .smallcause__img { width: 100%; height: 220px; }
+  .smallcause__body { padding: 30px 30px 32px; display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
+  .smallcause h3 { margin: 18px 0 0; font: 700 24px/1.3 var(--font); letter-spacing: -.02em; color: #1B1E26; }
+  .smallcause p { margin: 12px 0 0; font: 400 15px/1.7 var(--font); color: #5E6470; text-wrap: pretty; }
+  .smallcause__link { margin-top: auto; padding-top: 24px; display: inline-flex; align-items: center; gap: 8px; font: 700 14px/1 var(--font); color: #008F76; }
+
+  /* ---- Stats ---- */
+  .stats { background: #fff; }
+  .stats__inner { max-width: 1290px; margin: 0 auto; padding: 120px 24px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 64px 96px; align-items: start; }
+  .stats__copy { display: flex; flex-direction: column; min-width: 0; }
+  .stats__eyebrow { margin: 0 0 42px; display: flex; align-items: center; gap: 10px; font: 500 17px/1 var(--font); color: #1B1E26; }
+  .stats__eyebrow span { width: 9px; height: 9px; border-radius: 50%; background: #008F76; display: inline-block; }
+  .stats__copy h2 { margin: 0; font: 700 clamp(40px, 4.4vw, 56px)/1.1 var(--font); letter-spacing: -.03em; color: #1B1E26; text-align: left; text-wrap: balance; }
+  .stats__lead { margin: 40px 0 0; font: 400 16.5px/1.75 var(--font); color: #5E6470; max-width: 640px; text-wrap: pretty; }
+  .stats__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-self: center; min-width: 0; }
+  .stat { display: flex; flex-direction: column; gap: 22px; background: #F7F7F7; border-radius: 20px; padding: 36px 34px 34px; }
+  .stat__num { margin: 0; font: 700 64px/1 var(--font); letter-spacing: -.04em; color: #1B1E26; display: flex; align-items: baseline; gap: 3px; }
+  .stat__plus { color: #008F76; }
+  .stat__label { margin: 0; font: 400 17px/1.4 var(--font); color: #5E6470; }
+
+  /* ---- Feature cards ---- */
+  .features { background: #fff; }
+  .features__inner { max-width: 1290px; margin: 0 auto; padding: 0 24px 120px; }
+  .features__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .feature { background: #F7F7F7; border-radius: 20px; padding: 26px 26px 34px; display: flex; flex-direction: column; min-width: 0; height: 520px; }
+  .feature__img { width: 140px; height: 140px; border-radius: 20px; flex: none; }
+  .feature h3 { margin: auto 0 0; padding-top: 28px; font: 700 24px/1.3 var(--font); letter-spacing: -.02em; color: #1B1E26; text-wrap: balance; }
+  .feature p { margin: 14px 0 0; font: 400 16.5px/1.75 var(--font); color: #5E6470; text-wrap: pretty; }
+
+  /* ---- Gallery ---- */
+  .gallery { background: #fff; position: relative; overflow: hidden; }
+  .gallery__pad { padding: 96px 0; }
+  .gallery__track { display: flex; gap: 18px; width: max-content; will-change: transform; }
+  .gallery__item { flex: 0 0 auto; width: clamp(240px, 22vw, 340px); height: clamp(320px, 30vw, 460px); border-radius: 20px; }
+  .gallery__fade { position: absolute; top: 0; bottom: 0; width: clamp(80px, 12vw, 220px); pointer-events: none; }
+  .gallery__fade--l { left: 0; background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 100%); }
+  .gallery__fade--r { right: 0; background: linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0) 100%); }
+
+  /* ---- Volunteer CTA ---- */
+  .vol { position: relative; background: #00473B; overflow: hidden; }
+  .vol__glow { position: absolute; left: 50%; bottom: -260px; transform: translateX(-50%); width: 1100px; height: 560px; background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, .18), rgba(255, 255, 255, .06) 45%, transparent 70%); pointer-events: none; }
+  .vol__inner { max-width: 1290px; margin: 0 auto; padding: 150px 24px 120px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .fan { position: relative; width: min(460px, 90vw); height: 250px; margin: 0 auto; }
+  .fan__img { position: absolute; bottom: 0; object-fit: cover; border-radius: 20px; transform-origin: 50% 100%; opacity: 0; -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%); mask-image: linear-gradient(180deg, #000 60%, transparent 100%); }
+  .fan__img--l { left: 0; width: 156px; height: 222px; transform: translateY(120%) rotate(-14deg); transition: transform .9s var(--ease) .1s, opacity .6s ease .1s; }
+  .fan__img--r { right: 0; width: 156px; height: 222px; transform: translateY(120%) rotate(14deg); transition: transform .9s var(--ease) .2s, opacity .6s ease .2s; }
+  .fan__img--c { left: 50%; width: 180px; height: 250px; transform: translate(-50%, 120%); transition: transform .9s var(--ease), opacity .6s ease; }
+  .fan.is-in .fan__img { opacity: 1; }
+  .fan.is-in .fan__img--l { transform: translateY(0) rotate(-10deg); }
+  .fan.is-in .fan__img--r { transform: translateY(0) rotate(10deg); }
+  .fan.is-in .fan__img--c { transform: translate(-50%, 0); }
+  .vol h2 { margin: 40px 0 0; font: 700 clamp(40px, 4.4vw, 56px)/1.1 var(--font); letter-spacing: -.03em; color: #fff; max-width: 820px; text-wrap: balance; }
+  .vol__inner > p { margin: 26px 0 0; font: 400 16.5px/1.75 var(--font); color: rgba(255, 255, 255, .88); max-width: 560px; text-wrap: pretty; }
+  .vol__actions { margin-top: 44px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .vol__btn { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 28px; border-radius: 20px; font: 600 15.5px/1 var(--font); text-decoration: none; transition: background .2s ease, border-color .2s ease; }
+  .vol__btn--white { background: #fff; color: #00473B; }
+  .vol__btn--white:hover { background: #E6F4F0; color: #00473B; }
+  .vol__btn--outline { border: 1px solid rgba(255, 255, 255, .5); background: transparent; color: #fff; }
+  .vol__btn--outline:hover { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .8); color: #fff; }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 1099px) {
+    .story__row, .story__row--flip { display: flex; flex-direction: column; gap: 24px; height: auto; }
+    .story__row--flip { flex-direction: column-reverse; }
+    .story__img { height: 360px; flex: none; }
+    .story__card { padding: 40px 32px; gap: 32px; height: auto; flex: none; }
+  }
+  @media (max-width: 960px) {
+    .stats__inner { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .bigcause { grid-template-columns: 1fr; height: auto; }
+    .bigcause__text { padding: 32px 28px; }
+    .bigcause__media { height: 320px; padding: 28px; }
+    .smallcauses { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .hero-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; }
+    .hero-grid__item--tall { grid-row: auto; }
+    .dn__card { padding: 44px 24px; }
+    .stats__grid { grid-template-columns: 1fr; }
+    .stat__num { font-size: 52px; }
+  }
+</style>
+
+<script>
+  import '../scripts/mesh-gradient';
+  import '../scripts/home';
+</script>

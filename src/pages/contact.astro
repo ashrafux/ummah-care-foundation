@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+---
+<Base title="Contact" active="Contact" description="Have a question or feedback? Get in touch with Ummah Care Foundation.">
+  <PageHero crumb="Contact" />
+
+  <section class="contact">
+    <div class="contact__inner">
+      <div data-reveal="0">
+        <p class="kicker">Contact Us</p>
+        <h2 class="h2 contact__title">How can we help?</h2>
+        <p class="lead contact__lead">Have a question or feedback? Fill out the form below, and we'll get back to you.</p>
+
+        <div class="notice contact__notice" data-form-sent="contact" hidden tabindex="-1">
+          <span class="notice__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></span>
+          <p>Thanks for reaching out — we'll reply shortly.</p>
+        </div>
+
+        <form class="form contact__form" data-form="contact">
+          <div class="field"><label class="label" for="ct-name">Name</label><input id="ct-name" class="input" type="text" required placeholder="Your full name" /></div>
+          <div class="field"><label class="label" for="ct-email">Email address</label><input id="ct-email" class="input" type="email" required placeholder="you@example.com" /></div>
+          <div class="field"><label class="label" for="ct-message">Message</label><textarea id="ct-message" class="textarea contact__textarea" required placeholder="How can we help?"></textarea></div>
+          <div><button type="submit" class="btn btn--teal btn-fx">Send message<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg></button></div>
+        </form>
+      </div>
+
+      <div class="panel contact__card" data-reveal="120">
+        <h2 class="h2 contact__cardTitle">We’d love to hear from you. Let’s get in touch.</h2>
+        <div class="contact__blocks">
+          <div>
+            <h5>Address:</h5>
+            <p class="lead">Level-3, House-1005,1007 Avenue-11,Road-09,<br />Mirpur DOHS, Dhaka-1216, Bangladesh</p>
+          </div>
+          <div>
+            <h5>Working hours:</h5>
+            <p class="lead">Monday-Friday: 8AM-5Pm</p>
+          </div>
+          <div>
+            <h5>Contacts:</h5>
+            <p class="lead">Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a><br />Phone: +8801310-188834</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact { background: #fff; }
+  .contact__inner { max-width: 1290px; margin: 0 auto; padding: 96px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 72px; align-items: start; }
+  .contact__title { font-size: 34px; margin-top: 16px; }
+  .contact__lead { margin-top: 16px; }
+  .contact__notice { margin-top: 32px; }
+  .contact__form { margin-top: 34px; }
+  .contact__textarea { min-height: 140px; }
+  .contact__card { padding: 52px 48px; }
+  .contact__cardTitle { font-size: 32px; }
+  .contact__blocks { margin-top: 38px; display: flex; flex-direction: column; gap: 30px; }
+  .contact__blocks h5 { margin: 0; font: 700 16px/1.3 var(--font); color: #1B1E26; }
+  .contact__blocks p { margin-top: 10px; }
+  @media (max-width: 560px) { .contact__card { padding: 36px 28px; } }
+</style>
+
+<script>
+  import '../scripts/forms';
+</script>

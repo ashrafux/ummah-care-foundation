@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { IMG } from '../data/images';
+---
+<Base title="Success Stories" active="Stories" description="Lives changed, told by the people who lived them.">
+  <PageHero crumb="Success Stories" title="Lives changed, told by the people who lived them" />
+
+  <section class="stories" data-lightbox="stories">
+    <div class="stories__inner">
+      <article class="story story--media" data-reveal="0">
+        <span class="zoom story__img"><img src={IMG.students} alt="" loading="lazy" /></span>
+        <div class="story__text">
+          <h2 class="h2 story__title">From Recovery to Self-Reliance: Alamgir Hossain's Journey to Success</h2>
+          <p class="lead">Md. Alamgir Hossain from Patnitala Thana, Naogaon, Bangladesh, received critical medical assistance from Ummah Care Foundation during a challenging time in his life. After regaining his health, the foundation provided him with small business capital to help him rebuild his future. With this support, Alamgir has successfully established his business and is now self-reliant, marking a significant transformation in his life. His journey from illness to entrepreneurship is a testament to the power of opportunity and support.</p>
+        </div>
+      </article>
+
+      <article class="panel story story--panel" data-reveal="0">
+        <div class="story__text">
+          <h2 class="h2 story__title">From Debt to Independence: Abdur Rahman’s Inspiring Transformation</h2>
+          <p class="lead">Md. Abdur Rahman from Chatmohar Thana, Pabna, faced significant financial struggles due to debt. With the help of Ummah Care Foundation, he received debt relief support and was provided with capital to purchase a battery-operated van. This vital assistance allowed him to not only clear his debts but also start his own business. Today, Abdur Rahman is self-sufficient and successfully supporting his family, showcasing the profound impact of empowerment and opportunity.</p>
+        </div>
+      </article>
+
+      <article class="story story--media" data-reveal="0">
+        <div class="story__pair">
+          <span class="zoom story__pairImg"><img src={IMG.storyRagib1} alt="" loading="lazy" /></span>
+          <span class="zoom story__pairImg"><img src={IMG.storyRagib2} alt="" loading="lazy" /></span>
+        </div>
+        <div class="story__text">
+          <h2 class="h2 story__title">A New Breath of Life: Ragib Ishraq’s Remarkable Recovery</h2>
+          <p class="lead">Three-year-old Ragib Ishraq from Patnitala Thana, Naogaon district, faced severe health challenges from birth, including respiratory distress, blocked blood vessels, and complex lung issues. Despite extensive treatment in hospitals across Bangladesh, his condition remained critical. Ragib was eventually referred to Dr. Devi Shetty at Narayana Hospital, India. With financial support from Ummah Care Foundation, Ragib underwent life-saving surgeries to unblock his blood vessels and treat his lungs. Upon his return, Ragib’s health showed remarkable improvement—he began speaking, gained weight, and his physical growth normalized. Today, Ragib is on the path to a healthy, promising future.</p>
+        </div>
+      </article>
+
+      <article class="panel story story--panel" data-reveal="0">
+        <div class="story__text">
+          <h2 class="h2 story__title">Breaking Barriers: Ali Nur’s Journey to Academic Success</h2>
+          <p class="lead">Ali Nur, a fatherless and physically disabled student from Sherpur, achieved remarkable success by scoring GPA 5 in his SSC exams. However, his dreams of continuing his education seemed out of reach due to his family's financial difficulties. With his mother struggling to cover the expenses, Ali faced the risk of having to stop his studies. Through Ummah Care Foundation’s monthly scholarship, he has been able to continue his education and is now preparing for his HSC exams in 2025. Ali’s resilience and dedication, supported by our foundation, are a testament to the impact of empowering talented students in need.</p>
+        </div>
+      </article>
+
+      <article class="story story--media" data-reveal="0">
+        <span class="zoom story__img"><img src={IMG.storyMonowara} alt="" loading="lazy" /></span>
+        <div class="story__text">
+          <h2 class="h2 story__title">Empowered Through Education: Monowara’s Inspiring BCS Achievement</h2>
+          <p class="lead">Monowara Akter’s journey is a reminder that dedication, faith, and the right opportunity can change a life. Coming from a modest background, Monowara dreamed of becoming a teacher and contributing to society through knowledge and values. However, financial challenges often stood in her way.</p>
+          <p class="lead">In 2022, she became a recipient of the <strong>Ummah Care Foundation Education Scholarship</strong>, which supported her throughout her studies and allowed her to complete both her Bachelor’s and Master’s degrees in Bangla from the University of Dhaka. With renewed confidence and determination, she continued her preparation for Bangladesh Civil Service (BCS).</p>
+          <p class="lead">Monowara has achieved a remarkable milestone—<br /><em class="story__em">She has been recommended for the 49th BCS Education Cadre (Bangla).</em></p>
+        </div>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .stories { background: #fff; }
+  .stories__inner { max-width: 1290px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 88px; }
+  .story--media { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 52px; align-items: center; }
+  .story--panel { padding: 52px 56px; }
+  .story__img { width: 100%; height: 100%; min-height: 340px; border-radius: 20px; }
+  .story__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .story__pairImg { width: 100%; height: 300px; border-radius: 20px; }
+  .story__text { display: flex; flex-direction: column; gap: 18px; }
+  .story__title { font-size: 32px; }
+  .story__em { color: #1B1E26; font-weight: 700; }
+  @media (max-width: 640px) { .story--panel { padding: 36px 28px; } .story__title { font-size: 28px; } }
+</style>

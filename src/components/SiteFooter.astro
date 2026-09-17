@@ -1,0 +1,77 @@
+---
+import { ROUTES, SITE } from '../data/site';
+import { IMG } from '../data/images';
+
+---
+<footer class="site-footer">
+  <div class="site-footer__watermark" aria-hidden="true">Ummah Care</div>
+
+  <div class="site-footer__inner">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <img src={IMG.logoLight} alt="Ummah Care Foundation" width="180" height="48" />
+        <p>Standing beside underprivileged communities in Bangladesh with education, healthcare, and self-reliance.</p>
+      </div>
+
+      <div class="site-footer__col">
+        <h4>Explore</h4>
+        <a href={ROUTES.home}>Home</a>
+        <a href={ROUTES.about}>About</a>
+        <a href={ROUTES.stories}>Success Stories</a>
+        <a href={ROUTES.blog}>Blog</a>
+      </div>
+
+      <div class="site-footer__col">
+        <h4>Get Involved</h4>
+        <a href={ROUTES.donate}>Donate</a>
+        <a href={ROUTES.volunteer}>Volunteer</a>
+        <a href={ROUTES.membership}>Membership</a>
+        <a href={ROUTES.faq}>FAQ</a>
+      </div>
+
+      <div class="site-footer__col">
+        <h4>Contact</h4>
+        <a href={SITE.phoneHref}>{SITE.phone}</a>
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        <a href={SITE.facebook} target="_blank" rel="noopener">Facebook</a>
+        <a href={ROUTES.contact}>Contact us</a>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>Copyright © 2024 Ummah Care Foundation. All rights reserved.</p>
+      <div class="site-footer__legal">
+        <a href={ROUTES.privacy}>Privacy</a>
+        <a href={ROUTES.terms}>Terms</a>
+      </div>
+      <img src={IMG.paymentBanner} alt="Payment methods" class="site-footer__payment" />
+    </div>
+  </div>
+
+</footer>
+
+<style>
+  .site-footer { position: relative; background: #1B1E26; color: #fff; overflow: hidden; }
+  .site-footer__watermark { margin: 96px 0 0; font: 800 17vw/.9 var(--font); letter-spacing: -.045em; white-space: nowrap; text-align: center; color: rgba(255, 255, 255, .04); user-select: none; pointer-events: none; }
+  .site-footer__inner { max-width: 1290px; margin: 0 auto; padding: 96px 24px 0; }
+  .site-footer__grid { display: grid; grid-template-columns: minmax(0, 1.5fr) auto auto auto; gap: 56px 104px; align-items: start; }
+  .site-footer__brand { display: flex; flex-direction: column; gap: 26px; max-width: 400px; }
+  .site-footer__brand img { height: 48px; width: auto; display: block; align-self: flex-start; }
+  .site-footer__brand p { margin: 0; font: 400 19px/1.65 var(--font); color: rgba(255, 255, 255, .68); text-wrap: pretty; }
+  .site-footer__col { display: flex; flex-direction: column; gap: 15px; }
+  .site-footer__col h4 { margin: 0 0 8px; font: 600 16px/1.2 var(--font); color: #fff; }
+  .site-footer__col a { font: 400 15px/1.4 var(--font); color: rgba(255, 255, 255, .62); text-decoration: none; transition: color .18s ease; }
+  .site-footer__col a:hover { color: #7FCDBB; }
+  .site-footer__bottom { margin-top: 92px; border-top: 1px solid rgba(255, 255, 255, .1); padding: 28px 0 36px; display: flex; align-items: center; justify-content: space-between; gap: 24px 40px; flex-wrap: wrap; }
+  .site-footer__bottom p { margin: 0; font: 400 15px/1.7 var(--font); color: rgba(255, 255, 255, .5); }
+  .site-footer__legal { display: flex; align-items: center; gap: 72px; }
+  .site-footer__legal a { font: 400 14.5px/1.5 var(--font); color: rgba(255, 255, 255, .5); text-decoration: none; transition: color .18s ease; }
+  .site-footer__legal a:hover { color: #7FCDBB; }
+  .site-footer__payment { height: 26px; width: auto; display: block; border-radius: 3px; opacity: .92; }
+
+
+  @media (max-width: 1039px) {
+    .site-footer__grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 44px 40px; }
+  }
+</style>
+

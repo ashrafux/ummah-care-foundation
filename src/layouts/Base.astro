@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import type { NavKey } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  active?: NavKey;
+  dark?: boolean;
+}
+
+const { title, description = 'Ummah Care Foundation is a non-profit, non-political charitable organization dedicated to human welfare in Bangladesh.', active = '', dark = false } = Astro.props;
+const fullTitle = title === 'Home' ? 'Ummah Care Foundation — Committed to human social welfare & progress' : `${title} · Ummah Care Foundation`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#008F76" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Caveat:wght@500&display=swap" rel="stylesheet" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <div class="site">
+      <SiteHeader active={active} dark={dark} />
+      <main>
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+    <script>
+      import '../scripts/site-fx';
+      import '../scripts/site-reveal';
+      import '../scripts/gsap-buttons';
+    </script>
+  </body>
+</html>

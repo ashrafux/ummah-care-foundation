@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { IMG } from '../data/images';
+import { causeHref } from '../data/site';
+
+const ROWS = [
+  { title: 'Educational Aid', text: 'Quality education is crucial for a healthy and productive life. We provide monthly scholarships to students at various educational levels, supporting over 200 students across Bangladesh.', img: IMG.students, href: causeHref('educational-aid'), flip: false },
+  { title: 'Self-reliance', text: 'We support & empower ambitious individuals by providing tools like Sewing machines, Rickshaw-Vans, Cows, and Funds to help them become self-sufficient.We have already provided self-reliance assistance to more than 100 individuals & families.', img: IMG.aoaSelfReliance, href: causeHref('self-reliance'), flip: true },
+  { title: 'Medical Care', text: 'We help extremely low-income & poor people in Bangladesh get proper treatment by providing financial support for medical care.', img: IMG.aoaMedical, href: causeHref('medical-care'), flip: false },
+  { title: 'Distribution of Winter Clothes', text: 'Winter is joyous for some but harsh for the poor.Ummah Care Foundation has already supplied winter clothes to over 300 families and individuals.', img: IMG.aoaWinter, href: causeHref('winter-clothes'), flip: true },
+  { title: 'Basic Food Assistance', text: 'Food is essential for growth, repair, and energy. Ummah Care Foundation is dedicated to providing basic food assistance to those in need.', img: IMG.aoaFood, href: causeHref('food-assistance'), flip: false },
+  { title: 'Water Aid', text: 'Clean water is crucial for disease prevention and overall health. Ummah Care Foundation has installed several tubewells in different areas to provide access to clean water.', img: IMG.aoaWater, href: causeHref('water-aid'), flip: true },
+  { title: 'Humanitarian Aid', text: 'We offer vital aid, including marriage support, critical assistance, and rehabilitation, to uplift vulnerable individuals and families with dignity and hope.', img: IMG.aoaHumanitarian, href: causeHref('humanitarian-aid'), flip: false },
+  { title: 'Emergency Assistance', text: 'The Emergency Assistance program provides short-term financial aid to disaster-affected individuals and families for essentials like rent, food, and medical care.', img: IMG.wheelchair, href: causeHref('emergency-assistance'), flip: true }
+];
+---
+<Base title="Area of Activity" active="Causes" description="Eight programs, one purpose: dignity for every family.">
+  <PageHero crumb="Area of Activity" title="Eight programs, one purpose: dignity for every family" />
+
+  <section class="aoa">
+    <div class="aoa__inner">
+      {ROWS.map((r) => (
+        <div class="row" data-reveal="0">
+          {!r.flip && <span class="zoom row__img"><img src={r.img} alt={r.title} loading="lazy" /></span>}
+          <div>
+            <h2 class="h2 row__title">{r.title}</h2>
+            <p class="lead row__text">{r.text}</p>
+            <div class="row__cta"><a href={r.href} class="btn btn--outline btn--md">Read More<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg></a></div>
+          </div>
+          {r.flip && <span class="zoom row__img"><img src={r.img} alt={r.title} loading="lazy" /></span>}
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .aoa { background: #fff; }
+  .aoa__inner { max-width: 1290px; margin: 0 auto; padding: 96px 24px; display: flex; flex-direction: column; gap: 92px; }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr)); gap: 60px; align-items: center; }
+  .row__img { width: 100%; height: 420px; border-radius: 20px; box-shadow: 0 30px 60px -34px rgba(27, 30, 38, .42); }
+  .row__title { font-size: 36px; }
+  .row__text { margin-top: 20px; }
+  .row__cta { margin-top: 30px; }
+</style>

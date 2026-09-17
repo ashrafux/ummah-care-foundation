@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import CauseHero from '../../components/CauseHero.astro';
+import CausePage from '../../components/CausePage.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import { CAUSES } from '../../data/causes';
+
+export function getStaticPaths() {
+  return CAUSES.map((cause) => ({ params: { slug: cause.slug }, props: { cause } }));
+}
+
+const { cause } = Astro.props;
+---
+<Base title={cause.crumb} active="Causes" description={cause.title}>
+  <CauseHero crumb={cause.crumb} title={cause.title} tiles={cause.tiles} />
+  <CausePage data={cause} />
+  <Testimonials />
+</Base>

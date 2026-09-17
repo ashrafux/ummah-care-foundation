@@ -1,0 +1,124 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { IMG } from '../data/images';
+import { ROUTES } from '../data/site';
+
+const AMOUNTS = ['৳ 500', '৳ 1,000', '৳ 2,000', '৳ 3,000', '৳ 5,000', 'Custom – ৳ 0'];
+const BANK: [string, string][] = [
+  ['Bank Name:', 'Standard Chartered Bank Limited'],
+  ['Account Name:', 'UMMAH CARE FOUNDATION'],
+  ['Account Number:', '01-2375033-01'],
+  ['Routing Number:', '215261726'],
+  ['Branch Code:', '172'],
+  ['SWIFT Code:', 'SCBLBDDXXXX'],
+  ['Address:', '67 Gulshan Avenue, Dhaka 1212']
+];
+---
+<Base title="Donate" description="Make a lasting impact with your donation to Ummah Care Foundation.">
+  <PageHero crumb="Donate" />
+
+  <section class="donate">
+    <div class="donate__inner">
+      <div data-reveal="0">
+        <h2 class="h2 donate__title">Make a Lasting Impact with Your Donation</h2>
+
+        <div class="notice donate__notice" data-form-sent="donate" hidden tabindex="-1">
+          <span class="notice__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></span>
+          <p>Thank you — your donation details have been received.</p>
+        </div>
+
+        <form class="form donate__form" data-form="donate">
+          <div class="field">
+            <label class="label" for="dn-name">Your Name <em>*</em></label>
+            <input id="dn-name" class="input" type="text" required placeholder="Full name" />
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label class="label" for="dn-phone">Phone Number</label>
+              <input id="dn-phone" class="input" type="tel" placeholder="+8801XXXXXXXXX" />
+            </div>
+            <div class="field">
+              <label class="label" for="dn-email">Email Address (optional)</label>
+              <input id="dn-email" class="input" type="email" placeholder="you@example.com" />
+            </div>
+          </div>
+          <div class="field">
+            <span class="label">Donation Type <em>*</em></span>
+            <div class="types" data-toggle-group="single">
+              <button type="button" class="chip is-on">Zakat</button>
+              <button type="button" class="chip">Sadaqa</button>
+            </div>
+          </div>
+          <div class="field">
+            <span class="label">Donation Amount <em>*</em></span>
+            <div class="amounts" data-toggle-group="single">
+              {AMOUNTS.map((a, i) => <button type="button" class:list={['chip', { 'is-on': i === 0 }]}>{a}</button>)}
+            </div>
+          </div>
+          <div class="field">
+            <label class="label" for="dn-custom">Custom Payment Amount</label>
+            <div class="custom">
+              <span>৳</span>
+              <input id="dn-custom" type="number" min="0" placeholder="0" />
+            </div>
+          </div>
+          <label class="check">
+            <input type="checkbox" required />
+            <span>I confirm that I have read &amp; agreed to <a href={ROUTES.terms}>Terms &amp; Conditions</a>, <a href={ROUTES.privacy}>Privacy Policy</a> &amp; Refund-Return Policy.</span>
+          </label>
+          <div class="field">
+            <label class="label" for="dn-comments">Comments (optional)</label>
+            <textarea id="dn-comments" class="textarea" placeholder="Anything you would like us to know?"></textarea>
+          </div>
+          <div><button type="submit" class="btn btn--teal btn-fx">Donate Now<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg></button></div>
+        </form>
+      </div>
+
+      <div class="side" data-reveal="120">
+        <div class="panel side__bank">
+          <h3 class="h3">Bank Information</h3>
+          <div class="side__rows">
+            {BANK.map(([k, v]) => <p><strong>{k}</strong> {v}</p>)}
+          </div>
+        </div>
+        <div class="side__bkash">
+          <h3>bKash</h3>
+          <p>Merchant No: <strong>01310-188834</strong></p>
+          <p class="side__hint">(Send from Payment Option)</p>
+        </div>
+        <img src={IMG.paymentBanner} alt="Accepted payment methods" class="side__payment" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .donate { background: #fff; }
+  .donate__inner { max-width: 1290px; margin: 0 auto; padding: 88px 24px 104px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 64px; align-items: start; }
+  .donate__title { font-size: 34px; }
+  .donate__notice { margin-top: 34px; }
+  .donate__form { margin-top: 34px; gap: 24px; }
+  .types { display: flex; gap: 12px; flex-wrap: wrap; }
+  .amounts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .custom { display: flex; align-items: center; gap: 10px; border: 1.5px solid #E1EAE6; border-radius: 20px; padding: 0 18px; height: 54px; transition: border-color .18s ease; }
+  .custom:focus-within { border-color: #008F76; }
+  .custom span { font: 700 16px/1 var(--font); color: #008F76; }
+  .custom input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font: 400 15px/1 var(--font); color: #1B1E26; }
+
+  .side { display: flex; flex-direction: column; gap: 22px; }
+  .side__bank { padding: 40px 38px; }
+  .side__rows { margin-top: 24px; display: flex; flex-direction: column; gap: 13px; }
+  .side__rows p { margin: 0; font: 400 15px/1.7 var(--font); color: #5E6470; }
+  .side__rows strong { color: #1B1E26; }
+  .side__bkash { padding: 40px 38px; background: #1B1E26; border-radius: 20px; }
+  .side__bkash h3 { margin: 0; font: 700 26px/1.3 var(--font); letter-spacing: -.025em; color: #fff; }
+  .side__bkash p { margin: 22px 0 0; font: 400 15px/1.7 var(--font); color: rgba(255, 255, 255, .72); }
+  .side__bkash strong { color: #fff; }
+  .side__bkash .side__hint { margin: 8px 0 0; font: 600 14px/1.6 var(--font); color: #7FCDBB; font-style: italic; }
+  .side__payment { width: 100%; border-radius: 8px; display: block; }
+</style>
+
+<script>
+  import '../scripts/forms';
+</script>

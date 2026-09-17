@@ -1,0 +1,64 @@
+---
+import { TESTIMONIALS, TESTIMONIAL_IMGS } from '../data/testimonials';
+// The list is doubled so the track can loop seamlessly.
+const items = [...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => ({ ...t, img: TESTIMONIAL_IMGS[i % TESTIMONIAL_IMGS.length] }));
+---
+<section class="testi" data-testimonials>
+  <div class="testi__head">
+    <p class="testi__eyebrow">Testimonials</p>
+    <h2 class="testi__title">Don't take our word for it!<br />Hear it from the families we serve.</h2>
+  </div>
+  <div class="testi__area" data-area>
+    <div class="testi__track" data-track>
+      {items.map((t) => t.photo ? (
+        <div class="tcard tcard--photo">
+          <img src={t.img} alt="" draggable="false" class="tcard__bg" loading="lazy" />
+          <div class="tcard__shade"></div>
+          <img src={t.img} alt="" draggable="false" class="tcard__avatar tcard__avatar--ring" loading="lazy" />
+          <span class="tcard__play" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z" /></svg></span>
+          <p class="tcard__name">{t.name}</p>
+          <p class="tcard__role">{t.role}</p>
+        </div>
+      ) : (
+        <div class="tcard">
+          <img src={t.img} alt="" draggable="false" class="tcard__avatar" loading="lazy" />
+          <p class="tcard__quote">{t.quote}</p>
+          <p class="tcard__name">{t.name}</p>
+          <p class="tcard__role">{t.role}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+  <div class="testi__cursor" data-cursor aria-hidden="true">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 6 4 6M15 6l4 6-4 6" /></svg>
+  </div>
+</section>
+
+<style>
+  .testi { background: #F4F4F5; padding: 120px 0; overflow: hidden; position: relative; }
+  .testi__head { max-width: 1290px; margin: 0 auto; padding: 0 24px; }
+  .testi__eyebrow { margin: 0; font: 500 11px/1 var(--font); letter-spacing: .12em; text-transform: uppercase; color: #4B505B; }
+  .testi__title { margin: 22px 0 0; font: 300 clamp(30px, 3.4vw, 44px)/1.12 var(--font); letter-spacing: -.03em; color: #1B1E26; max-width: 760px; text-wrap: balance; }
+  .testi__area { margin-top: 48px; cursor: none; user-select: none; touch-action: pan-y; }
+  .testi__track { display: flex; gap: 16px; align-items: stretch; padding: 0 24px; width: max-content; will-change: transform; }
+
+  .tcard { flex: 0 0 320px; min-height: 420px; display: flex; flex-direction: column; background: #fff; border-radius: 8px; padding: 32px 28px 28px; }
+  .tcard__avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; }
+  .tcard__quote { margin: 26px 0 0; font: 400 15px/1.7 var(--font); color: #1B1E26; text-wrap: pretty; }
+  .tcard__name { margin: auto 0 0; padding-top: 28px; font: 500 24px/1 var(--hand); color: #1B1E26; }
+  .tcard__role { margin: 8px 0 0; font: 400 12px/1.4 var(--font); color: #8B92A0; }
+
+  .tcard--photo { position: relative; overflow: hidden; background: #1B1E26; }
+  .tcard__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; display: block; }
+  .tcard__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .75)); }
+  .tcard__avatar--ring { position: relative; border: 2px solid rgba(255, 255, 255, .7); }
+  .tcard__play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, .22); display: flex; align-items: center; justify-content: center; }
+  .tcard--photo .tcard__name { position: relative; padding-top: 0; color: #fff; }
+  .tcard--photo .tcard__role { position: relative; color: rgba(255, 255, 255, .75); }
+
+  .testi__cursor { position: absolute; left: 0; top: 0; width: 64px; height: 64px; border-radius: 50%; background: #008F76; color: #fff; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transform: translate(-50%, -50%) scale(.6); transition: opacity .2s ease, transform .2s ease; z-index: 5; }
+</style>
+
+<script>
+  import '../scripts/testimonials';
+</script>

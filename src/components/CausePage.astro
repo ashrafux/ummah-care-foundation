@@ -1,0 +1,159 @@
+---
+import type { Cause } from '../data/causes';
+import { IMG } from '../data/images';
+import { ROUTES } from '../data/site';
+
+interface Props { data: Cause }
+const { data } = Astro.props;
+
+const ICONS = [
+  'M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5M3 17l9 5 9-5',
+  'M4 20l4-4M14 4l6 6M9 15l10-10M7 17l-3 3M13 11l3 3',
+  'M12 21s-7-4.5-7-11a7 7 0 0114 0c0 6.5-7 11-7 11zM9 10h6M12 7v6',
+  'M4 19V5M4 19h16M8 15l4-6 3 4 5-7',
+  'M12 2a5 5 0 015 5c0 2-1 3.5-2 4.5V14H9v-2.5C8 10.5 7 9 7 7a5 5 0 015-5zM9 18h6M10 21h4',
+  'M3 12h4l3-8 4 16 3-8h4'
+];
+const GOAL_COLORS = ['#008F76', '#0B2B22', '#2D6A4F', '#B7A24A', '#1F4E79'];
+const TONES = [
+  { bg: '#F4F4F5', num: '#008F76', title: '#1B1E26', text: '#5E6470' },
+  { bg: '#D9EFD3', num: '#0B2B22', title: '#0B2B22', text: '#2D4A3E' },
+  { bg: '#0D0D0D', num: '#95D5B2', title: '#fff', text: 'rgba(255,255,255,.72)' },
+  { bg: '#E6F3F0', num: '#008F76', title: '#1B1E26', text: '#5E6470' }
+];
+const FLOAT_IMGS = [IMG.students, IMG.sewing, IMG.wheelchair, IMG.winterDistribution, IMG.foodDistribution, IMG.goats];
+// anchored to the 1000px text column: 50% ± (500px column half + gap + width)
+const FLOAT_POS = [
+  'left:max(24px,calc(50% - 500px - 240px));top:15%',
+  'left:max(24px,calc(50% - 500px - 300px));top:38%',
+  'left:max(24px,calc(50% - 500px - 230px));top:63%',
+  'right:max(24px,calc(50% - 500px - 250px));top:10%',
+  'right:max(24px,calc(50% - 500px - 190px));top:31%',
+  'right:max(24px,calc(50% - 500px - 240px));top:67%'
+];
+
+const totalWords = data.extra.join(' ').split(/\s+/).filter(Boolean).length;
+const scrollHeight = `${100 + Math.min(260, Math.max(140, totalWords * 2.2))}vh`;
+let wi = 0;
+const paragraphs = data.extra.map((t) => t.split(/\s+/).filter(Boolean).map((w) => ({ t: w, i: wi++ })));
+---
+<article class="cause">
+  <div class="cause__inner">
+    <p class="cause__intro">{data.intro}</p>
+
+    {data.goals.length > 0 && (
+      <div class="cause__block">
+        <h3 class="cause__h3">Goals:</h3>
+        <div class="goals" data-goals>
+          {data.goals.map(([k, v], i) => (
+            <div class:list={['goal', { 'is-active': i === 0 }]} data-goal tabindex="0" role="button" aria-label={k}>
+              <h4 class="goal__title">{k}</h4>
+              <p class="goal__desc">{v}</p>
+              <div class="goal__block" style={`background:${GOAL_COLORS[i % GOAL_COLORS.length]}`}>
+                <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICONS[i % ICONS.length]} /></svg>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {data.plans.length > 0 && (
+      <div class="cause__block">
+        <h3 class="cause__h3">Future Plans:</h3>
+        <ol class="plans">
+          {data.plans.map(([k, v], i) => {
+            const t = TONES[i % TONES.length];
+            return (
+              <li class:list={['plan', i < 2 ? 'plan--half' : 'plan--third']} style={`--bg:${t.bg};--num:${t.num};--title:${t.title};--text:${t.text}`}>
+                <span class="plan__icon"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICONS[i % ICONS.length]} /></svg></span>
+                <h4 class="plan__title">{k}</h4>
+                <p class="plan__text">{v}</p>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    )}
+  </div>
+
+  <section class="cause-scroll" data-no-reveal data-cause-scroll style={`height:${scrollHeight}`}>
+    <div class="cause-scroll__sticky">
+      {FLOAT_IMGS.map((src, i) => (
+        <img src={src} alt="" class="cause-float" data-float={i} loading="lazy" style={`animation:causeFloat ${9 + i * 1.3}s ease-in-out ${-i * 2.1}s infinite;${FLOAT_POS[i]}`} />
+      ))}
+      <div class="cause-scroll__content">
+        <h3 class="cause-scroll__title">{data.extraTitle}</h3>
+        <div class="cause-scroll__paras">
+          {paragraphs.map((words) => (
+            <p>{words.map((w) => <span data-word={w.i}>{w.t + ' '}</span>)}</p>
+          ))}
+        </div>
+        <div class="cause-scroll__cta" data-cta>
+          <a href={ROUTES.donate} class="cause-cta cause-cta--white btn-fx">Donate now<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg></a>
+          <a href={ROUTES.home} class="cause-cta cause-cta--outline">All causes</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</article>
+
+<style>
+  .cause { background: #fff; }
+  .cause__inner { max-width: 1000px; margin: 0 auto; padding: 80px 24px 104px; }
+  .cause__intro { margin: 0; font: 400 16.5px/1.75 var(--font); color: #5E6470; text-wrap: pretty; }
+  .cause__block { margin-top: 56px; }
+  .cause__h3 { margin: 0; font: 700 26px/1.3 var(--font); letter-spacing: -.025em; color: #1B1E26; }
+
+  .goals { margin: 26px 0 0; display: flex; gap: 14px; align-items: stretch; }
+  .goal { display: flex; flex-direction: column; min-width: 0; flex: 1 1 0; min-height: 560px; padding: 32px 30px 30px; border-radius: 24px; background: #F4F4F5; cursor: pointer; transition: flex .55s var(--ease); outline-offset: 4px; }
+  .goal.is-active { flex: 2.4 1 0; }
+  .goal__title { margin: 0; font: 700 20px/1.3 var(--font); letter-spacing: -.02em; color: #1B1E26; text-wrap: balance; }
+  .goal__desc { margin: 12px 0 0; font: 400 15px/1.7 var(--font); color: #5E6470; text-wrap: pretty; overflow: hidden; opacity: 0; max-height: 0; transition: opacity .35s ease 0s, max-height .45s ease; }
+  .goal.is-active .goal__desc { opacity: 1; max-height: 220px; transition: opacity .35s ease .2s, max-height .45s ease; }
+  .goal__block { margin-top: auto; display: flex; align-items: flex-end; justify-content: flex-end; padding: 28px; border-radius: 18px; height: 220px; color: #fff; transition: height .55s var(--ease), padding .55s ease; }
+
+  .plans { margin: 26px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+  .plan { display: flex; flex-direction: column; padding: 30px 30px 32px; border-radius: 24px; background: var(--bg); }
+  .plan--half { grid-column: span 3; min-height: 340px; }
+  .plan--third { grid-column: span 2; min-height: 280px; }
+  .plan__icon { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; color: var(--num); }
+  .plan__title { margin: auto 0 0; padding-top: 48px; font: 700 20px/1.3 var(--font); letter-spacing: -.02em; color: var(--title); text-wrap: balance; }
+  .plan__text { margin: 10px 0 0; font: 400 15px/1.7 var(--font); color: var(--text); text-wrap: pretty; }
+
+  .cause-scroll { position: relative; background: #00473B; }
+  .cause-scroll__sticky { position: sticky; top: 0; min-height: 100vh; overflow: hidden; }
+  .cause-float { position: absolute; width: 120px; aspect-ratio: 1; object-fit: cover; border-radius: 12px; pointer-events: none; }
+  .cause-scroll__content { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; max-width: 1100px; margin: 0 auto; padding: 144px 24px; }
+  .cause-scroll__title { margin: 0; font: 700 clamp(32px, 3.4vw, 44px)/1.15 var(--font); letter-spacing: -.03em; color: #fff; text-wrap: balance; }
+  .cause-scroll__paras { margin-top: 44px; display: flex; flex-direction: column; gap: 32px; max-width: 1000px; }
+  .cause-scroll__paras p { margin: 0; font: 500 clamp(26px, 3vw, 44px)/1.35 var(--font); letter-spacing: -.015em; text-wrap: pretty; color: rgba(255, 255, 255, .22); }
+  .cause-scroll__paras span { color: rgba(255, 255, 255, .22); transition: color .25s ease; }
+  .cause-scroll__paras span.is-lit { color: #fff; }
+  .cause-scroll__cta { margin-top: 56px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+  .cause-scroll__cta.is-on { opacity: 1; transform: none; pointer-events: auto; }
+  .cause-cta { display: inline-flex; align-items: center; gap: 10px; height: 56px; padding: 0 32px; border-radius: 999px; font: 700 15px/1 var(--font); transition: background .2s ease, color .2s ease; }
+  .cause-cta--white { background: #fff; color: #00473B; }
+  .cause-cta--white:hover { background: #95D5B2; color: #00473B; }
+  .cause-cta--outline { border: 1.5px solid rgba(255, 255, 255, .7); color: #fff; }
+  .cause-cta--outline:hover { background: #fff; color: #00473B; }
+
+  @keyframes causeFloat {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(10px, -16px) rotate(2.5deg); }
+    50% { transform: translate(-8px, -6px) rotate(-2deg); }
+    75% { transform: translate(6px, 14px) rotate(1.5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  @media (max-width: 1399px) { .cause-float { display: none; } }
+  @media (max-width: 760px) {
+    .goals { flex-direction: column; }
+    .goal, .goal.is-active { flex: 0 0 auto; min-height: 0; }
+    .plan { grid-column: span 6; }
+  }
+</style>
+
+<script>
+  import '../scripts/cause-page';
+</script>

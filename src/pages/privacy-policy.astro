@@ -1,0 +1,109 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+
+const TOC = ['Commitment to Your Privacy', 'Collection of Personal Information', 'How We Use Your Information', 'Control Over Your Information', 'Protecting Your Information', 'Changes to This Privacy Policy', 'Contact us'];
+---
+<Base title="Privacy Policy" description="How Ummah Care Foundation collects, uses and protects your personal information.">
+  <PageHero crumb="Privacy policy" title="How we protect your information" />
+
+  <section class="legal">
+    <div class="legal__inner">
+      <aside class="panel toc">
+        <p class="toc__label">Contents</p>
+        <p class="toc__date"><strong>Last modified:</strong> April 15, 2024</p>
+        <nav class="toc__nav" aria-label="Contents">
+          {TOC.map((t, i) => <a href={`#section${i + 1}`}><span>{i + 1}</span>{t}</a>)}
+        </nav>
+      </aside>
+
+      <div class="legal__body">
+        <section id="section1" class="legal__section">
+          <h3 class="h3">Commitment to Your Privacy</h3>
+          <div class="legal__copy">
+            <p class="lead">Ummah Care Foundation is committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you visit our website or use our services. By using our website, you agree to the practices described in this policy.</p>
+          </div>
+        </section>
+
+        <section id="section2" class="legal__section">
+          <h3 class="h3">Collection of Personal Information</h3>
+          <div class="legal__copy">
+            <p class="lead">Ummah Care Foundation collects limited personal information such as:</p>
+            <ul class="legal__list"><li>Your name</li><li>Email address</li><li>Phone number</li><li>Home or mailing address</li></ul>
+            <p class="lead">This information is collected <strong>only</strong> to process donations, issue receipts, register you for events, or contact you when necessary.<br />Ummah Care Foundation does not collect any information about your computer, browser details, or software.</p>
+            <p class="lead">When you follow links to external websites, please review their privacy policies. We are not responsible for the practices or content of third-party sites.</p>
+          </div>
+        </section>
+
+        <section id="section3" class="legal__section">
+          <h3 class="h3">How We Use Your Information</h3>
+          <div class="legal__copy">
+            <p class="lead">Your personal information is used to:</p>
+            <ul class="legal__list"><li>Process donations and payments</li><li>Provide receipts and confirmations</li><li>Communicate important updates or new initiatives</li><li>Improve our donor experience and services</li></ul>
+            <p class="lead">Ummah Care Foundation <strong>does not sell, rent, or lease</strong> your personal information to any third parties.</p>
+            <p class="lead">In some cases, we may work with trusted service providers (e.g., payment processors, mailing services). They only receive the information necessary to perform the required service and are obligated to keep your data secure.</p>
+            <p class="lead">We do not use or disclose sensitive personal information (such as religion, race, or political views) without your explicit consent.</p>
+            <p class="lead">Your information may be shared only when required by law or to protect the safety, rights, or property of Ummah Care Foundation, our users, or the public.</p>
+          </div>
+        </section>
+
+        <section id="section4" class="legal__section">
+          <h3 class="h3">Control Over Your Information</h3>
+          <div class="legal__copy">
+            <p class="lead">You always have control over how your information is used.<br />You may:</p>
+            <ul class="legal__list"><li>Request updates to your information</li><li>Ask us to stop sending promotional or fundraising emails</li><li>Request removal from our mailing list</li></ul>
+            <p class="lead">To do this, you can contact us directly at (<a href={`mailto:${SITE.email}`}>{SITE.email}</a>)</p>
+          </div>
+        </section>
+
+        <section id="section5" class="legal__section">
+          <h3 class="h3">Protecting Your Information</h3>
+          <div class="legal__copy">
+            <p class="lead">Ummah Care Foundation takes security seriously.<br />We use industry-standard measures to protect your personal information from unauthorized access or misuse, including:</p>
+            <ul class="legal__list"><li>Secure servers with restricted access</li><li>Encrypted payment gateways for online donations</li><li>Safe data storage systems</li></ul>
+            <p class="lead">However, no online transmission is 100% secure, so we encourage donors to also practice safe browsing habits.</p>
+          </div>
+        </section>
+
+        <section id="section6" class="legal__section">
+          <h3 class="h3">Changes to This Privacy Policy</h3>
+          <div class="legal__copy">
+            <p class="lead">Ummah Care Foundation may update this Privacy Policy when necessary.<br />If major changes are made, we will notify you clearly before they take effect.</p>
+            <p class="lead">We encourage you to review this page occasionally to stay informed about how we protect your information.</p>
+          </div>
+        </section>
+
+        <section id="section7" class="legal__section">
+          <h3 class="h3">Contact us</h3>
+          <div class="legal__copy">
+            <p class="lead">If you have any questions about this Privacy Policy, please contact us.</p>
+            <p class="lead">Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a> · Phone: +8801310-188834</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .legal { background: #fff; }
+  .legal__inner { max-width: 1290px; margin: 0 auto; padding: 80px 24px 104px; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; align-items: start; }
+  .toc { position: sticky; top: 120px; padding: 26px 20px; }
+  .toc__label { margin: 0 0 6px 18px; font: 700 12.5px/1 var(--font); letter-spacing: .12em; text-transform: uppercase; color: #008F76; }
+  .toc__date { margin: 14px 0 18px 18px; font: 500 13.5px/1 var(--font); color: #8B92A0; }
+  .toc__date strong { color: #1B1E26; font-weight: 700; }
+  .toc__nav { display: flex; flex-direction: column; gap: 2px; }
+  .toc__nav a { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 20px; font: 600 14.5px/1.4 var(--font); color: #3A3F4B; transition: background .18s ease, color .18s ease; }
+  .toc__nav a:hover { background: #EDF7F4; color: #008F76; }
+  .toc__nav span { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: #F1EBFB; color: #008F76; font: 700 12px/1 var(--font); }
+  .legal__body { min-width: 0; display: flex; flex-direction: column; gap: 52px; }
+  .legal__section { scroll-margin-top: 120px; }
+  .legal__copy { margin-top: 18px; display: flex; flex-direction: column; gap: 16px; }
+  .legal__list { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .legal__list li { margin: 0; font: 400 16.5px/1.85 var(--font); color: #5E6470; text-wrap: pretty; }
+  @media (max-width: 1019px) {
+    .legal__inner { display: flex; flex-direction: column; gap: 44px; }
+    .toc { position: static; }
+  }
+</style>
