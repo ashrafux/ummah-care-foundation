@@ -7,6 +7,8 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'never',
   build: {
-    format: 'file'
+    // Emit each route as <route>/index.html so static hosts (Vercel, Netlify,
+    // GitHub Pages) resolve clean URLs like /news-and-events without extra config.
+    format: 'directory'
   }
 });
