@@ -7,9 +7,9 @@ export interface Shot {
   cause: string;
 }
 
-// Interleaved on purpose so the unfiltered view reads as a mix rather than
-// eight blocks. Add new photos anywhere in this list; the counts, the filters
-// and the grid all follow from it.
+// The gallery page groups these by cause, so the order here only decides the
+// order within a cause. Add new photos anywhere in this list; the sections, the
+// counts and the sidebar all follow from it.
 export const GALLERY: Shot[] = [
   { src: IMG.students, alt: 'Scholarship recipients with their certificates', cause: 'educational-aid' },
   { src: IMG.sewing, alt: 'Handing over a sewing machine to a beneficiary', cause: 'self-reliance' },

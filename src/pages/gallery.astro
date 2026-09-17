@@ -4,40 +4,51 @@ import PageHero from '../components/PageHero.astro';
 import { GALLERY } from '../data/gallery';
 import { CAUSE_NAV } from '../data/site';
 
-const countFor = (slug: string) => GALLERY.filter((s) => s.cause === slug).length;
-const CATEGORIES = [
-  { slug: 'all', name: 'All photos', count: GALLERY.length },
-  ...CAUSE_NAV.map((c) => ({ slug: c.slug, name: c.name, count: countFor(c.slug) }))
-];
+// One section per cause, in nav order. Causes without photos are skipped so the
+// sidebar never points at an empty section.
+const SECTIONS = CAUSE_NAV
+  .map((c) => ({ slug: c.slug, name: c.name, shots: GALLERY.filter((s) => s.cause === c.slug) }))
+  .filter((c) => c.shots.length > 0);
 ---
-<Base title="Gallery" active="Gallery" description="Photographs from Ummah Care Foundation's work across Bangladesh, sorted by cause.">
-  <PageHero crumb="Gallery" title="Moments from the field" subtitle="Every photograph here is from a real distribution, handover or visit. Pick a cause to see its work." />
+<Base title="Gallery" active="Gallery" description="Photographs from Ummah Care Foundation's work across Bangladesh, grouped by cause.">
+  <PageHero crumb="Gallery" title="Moments from the field" subtitle="Every photograph here is from a real distribution, handover or visit. Pick a cause to jump to its work." />
 
   <section class="gal" data-gallery>
     <div class="gal__inner">
       <aside class="gal__side" data-no-reveal>
         <p class="gal__sideLabel">Causes</p>
-        <div class="gal__cats" role="group" aria-label="Filter photos by cause">
-          {CATEGORIES.map((c) => (
-            <button type="button" class:list={['gal__cat', { 'is-on': c.slug === 'all' }]} data-filter={c.slug} aria-pressed={c.slug === 'all' ? 'true' : 'false'}>
+        <nav class="gal__cats" aria-label="Jump to a cause">
+          <a href="#gallery-top" class="gal__cat is-on" data-spy="all">
+            <span class="gal__bar" aria-hidden="true"></span>
+            <span class="gal__catName">All photos</span>
+            <span class="gal__count">{GALLERY.length}</span>
+          </a>
+          {SECTIONS.map((c) => (
+            <a href={`#${c.slug}`} class="gal__cat" data-spy={c.slug}>
               <span class="gal__bar" aria-hidden="true"></span>
               <span class="gal__catName">{c.name}</span>
-              <span class="gal__count">{c.count}</span>
-            </button>
+              <span class="gal__count">{c.shots.length}</span>
+            </a>
           ))}
-        </div>
+        </nav>
       </aside>
 
-      <div class="gal__main">
-        <p class="gal__meta"><span data-gallery-count>{GALLERY.length} photos</span></p>
-        <div class="gal__grid" data-lightbox="gallery">
-          {GALLERY.map((shot) => (
-            <figure class="gal__item zoom" data-cause={shot.cause}>
-              <img src={shot.src} alt={shot.alt} loading="lazy" />
-            </figure>
-          ))}
-        </div>
-        <p class="gal__empty" data-gallery-empty hidden>No photographs in this cause yet.</p>
+      <div class="gal__main" id="gallery-top" data-lightbox="gallery">
+        {SECTIONS.map((c) => (
+          <section class="gal__sec" id={c.slug} data-gal-section>
+            <div class="gal__secHead">
+              <h2 class="gal__secTitle">{c.name}</h2>
+              <span class="gal__secCount">{c.shots.length} {c.shots.length === 1 ? 'photo' : 'photos'}</span>
+            </div>
+            <div class="gal__grid">
+              {c.shots.map((shot) => (
+                <figure class="gal__item zoom">
+                  <img src={shot.src} alt={shot.alt} loading="lazy" />
+                </figure>
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   </section>
@@ -47,11 +58,11 @@ const CATEGORIES = [
   .gal { background: #fff; }
   .gal__inner { max-width: 1290px; margin: 0 auto; padding: 72px 24px 104px; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; align-items: start; }
 
-  /* Sidebar of causes, following the contents panel used on the policy pages. */
+  /* Sidebar doubles as the page's table of contents: it follows the scroll. */
   .gal__side { position: sticky; top: 120px; padding: 22px 16px; background: var(--bg-soft); border: 1px solid #ECECEF; border-radius: 20px; }
   .gal__sideLabel { margin: 0 0 14px 14px; font: 700 12.5px/1 var(--font); letter-spacing: .12em; text-transform: uppercase; color: var(--teal); }
   .gal__cats { display: flex; flex-direction: column; gap: 2px; }
-  .gal__cat { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 14px; border: 0; border-radius: 14px; background: none; cursor: pointer; text-align: left; font: 600 14.5px/1.4 var(--font); color: var(--grey-3); transition: background .18s ease, color .18s ease; }
+  .gal__cat { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 14px; border-radius: 14px; text-decoration: none; font: 600 14.5px/1.4 var(--font); color: var(--grey-3); transition: background .18s ease, color .18s ease, box-shadow .18s ease; }
   .gal__cat:hover { background: rgba(255, 255, 255, .72); color: var(--teal); }
   /* Selected reads as a card lifted off the neutral panel. */
   .gal__cat.is-on { background: #fff; color: var(--teal); box-shadow: 0 4px 10px -4px rgba(27, 30, 38, .12), 0 1px 2px rgba(27, 30, 38, .05); }
@@ -61,21 +72,30 @@ const CATEGORIES = [
   .gal__count { margin-left: auto; font: 600 12.5px/1 var(--font); color: var(--grey-4); }
   .gal__cat.is-on .gal__count { color: var(--teal); }
 
-  .gal__main { min-width: 0; }
-  .gal__meta { margin: 0 0 18px; font: 500 14px/1 var(--font); color: var(--grey-4); }
+  .gal__main { min-width: 0; scroll-margin-top: 40px; }
+
+  .gal__sec { scroll-margin-top: 40px; }
+  .gal__sec + .gal__sec { margin-top: 76px; }
+  .gal__secHead { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+  .gal__secTitle { margin: 0; font: 700 30px/1.2 var(--font); letter-spacing: -.025em; color: var(--ink); }
+  .gal__secCount { flex: none; font: 500 14px/1 var(--font); color: var(--grey-4); }
+
   .gal__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .gal__item { margin: 0; border-radius: 20px; aspect-ratio: 16 / 10; background: var(--bg-soft); }
-  .gal__empty { margin: 48px 0; text-align: center; font: 400 16.5px/1.75 var(--font); color: var(--muted); }
 
   @media (max-width: 1019px) {
-    .gal__inner { display: flex; flex-direction: column; gap: 32px; padding-top: 56px; }
-    /* On narrow screens the sidebar becomes the pill row used on the FAQ page. */
-    .gal__side { position: static; padding: 0; background: none; border: 0; }
-    .gal__sideLabel { margin-left: 0; }
-    .gal__cats { flex-direction: row; flex-wrap: wrap; gap: 10px; }
-    .gal__cat { width: auto; height: 44px; padding: 0 18px; border: 1.5px solid var(--line-2); border-radius: 999px; background: #fff; }
+    .gal__inner { display: flex; flex-direction: column; gap: 28px; padding-top: 56px; }
+    /* The sidebar becomes a sticky pill row, so jumping stays available while scrolling. */
+    .gal__side { position: sticky; top: 0; z-index: 20; padding: 14px 0; background: #fff; border: 0; border-radius: 0; border-bottom: 1px solid var(--line-3); }
+    .gal__sideLabel { display: none; }
+    .gal__cats { flex-direction: row; flex-wrap: nowrap; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+    .gal__cats::-webkit-scrollbar { display: none; }
+    .gal__cat { width: auto; flex: none; height: 42px; padding: 0 16px; border: 1.5px solid var(--line-2); border-radius: 999px; background: #fff; white-space: nowrap; }
     .gal__cat.is-on { border-color: var(--teal); }
     .gal__bar { display: none; }
+    .gal__sec { scroll-margin-top: 84px; }
+    .gal__main { scroll-margin-top: 84px; }
+    .gal__secTitle { font-size: 26px; }
   }
   @media (max-width: 620px) {
     .gal__grid { grid-template-columns: 1fr; }
