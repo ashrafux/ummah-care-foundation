@@ -6,7 +6,7 @@ import { ROUTES, causeHref } from '../data/site';
 // Mirrors the prototype's "showDonationBox" toggle (off by default).
 const SHOW_DONATION_BOX = false;
 
-// Hero headline is split per character so it can be typed out on load.
+// Hero headline, split per word so each one can be revealed on a stagger.
 const HERO_TITLE = 'Committed to human social welfare & progress.';
 const HERO_WORDS = HERO_TITLE.split(' ');
 
@@ -54,14 +54,13 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
     <div class="hero__mesh"><mesh-gradient fill colors="#081C15,#2D6A4F,#95D5B2,#FFF3B0" seed="1" scale="1.26" grain="0.042" fallback="#003E33"></mesh-gradient></div>
     <div class="hero__shade"></div>
     <div class="hero__inner">
-      <h1 class="hero__title" data-typewriter data-no-reveal aria-label={HERO_TITLE}>
-        {HERO_WORDS.map((word, wi) => (
+      <h1 class="hero__title" data-hero-reveal="blur" data-no-reveal>
+        {HERO_WORDS.map((word, i) => (
           <>
-            <span class="tw-word" aria-hidden="true">{[...word].map((ch) => <span class="tw-ch">{ch}</span>)}</span>
-            {wi < HERO_WORDS.length - 1 && <span class="tw-sp" aria-hidden="true">{' '}</span>}
+            <span class="hw">{word}</span>
+            {i < HERO_WORDS.length - 1 && <span class="hw-sp">{' '}</span>}
           </>
         ))}
-        <span class="tw-caret" aria-hidden="true"></span>
       </h1>
       <p class="hero__sub">Your donation has the power to change lives with impactful projects.</p>
       <a href={ROUTES.donate} class="hero__cta">Donate now
@@ -290,16 +289,25 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
   .hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13, 13, 13, .55) 0%, rgba(0, 62, 51, .1) 30%, rgba(0, 0, 0, 0) 55%); pointer-events: none; }
   .hero__inner { max-width: 1290px; margin: 0 auto; padding: 196px 24px 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
   .hero__title { margin: 0; font: 700 clamp(44px, 5.4vw, 72px)/1.08 var(--font); letter-spacing: -.035em; color: #fff; text-align: center; max-width: 1060px; text-wrap: balance; }
-  /* Typewriter: full text is laid out from the first frame, revealed per character. */
-  .hero__title { position: relative; }
-  .tw-sp { white-space: pre-wrap; }
-  .tw-ch { visibility: hidden; }
-  .tw-ch.tw-in, .tw-done .tw-ch { visibility: visible; }
-  .tw-caret { position: absolute; top: 0; left: 0; width: .055em; border-radius: .03em; background: #fff; opacity: 0; pointer-events: none; transition: opacity .35s ease; }
-  .tw-caret.tw-on { opacity: 1; }
-  .tw-caret.tw-blink { animation: twBlink 1.05s steps(1, end) infinite; }
-  @keyframes twBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { .tw-ch { visibility: visible; } .tw-caret { display: none; } }
+  /* Headline reveal. Words are inline-block so they can be transformed; the
+     spaces stay plain text, so the line still wraps and balances normally.
+     Order matters: the rest state comes first, the variants next, and the
+     finished state last with higher specificity so it always wins. */
+  .hw-sp { white-space: pre-wrap; }
+  .hw { display: inline-block; opacity: 0; will-change: transform, filter, opacity; }
+
+  /* blur: each word resolves out of a soft blur */
+  [data-hero-reveal="blur"] .hw { filter: blur(14px); transform: translateY(.18em); transition: opacity .85s ease, filter .85s ease, transform .85s cubic-bezier(.16, 1, .3, 1); }
+  /* rise: each word lifts into place */
+  [data-hero-reveal="rise"] .hw { transform: translateY(.55em); transition: opacity .7s ease, transform .7s cubic-bezier(.16, 1, .3, 1); }
+  /* scale: each word settles down from slightly larger */
+  [data-hero-reveal="scale"] .hw { transform: scale(1.14); transition: opacity .7s ease, transform .7s cubic-bezier(.16, 1, .3, 1); }
+
+  [data-hero-reveal] .hw.is-in { opacity: 1; filter: blur(0); transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-reveal] .hw { opacity: 1; filter: none; transform: none; transition: none; }
+  }
   .hero__sub { margin: 30px 0 0; font: 400 19px/1.65 var(--font); color: rgba(255, 255, 255, .78); text-align: center; max-width: 620px; text-wrap: pretty; }
   .hero__cta { margin-top: 42px; display: inline-flex; align-items: center; gap: 11px; height: 60px; padding: 0 36px; border-radius: 999px; color: #fff; font: 700 17px/1 var(--font); letter-spacing: -.01em; box-shadow: 0 22px 44px -18px rgba(0, 143, 118, .6); transition: background .2s ease; background: #55B984; }
   .hero__cta:hover { background: #00A98C; color: #fff; }
@@ -470,6 +478,6 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
 
 <script>
   import '../scripts/mesh-gradient';
-  import '../scripts/typewriter';
+  import '../scripts/hero-reveal';
   import '../scripts/home';
 </script>
