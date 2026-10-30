@@ -18,7 +18,7 @@ const NAV = [
 <header class:list={['site-header', { 'site-header--dark': dark }]} data-site-header>
   <div class="site-header__bar">
     <a href={ROUTES.home} class="site-header__logo" aria-label="Ummah Care Foundation — home">
-      <img src={dark ? IMG.logoLight : IMG.logoDark} alt="Ummah Care Foundation" width="180" height="48" />
+      <img src={dark ? IMG.logoLight : IMG.logoDark} alt="Ummah Care Foundation" width="157" height="48" />
     </a>
 
     <nav class="site-header__nav" aria-label="Primary">
@@ -73,7 +73,7 @@ const NAV = [
 
 <style>
   .site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 500; background: transparent; }
-  .site-header__bar { max-width: 1290px; margin: 0 auto; padding: 0 24px; height: 92px; display: flex; align-items: center; gap: 28px; }
+  .site-header__bar { max-width: var(--shell); margin: 0 auto; padding: 0 24px; height: 92px; display: flex; align-items: center; gap: 28px; }
   .site-header__logo { flex: 0 0 auto; display: block; line-height: 0; }
   .site-header__logo img { height: 48px; width: auto; display: block; }
 

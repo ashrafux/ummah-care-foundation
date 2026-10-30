@@ -9,7 +9,7 @@ import { IMG } from '../data/images';
   <div class="site-footer__inner">
     <div class="site-footer__grid">
       <div class="site-footer__brand">
-        <img src={IMG.logoLight} alt="Ummah Care Foundation" width="180" height="48" />
+        <img src={IMG.logoLight} alt="Ummah Care Foundation" width="157" height="48" />
         <p>Standing beside underprivileged communities in Bangladesh with education, healthcare, and self-reliance.</p>
       </div>
 
@@ -54,7 +54,7 @@ import { IMG } from '../data/images';
 <style>
   .site-footer { position: relative; background: #1B1E26; color: #fff; overflow: hidden; }
   .site-footer__watermark { margin: 96px 0 0; font: 800 17vw/.9 var(--font); letter-spacing: -.045em; white-space: nowrap; text-align: center; color: rgba(255, 255, 255, .04); user-select: none; pointer-events: none; }
-  .site-footer__inner { max-width: 1290px; margin: 0 auto; padding: 96px 24px 0; }
+  .site-footer__inner { max-width: var(--shell); margin: 0 auto; padding: 96px 24px 0; }
   .site-footer__grid { display: grid; grid-template-columns: minmax(0, 1.5fr) auto auto auto; gap: 56px 104px; align-items: start; }
   .site-footer__brand { display: flex; flex-direction: column; gap: 26px; max-width: 400px; }
   .site-footer__brand img { height: 48px; width: auto; display: block; align-self: flex-start; }

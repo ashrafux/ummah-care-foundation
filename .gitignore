@@ -17,3 +17,6 @@ pnpm-debug.log*
 
 # macOS
 .DS_Store
+
+# Supplied photo originals (large PNGs, kept out of the build)
+source-images/

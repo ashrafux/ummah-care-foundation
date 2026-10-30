@@ -287,7 +287,7 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
   .hero { position: relative; overflow: hidden; background: radial-gradient(ellipse 80% 60% at 65% 45%, #95D5B2 0%, #2D6A4F 32%, #0B2B22 68%, #0D0D0D 100%); }
   .hero__mesh { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13, 13, 13, .55) 0%, rgba(0, 62, 51, .1) 30%, rgba(0, 0, 0, 0) 55%); pointer-events: none; }
-  .hero__inner { max-width: 1290px; margin: 0 auto; padding: 196px 24px 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
+  .hero__inner { max-width: var(--shell); margin: 0 auto; padding: 196px 24px 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
   .hero__title { margin: 0; font: 700 clamp(44px, 5.4vw, 72px)/1.08 var(--font); letter-spacing: -.035em; color: #fff; text-align: center; max-width: 1060px; text-wrap: balance; }
   /* Headline reveal. Words are inline-block so they can be transformed; the
      spaces stay plain text, so the line still wraps and balances normally.
@@ -319,7 +319,7 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
   .hero-grid__item--wide { grid-column: span 2; }
 
   /* ---- Donation box (optional) ---- */
-  .dn { max-width: 1290px; margin: 0 auto; padding: 0 24px 100px; position: relative; }
+  .dn { max-width: var(--shell); margin: 0 auto; padding: 0 24px 100px; position: relative; }
   .dn__card { position: relative; overflow: hidden; background: #0D0D0D; border-radius: 20px; padding: 60px 54px 54px; }
   .dn__glow { position: absolute; border-radius: 50%; pointer-events: none; }
   .dn__glow--tr { top: -140px; right: -120px; width: 440px; height: 440px; background: radial-gradient(circle, rgba(0, 143, 118, .28), transparent 70%); }
@@ -357,7 +357,7 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
 
   /* ---- Story ---- */
   .story { background: #fff; }
-  .story__inner { max-width: 1290px; margin: 0 auto; padding: 100px 24px; display: flex; flex-direction: column; gap: 50px; }
+  .story__inner { max-width: var(--shell); margin: 0 auto; padding: 100px 24px; display: flex; flex-direction: column; gap: 50px; }
   .story__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); grid-template-rows: 530px; gap: 30px; align-items: stretch; height: 530px; }
   .story__row--flip { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); }
   .story__card { background: #F7F7F7; border-radius: 20px; padding: 44px 48px 40px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; min-width: 0; min-height: 0; height: 530px; overflow: hidden; }
@@ -371,12 +371,12 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
   .aoa__bg { position: absolute; inset: -40px; pointer-events: none; background: url('/images/sunset-bg.jpg') center 42% / cover no-repeat; filter: blur(18px); transform: scale(1.04); }
   .aoa__shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(10, 10, 10, .5) 0%, rgba(10, 10, 10, .3) 40%, rgba(10, 10, 10, .62) 100%); }
   .aoa__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-  .aoa__head { position: relative; max-width: 1290px; margin: 0 auto; padding: 30vh 24px 0; display: flex; flex-direction: column; align-items: center; text-align: center; will-change: opacity, transform; }
+  .aoa__head { position: relative; max-width: var(--shell); margin: 0 auto; padding: 30vh 24px 0; display: flex; flex-direction: column; align-items: center; text-align: center; will-change: opacity, transform; }
   .aoa__head h2 { margin: 0; font: 700 clamp(40px, 4.4vw, 56px)/1.1 var(--font); letter-spacing: -.03em; color: #fff; text-wrap: balance; }
   .aoa__head p { margin: 18px 0 0; font: 400 16.5px/1.75 var(--font); color: rgba(255, 255, 255, .78); max-width: 520px; text-wrap: pretty; }
   .aoa__cta { margin-top: 26px; display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border-radius: 999px; background: #008F76; color: #fff; font: 700 14px/1 var(--font); text-decoration: none; transition: background .2s ease; }
   .aoa__cta:hover { background: #00A98C; color: #fff; }
-  .aoa__body { position: relative; max-width: 1290px; margin: -100vh auto 0; padding: 0 24px 14vh; }
+  .aoa__body { position: relative; max-width: var(--shell); margin: -100vh auto 0; padding: 0 24px 14vh; }
   .aoa__spacer { height: 80vh; }
 
   .pill { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #F3F3F4; border: 1px solid #E2E2E5; font: 600 12.5px/1 var(--font); color: #4B505B; }
@@ -399,7 +399,7 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
 
   /* ---- Stats ---- */
   .stats { background: #fff; }
-  .stats__inner { max-width: 1290px; margin: 0 auto; padding: 120px 24px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 64px 96px; align-items: start; }
+  .stats__inner { max-width: var(--shell); margin: 0 auto; padding: 120px 24px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 64px 96px; align-items: start; }
   .stats__copy { display: flex; flex-direction: column; min-width: 0; }
   .stats__eyebrow { margin: 0 0 42px; display: flex; align-items: center; gap: 10px; font: 500 17px/1 var(--font); color: #1B1E26; }
   .stats__eyebrow span { width: 9px; height: 9px; border-radius: 50%; background: #008F76; display: inline-block; }
@@ -413,7 +413,7 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
 
   /* ---- Feature cards ---- */
   .features { background: #fff; }
-  .features__inner { max-width: 1290px; margin: 0 auto; padding: 0 24px 120px; }
+  .features__inner { max-width: var(--shell); margin: 0 auto; padding: 0 24px 120px; }
   .features__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
   .feature { background: #F7F7F7; border-radius: 20px; padding: 26px 26px 34px; display: flex; flex-direction: column; min-width: 0; height: 520px; }
   .feature__img { width: 140px; height: 140px; border-radius: 20px; flex: none; }
@@ -432,7 +432,7 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
   /* ---- Volunteer CTA ---- */
   .vol { position: relative; background: #00473B; overflow: hidden; }
   .vol__glow { position: absolute; left: 50%; bottom: -260px; transform: translateX(-50%); width: 1100px; height: 560px; background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, .18), rgba(255, 255, 255, .06) 45%, transparent 70%); pointer-events: none; }
-  .vol__inner { max-width: 1290px; margin: 0 auto; padding: 150px 24px 120px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .vol__inner { max-width: var(--shell); margin: 0 auto; padding: 150px 24px 120px; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
   .fan { position: relative; width: min(460px, 90vw); height: 250px; margin: 0 auto; }
   .fan__img { position: absolute; bottom: 0; object-fit: cover; border-radius: 20px; transform-origin: 50% 100%; opacity: 0; -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%); mask-image: linear-gradient(180deg, #000 60%, transparent 100%); }
   .fan__img--l { left: 0; width: 156px; height: 222px; transform: translateY(120%) rotate(-14deg); transition: transform .9s var(--ease) .1s, opacity .6s ease .1s; }

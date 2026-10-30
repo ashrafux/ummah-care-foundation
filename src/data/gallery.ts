@@ -10,35 +10,31 @@ export interface Shot {
 // The gallery page groups these by cause, so the order here only decides the
 // order within a cause. Add new photos anywhere in this list; the sections, the
 // counts and the sidebar all follow from it.
+//
+// One entry per photograph the foundation has supplied, so no cause shows the
+// same picture twice. The two flood-relief photographs each appear in a second
+// section because they are the only coverage of food and water aid so far.
 export const GALLERY: Shot[] = [
-  { src: IMG.students, alt: 'Scholarship recipients with their certificates', cause: 'educational-aid' },
+  { src: IMG.students, alt: 'A student receiving a gift in the classroom', cause: 'educational-aid' },
+  { src: IMG.eduAid3, alt: 'A scholarship recipient on his college campus', cause: 'educational-aid' },
+
+  { src: IMG.aoaMedical, alt: 'A child under treatment, with the hospital paperwork', cause: 'medical-care' },
+  { src: IMG.wheelchair, alt: 'A wheelchair recipient out on the campus path', cause: 'medical-care' },
+
+  { src: IMG.aoaSelfReliance, alt: 'A battery-run van handed to its new owner', cause: 'self-reliance' },
   { src: IMG.sewing, alt: 'Handing over a sewing machine to a beneficiary', cause: 'self-reliance' },
-  { src: IMG.wheelchair, alt: 'A patient receiving a wheelchair', cause: 'medical-care' },
-  { src: IMG.winterClothing, alt: 'Winter clothing distribution in the north', cause: 'winter-clothes' },
-  { src: IMG.foodDistribution, alt: 'Volunteers handing out food packs', cause: 'food-assistance' },
-  { src: IMG.waterCheck, alt: 'A newly installed tubewell in the village', cause: 'water-aid' },
-  { src: IMG.community, alt: 'Community support programme', cause: 'humanitarian-aid' },
-  { src: IMG.relief, alt: 'Emergency relief handover', cause: 'emergency-assistance' },
+  { src: IMG.goats, alt: 'A goat handed over in the village courtyard', cause: 'self-reliance' },
+  { src: IMG.selfReliance2, alt: 'A street food stall trading into the evening', cause: 'self-reliance' },
 
-  { src: IMG.storyMonowara, alt: 'Monowara Akter after her BCS result', cause: 'educational-aid' },
-  { src: IMG.aoaSelfReliance, alt: 'Small business capital handed to a family', cause: 'self-reliance' },
-  { src: IMG.aoaMedical, alt: 'Medical treatment support in hospital', cause: 'medical-care' },
-  { src: IMG.winterDistribution, alt: 'Blankets being distributed on a cold morning', cause: 'winter-clothes' },
-  { src: IMG.foodCheck, alt: 'Rice and essentials ready for delivery', cause: 'food-assistance' },
-  { src: IMG.aoaWater, alt: 'Villagers collecting safe drinking water', cause: 'water-aid' },
-  { src: IMG.aoaHumanitarian, alt: 'Families receiving humanitarian support', cause: 'humanitarian-aid' },
-  { src: IMG.fieldWork, alt: 'Reaching flood-affected families by boat', cause: 'emergency-assistance' },
+  { src: IMG.winterClothing, alt: 'Volunteers with quilts before a winter distribution', cause: 'winter-clothes' },
 
-  { src: IMG.eduAid2, alt: 'A student receiving a monthly scholarship', cause: 'educational-aid' },
-  { src: IMG.goats, alt: 'Livestock handed over under the self-reliance programme', cause: 'self-reliance' },
-  { src: IMG.storyRagib1, alt: 'Ragib Ishraq during treatment', cause: 'medical-care' },
-  { src: IMG.aoaWinter, alt: 'Warm clothes packed for distribution', cause: 'winter-clothes' },
-  { src: IMG.aoaFood, alt: 'Food assistance reaching a household', cause: 'food-assistance' },
-  { src: IMG.humanitarian2, alt: 'Marriage support for a family in need', cause: 'humanitarian-aid' },
-  { src: IMG.emergency2, alt: 'Relief packages after a flood', cause: 'emergency-assistance' },
+  { src: IMG.community, alt: 'A handover at the Ummah Care Foundation office', cause: 'humanitarian-aid' },
+  { src: IMG.aoaHumanitarian, alt: 'Assistance handed over at the foundation office', cause: 'humanitarian-aid' },
 
-  { src: IMG.eduAid3, alt: 'Students supported through school and college', cause: 'educational-aid' },
-  { src: IMG.selfReliance2, alt: 'A rickshaw-van handed to its new owner', cause: 'self-reliance' },
-  { src: IMG.medical2, alt: 'Surgery costs covered for a low-income patient', cause: 'medical-care' },
-  { src: IMG.storyRagib2, alt: 'Ragib Ishraq on the way to recovery', cause: 'medical-care' }
+  { src: IMG.relief, alt: 'Relief reaching a flooded village by boat', cause: 'emergency-assistance' },
+  { src: IMG.foodDistribution, alt: 'A relief package carried through the floodwater', cause: 'emergency-assistance' },
+
+  { src: IMG.aoaFood, alt: 'Food relief handed out to a flood-hit family', cause: 'food-assistance' },
+
+  { src: IMG.aoaWater, alt: 'Volunteers wading through floodwater to reach a home', cause: 'water-aid' }
 ];

@@ -36,7 +36,7 @@ const items = [...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => ({ ...t, img: TES
 
 <style>
   .testi { background: #F4F4F5; padding: 120px 0; overflow: hidden; position: relative; }
-  .testi__head { max-width: 1290px; margin: 0 auto; padding: 0 24px; }
+  .testi__head { max-width: var(--shell); margin: 0 auto; padding: 0 24px; }
   .testi__eyebrow { margin: 0; font: 500 11px/1 var(--font); letter-spacing: .12em; text-transform: uppercase; color: #4B505B; }
   .testi__title { margin: 22px 0 0; font: 300 clamp(30px, 3.4vw, 44px)/1.12 var(--font); letter-spacing: -.03em; color: #1B1E26; max-width: 760px; text-wrap: balance; }
   .testi__area { margin-top: 48px; cursor: none; user-select: none; touch-action: pan-y; }

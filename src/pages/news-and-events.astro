@@ -52,7 +52,7 @@ const RECENT = POSTS.slice(0, 3);
 
 <style>
   .blog { background: #fff; }
-  .blog__inner { max-width: 1290px; margin: 0 auto; padding: 88px 24px 104px; display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 56px; align-items: start; }
+  .blog__inner { max-width: var(--shell); margin: 0 auto; padding: 88px 24px 104px; display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 56px; align-items: start; }
   .blog__grid { min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 26px; }
   .post { display: flex; flex-direction: column; background: #fff; border: 1px solid #E6E6E9; border-radius: 20px; overflow: hidden; transition: border-color .25s ease, background .25s ease; }
   .post:hover { border-color: #008F76; background: #F7F7F7; }
