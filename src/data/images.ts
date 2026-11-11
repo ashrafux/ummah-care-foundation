@@ -11,6 +11,8 @@ export const IMG = {
   // --- Medical care ---
   wheelchair: '/images/wheelchair-campus.jpg',
   aoaMedical: '/images/child-hospital-visit.jpg',
+  // Cropped out of the collage above, so small panels show the people rather than the paperwork.
+  medicalHospital: '/images/medical-care-hospital.jpg',
   medical2: '/images/child-hospital-visit.jpg',
 
   // --- Self-reliance ---
