@@ -52,7 +52,8 @@ const dn = document.querySelector<HTMLFormElement>('[data-donation-form]');
 if (dn) {
   const box = dn.closest<HTMLElement>('[data-donation-box]')!;
   const done = box.querySelector<HTMLElement>('[data-donation-done]')!;
-  const fund = dn.querySelector<HTMLSelectElement>('#dn-fund')!;
+  // Hidden input fed by the fund picker (src/scripts/fund-picker.ts).
+  const fund = dn.querySelector<HTMLInputElement>('#dn-fund')!;
   const contact = dn.querySelector<HTMLInputElement>('#dn-contact')!;
   const amount = dn.querySelector<HTMLInputElement>('#dn-amount')!;
   const err = (name: string) => dn.querySelector<HTMLElement>(`[data-error="${name}"]`)!;

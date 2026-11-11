@@ -46,7 +46,19 @@ const GALLERY: [string, string][] = [
   [IMG.students, 'Scholarship recipients'], [IMG.winterDistribution, 'Distribution programme'], [IMG.community, 'Community support']
 ];
 
-const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care', 'Winter Clothing', 'Food Assistance', 'Water Aid', 'Humanitarian Aid', 'Emergency Assistance'];
+// Fund list for the donation box. Icons match the programme icons on the About page.
+const FUNDS = [
+  { name: 'General Fund', icon: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
+  { name: 'Educational Aid', icon: 'M3 6.5A2.5 2.5 0 0 1 5.5 4H11v15H5.5A2.5 2.5 0 0 0 3 21zM21 6.5A2.5 2.5 0 0 0 18.5 4H13v15h5.5A2.5 2.5 0 0 1 21 21z' },
+  { name: 'Self-Reliance', icon: 'M4 20V10l8-6 8 6v10M9 20v-6h6v6' },
+  { name: 'Medical Care', icon: 'M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10zM8 12h2l1-2 2 4 1-2h2' },
+  { name: 'Winter Clothing', icon: 'M12 3v18M3 12h18M6 6l12 12M18 6L6 18' },
+  { name: 'Food Assistance', icon: 'M5 8h14l-1 12H6zM8 8V6a4 4 0 0 1 8 0v2' },
+  { name: 'Water Aid', icon: 'M12 3s6 7 6 11.5A6 6 0 0 1 6 14.5C6 10 12 3 12 3z' },
+  { name: 'Humanitarian Aid', icon: 'M4 14l4-4 4 4 4-4 4 4M8 10V6a4 4 0 0 1 8 0v4M4 14v3a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-3' },
+  { name: 'Emergency Assistance', icon: 'M12 3l9 16H3zM12 10v4M12 17h.01' }
+];
+const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 ---
 <Base title="Home" active="Home" dark>
   <!-- Hero -->
@@ -95,11 +107,24 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
           <div class="dn__stage">
             <form class="dn__form" data-donation-form novalidate>
               <div class="dn__field">
-                <label for="dn-fund">Fund</label>
-                <select id="dn-fund" class="dn__input">
-                  <option value="">Select a fund</option>
-                  {FUNDS.map((f) => <option value={f}>{f}</option>)}
-                </select>
+                <label id="dn-fund-label" for="dn-fund-btn">Fund</label>
+                <div class="dn__pick" data-fund-picker>
+                  <input type="hidden" id="dn-fund" value="" />
+                  <button type="button" id="dn-fund-btn" class="dn__input dn__pickBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="dn-fund-list" aria-labelledby="dn-fund-label dn-fund-value" data-fund-btn>
+                    <span class="dn__pickIco" data-fund-ico hidden></span>
+                    <span id="dn-fund-value" class="dn__pickValue is-empty" data-fund-value>Select a fund</span>
+                    <svg class="dn__pickChev" width="14" height="9" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.5L5.5 5.5L10 1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  </button>
+                  <ul id="dn-fund-list" class="dn__list" role="listbox" aria-labelledby="dn-fund-label" tabindex="-1" data-fund-list hidden>
+                    {FUNDS.map((f, i) => (
+                      <li id={`dn-fund-opt-${i}`} class="dn__opt" role="option" aria-selected="false" data-value={f.name}>
+                        <span class="dn__optIco" set:html={fundIcon(f.icon)} />
+                        <span class="dn__optName">{f.name}</span>
+                        <svg class="dn__optTick" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 <p class="dn__err" data-error="fund" hidden></p>
               </div>
               <div class="dn__field">
@@ -340,6 +365,29 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
   .dn__field label { font: 600 15px/1 var(--font); color: #1B1E26; }
   .dn__input { height: 58px; padding: 0 18px; border: 1.5px solid #E1EAE6; border-radius: 20px; background: #fff; font: 500 16px/1 var(--font); color: #1B1E26; width: 100%; transition: border-color .2s ease, box-shadow .2s ease; }
   .dn__input:focus { outline: none; border-color: #008F76; box-shadow: 0 0 0 4px rgba(0, 143, 118, .12); }
+  .dn__pick { position: relative; }
+  .dn__pickBtn { display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer; }
+  .dn__pickBtn:hover { border-color: #C9D8D2; }
+  .dn__pickBtn[aria-expanded="true"] { border-color: #008F76; box-shadow: 0 0 0 4px rgba(0, 143, 118, .12); }
+  .dn__pickIco { display: flex; color: #5E6470; }
+  .dn__pickIco[hidden] { display: none; }
+  .dn__pickValue { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dn__pickValue.is-empty { color: #9AA0AE; }
+  .dn__pickChev { flex: none; color: #8B92A0; transition: transform .2s ease, color .2s ease; }
+  .dn__pickBtn[aria-expanded="true"] .dn__pickChev { transform: rotate(180deg); color: #008F76; }
+  .dn__list { position: absolute; z-index: 30; top: calc(100% + 8px); left: 0; right: 0; margin: 0; padding: 8px; list-style: none; max-height: min(520px, 62vh); overflow-y: auto; background: #fff; border: 1px solid #ECECEF; border-radius: 20px; box-shadow: 0 24px 48px -12px rgba(16, 24, 40, .18), 0 4px 10px rgba(16, 24, 40, .05); outline: none; animation: dnListIn .16s ease-out; }
+  .dn__list[hidden] { display: none; }
+  @keyframes dnListIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .dn__opt { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 12px; font: 500 16px/1.3 var(--font); color: #1B1E26; cursor: pointer; user-select: none; transition: background .15s ease, color .15s ease; }
+  .dn__optIco { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 12px; background: #F4F4F5; color: #5E6470; transition: background .15s ease, color .15s ease; }
+  .dn__optName { flex: 1; min-width: 0; }
+  .dn__optTick { flex: none; color: #008F76; opacity: 0; }
+  /* Chosen fund: tinted row, teal name and tick; its icon stays neutral like the rest. */
+  .dn__opt[aria-selected="true"] { background: #EDF7F4; color: #008F76; font-weight: 600; }
+  .dn__opt[aria-selected="true"] .dn__optTick { opacity: 1; }
+  /* Hover and keyboard focus carry the full primary colour. */
+  .dn__opt:hover, .dn__opt.is-active { background: rgba(0, 143, 118, .1); color: #008F76; }
+  .dn__opt:hover .dn__optIco, .dn__opt.is-active .dn__optIco { background: #008F76; color: #fff; }
   .dn__err { margin: 0; font: 500 14px/1.4 var(--font); color: #C4321C; }
   .dn__submit { margin-top: 6px; height: 58px; border: 0; border-radius: 20px; background: #008F76; color: #fff; font: 700 16px/1 var(--font); letter-spacing: -.01em; cursor: pointer; transition: background .2s ease; width: 100%; }
   .dn__submit:hover { background: #00A98C; }
@@ -492,5 +540,6 @@ const FUNDS = ['General Fund', 'Educational Aid', 'Self-Reliance', 'Medical Care
 <script>
   import '../scripts/mesh-gradient';
   import '../scripts/hero-reveal';
+  import '../scripts/fund-picker';
   import '../scripts/home';
 </script>
