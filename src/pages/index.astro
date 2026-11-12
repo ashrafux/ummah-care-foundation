@@ -10,14 +10,13 @@ const SHOW_DONATION_BOX = true;
 const HERO_TITLE = 'Committed to human social welfare & progress.';
 const HERO_WORDS = HERO_TITLE.split(' ');
 
-const HERO_GRID = [
-  { src: IMG.fieldWork, alt: 'Ummah Care Foundation field work', cls: 'hero-grid__item--wide-tall' },
-  { src: IMG.students, alt: 'Scholarship recipients', cls: '' },
-  { src: IMG.winterDistribution, alt: 'Distribution programme', cls: 'hero-grid__item--tall' },
-  { src: IMG.community, alt: 'Community support', cls: '' },
-  { src: IMG.wheelchair, alt: 'Aid distribution', cls: '' },
-  { src: IMG.relief, alt: 'Community programme', cls: '' },
-  { src: IMG.goats, alt: 'Volunteers at work', cls: 'hero-grid__item--wide' }
+// Photos fanned under the hero headline, left to right; the middle one sits on top.
+const HERO_FAN = [
+  { src: IMG.students, alt: 'A student receiving a gift in the classroom' },
+  { src: IMG.sewing, alt: 'A sewing machine handed to a beneficiary' },
+  { src: IMG.fieldWork, alt: 'Relief reaching a flooded village by boat' },
+  { src: IMG.goats, alt: 'A goat handed over in the village courtyard' },
+  { src: IMG.medicalHospital, alt: 'A father and his child outside the hospital after treatment' }
 ];
 
 const BIG_CAUSES = [
@@ -75,16 +74,17 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
         ))}
       </h1>
       <p class="hero__sub">Your donation has the power to change lives with impactful projects.</p>
-      <a href={ROUTES.donate} class="hero__cta">Donate now
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg>
-      </a>
+      <div class="hero__ctas">
+        <a href={ROUTES.donate} class="hero__cta">Donate now
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg>
+        </a>
+        <a href={ROUTES.areaOfActivity} class="hero__cta2">See our causes</a>
+      </div>
 
-      <div class="hero-card">
-        <div class="hero-grid">
-          {HERO_GRID.map((g) => (
-            <span class:list={['zoom', 'hero-grid__item', g.cls]}><img src={g.src} alt={g.alt} /></span>
-          ))}
-        </div>
+      <div class="hfan" data-no-reveal>
+        {HERO_FAN.map((ph, i) => (
+          <img class="hfan__card" style={`--k:${i - 2};--i:${i}`} src={ph.src} alt={ph.alt} />
+        ))}
       </div>
     </div>
   </section>
@@ -318,7 +318,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
   .hero { position: relative; overflow: hidden; background: radial-gradient(ellipse 80% 60% at 65% 45%, #95D5B2 0%, #2D6A4F 32%, #0B2B22 68%, #0D0D0D 100%); }
   .hero__mesh { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13, 13, 13, .55) 0%, rgba(0, 62, 51, .1) 30%, rgba(0, 0, 0, 0) 55%); pointer-events: none; }
-  .hero__inner { max-width: var(--shell); margin: 0 auto; padding: 196px 24px 100px; position: relative; display: flex; flex-direction: column; align-items: center; }
+  .hero__inner { max-width: var(--shell); margin: 0 auto; padding: 196px 24px 0; position: relative; display: flex; flex-direction: column; align-items: center; }
   .hero__title { margin: 0; font: 700 clamp(44px, 5.4vw, 72px)/1.08 var(--font); letter-spacing: -.035em; color: #fff; text-align: center; max-width: 1060px; text-wrap: balance; }
   /* Headline reveal. Words are inline-block so they can be transformed; the
      spaces stay plain text, so the line still wraps and balances normally.
@@ -338,16 +338,25 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
 
   @media (prefers-reduced-motion: reduce) {
     [data-hero-reveal] .hw { opacity: 1; filter: none; transform: none; transition: none; }
+    .hfan__card { animation: none; transition: none; }
   }
   .hero__sub { margin: 30px 0 0; font: 400 19px/1.65 var(--font); color: rgba(255, 255, 255, .78); text-align: center; max-width: 620px; text-wrap: pretty; }
-  .hero__cta { margin-top: 42px; display: inline-flex; align-items: center; gap: 11px; height: 60px; padding: 0 36px; border-radius: 999px; color: #fff; font: 700 17px/1 var(--font); letter-spacing: -.01em; box-shadow: 0 22px 44px -18px rgba(0, 143, 118, .6); transition: background .2s ease; background: #55B984; }
+  .hero__cta { display: inline-flex; align-items: center; gap: 11px; height: 60px; padding: 0 36px; border-radius: 999px; color: #fff; font: 700 17px/1 var(--font); letter-spacing: -.01em; box-shadow: 0 22px 44px -18px rgba(0, 143, 118, .6); transition: background .2s ease; background: #55B984; }
   .hero__cta:hover { background: #00A98C; color: #fff; }
-  .hero-card { margin-top: 88px; width: 100%; background: #fff; border-radius: 20px; padding: 14px; box-shadow: 0 60px 120px -50px rgba(0, 30, 22, .45), 0 24px 48px -30px rgba(0, 30, 22, .3); }
-  .hero-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 186px; gap: 12px; }
-  .hero-grid__item { border-radius: 20px; }
-  .hero-grid__item--wide-tall { grid-column: span 2; grid-row: span 2; }
-  .hero-grid__item--tall { grid-row: span 2; }
-  .hero-grid__item--wide { grid-column: span 2; }
+  .hero__ctas { margin-top: 42px; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  .hero__cta2 { display: inline-flex; align-items: center; height: 60px; padding: 0 32px; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, .45); color: #fff; font: 700 17px/1 var(--font); letter-spacing: -.01em; transition: background .2s ease, border-color .2s ease; }
+  .hero__cta2:hover { background: rgba(255, 255, 255, .1); border-color: #fff; color: #fff; }
+  /* Five photos fanned from a pivot below the hero edge; --k runs -2..2 from left to right. */
+  /* Spacing and card size scale with the screen so all five cards stay in view down to tablets. */
+  .hfan { --step: clamp(120px, 14.5vw, 230px); --w: clamp(160px, 15vw, 240px); --h: calc(var(--w) * 4 / 3); position: relative; width: 100%; height: calc(var(--h) + 20px); margin-top: 80px; }
+  .hfan__card { position: absolute; left: 50%; bottom: -40px; width: var(--w); height: var(--h); object-fit: cover; border-radius: 20px; border: 6px solid #fff; box-shadow: 0 30px 60px -25px rgba(0, 0, 0, .55); transform-origin: 50% 120%;
+    transform: translateX(-50%) translateX(calc(var(--k) * var(--step))) translateY(var(--y, 0px)) rotate(calc(var(--k) * 7deg));
+    transition: transform .35s var(--ease-out), box-shadow .35s ease;
+    animation: hfanIn .9s var(--ease-out) backwards; animation-delay: calc(var(--i) * 70ms + 450ms); }
+  .hfan__card:nth-child(3) { --y: -24px; z-index: 2; }
+  .hfan__card:hover { --y: -18px; z-index: 3; box-shadow: 0 40px 70px -25px rgba(0, 0, 0, .6); }
+  .hfan__card:nth-child(3):hover { --y: -40px; }
+  @keyframes hfanIn { from { opacity: 0; transform: translateX(-50%) translateY(140px) rotate(0deg); } }
 
   /* ---- Donation box (optional) ---- */
   .dn { max-width: var(--shell); margin: 0 auto; padding: 100px 24px 0; position: relative; }
@@ -527,8 +536,10 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
     .smallcauses { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .hero-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; }
-    .hero-grid__item--tall { grid-row: auto; }
+    .hfan { --step: 92px; --w: 150px; margin-top: 56px; }
+    .hfan__card { border-width: 4px; bottom: -28px; }
+    .hfan__card:nth-child(1), .hfan__card:nth-child(5) { display: none; }
+    .hero__ctas > * { flex: 1 1 100%; justify-content: center; }
     .dn__card { padding: 32px 20px; gap: 32px; }
     .dn__panel { padding: 26px 20px; }
     .dn__stats { gap: 36px; }
