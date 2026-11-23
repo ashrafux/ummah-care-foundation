@@ -1,124 +1,362 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
 import { IMG } from '../data/images';
-import { ROUTES } from '../data/site';
+import { ROUTES, CAUSE_NAV } from '../data/site';
 
-const AMOUNTS = ['৳ 500', '৳ 1,000', '৳ 2,000', '৳ 3,000', '৳ 5,000', 'Custom – ৳ 0'];
+// Checkout-style donation page: choose causes, amount, type and payment method on the left;
+// the summary on the right splits the gift across the chosen causes and shows the total.
+// Nothing is charged yet: SSLCommerz and bKash need a merchant account and a server to go live.
+const AMOUNTS = [500, 1000, 2000, 3000, 5000];
+const DEFAULT_AMOUNT = 2000;
+const DEFAULT_CAUSES = ['educational-aid'];
+const BKASH = '01310-188834';
 const BANK: [string, string][] = [
-  ['Bank Name:', 'Standard Chartered Bank Limited'],
-  ['Account Name:', 'UMMAH CARE FOUNDATION'],
-  ['Account Number:', '01-2375033-01'],
-  ['Routing Number:', '215261726'],
-  ['Branch Code:', '172'],
-  ['SWIFT Code:', 'SCBLBDDXXXX'],
-  ['Address:', '67 Gulshan Avenue, Dhaka 1212']
+  ['Bank', 'Standard Chartered Bank Limited'],
+  ['Account name', 'UMMAH CARE FOUNDATION'],
+  ['Account no.', '01-2375033-01'],
+  ['Routing no.', '215261726'],
+  ['Branch code', '172'],
+  ['SWIFT', 'SCBLBDDXXXX'],
+  ['Address', '67 Gulshan Avenue, Dhaka 1212']
 ];
+const taka = (n: number) => '৳' + n.toLocaleString('en-US');
+const arrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>';
 ---
-<Base title="Donate" description="Make a lasting impact with your donation to Ummah Care Foundation.">
-  <PageHero crumb="Donate" />
+<Base title="Donate" description="Choose the causes you care about and donate to Ummah Care Foundation by card, mobile banking, bKash or bank transfer.">
+  <section class="dt">
+    <div class="dt__wrap">
+      <div class="notice dt__notice" data-dt-sent hidden tabindex="-1">
+        <span class="notice__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></span>
+        <p>Thank you. Your donation details have been received, and we’ll confirm once the payment arrives.</p>
+      </div>
 
-  <section class="donate">
-    <div class="donate__inner">
-      <div data-reveal="0">
-        <h2 class="h2 donate__title">Make a Lasting Impact with Your Donation</h2>
+      <h2 class="dt__title">Donation Details</h2>
+      <form class="dt__card" data-dt novalidate>
+        <div class="dt__main">
 
-        <div class="notice donate__notice" data-form-sent="donate" hidden tabindex="-1">
-          <span class="notice__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></span>
-          <p>Thank you — your donation details have been received.</p>
-        </div>
+          <fieldset class="dt__group">
+            <legend class="dt__label">Choose causes <small data-dt-count></small></legend>
+            <div class="cdrop" data-cdrop>
+              <button type="button" class="cdrop__btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="dt-causes" data-cdrop-btn>
+                <span class="cdrop__imgs" data-cdrop-imgs></span>
+                <span class="cdrop__txt" data-cdrop-txt>Choose causes</span>
+                <svg class="cdrop__chev" width="14" height="9" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.5L5.5 5.5L10 1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+            <div class="causes" id="dt-causes" role="listbox" aria-multiselectable="true" data-cdrop-panel hidden>
+              {CAUSE_NAV.map((c) => {
+                const on = DEFAULT_CAUSES.includes(c.slug);
+                return (
+                  <button type="button" role="option" class:list={['cause', { 'is-on': on }]} aria-selected={String(on)} data-cause={c.name} data-img={c.img}>
+                    <img src={c.img} alt="" loading="lazy" />
+                    <span>{c.name}</span>
+                    <i aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" /></svg></i>
+                  </button>
+                );
+              })}
+              <div class="causes__foot"><button type="button" class="causes__clear" data-cdrop-clear>Clear</button><button type="button" class="causes__done" data-cdrop-done>Done</button></div>
+            </div>
+            </div>
+            <p class="dt__error" data-err="causes" hidden>Please choose at least one cause.</p>
+          </fieldset>
 
-        <form class="form donate__form" data-form="donate">
-          <div class="field">
-            <label class="label" for="dn-name">Your Name <em>*</em></label>
-            <input id="dn-name" class="input" type="text" required placeholder="Full name" />
-          </div>
-          <div class="field-grid">
-            <div class="field">
-              <label class="label" for="dn-phone">Phone Number</label>
-              <input id="dn-phone" class="input" type="tel" placeholder="+8801XXXXXXXXX" />
-            </div>
-            <div class="field">
-              <label class="label" for="dn-email">Email Address (optional)</label>
-              <input id="dn-email" class="input" type="email" placeholder="you@example.com" />
-            </div>
-          </div>
-          <div class="field">
-            <span class="label">Donation Type <em>*</em></span>
-            <div class="types" data-toggle-group="single">
-              <button type="button" class="chip is-on">Zakat</button>
-              <button type="button" class="chip">Sadaqa</button>
-            </div>
-          </div>
-          <div class="field">
-            <span class="label">Donation Amount <em>*</em></span>
-            <div class="amounts" data-toggle-group="single">
-              {AMOUNTS.map((a, i) => <button type="button" class:list={['chip', { 'is-on': i === 0 }]}>{a}</button>)}
-            </div>
-          </div>
-          <div class="field">
-            <label class="label" for="dn-custom">Custom Payment Amount</label>
-            <div class="custom">
+          <fieldset class="dt__group">
+            <legend class="dt__label">Choose an amount</legend>
+            <label class="amt">
               <span>৳</span>
-              <input id="dn-custom" type="number" min="0" placeholder="0" />
+              <input type="text" inputmode="numeric" value={DEFAULT_AMOUNT.toLocaleString('en-US')} aria-label="Donation amount in taka" data-dt-amount />
+              <em>one-time</em>
+            </label>
+            <div class="pills" data-dt-presets>
+              {AMOUNTS.map((a) => <button type="button" class:list={['pill', { 'is-on': a === DEFAULT_AMOUNT }]} data-v={a}>{taka(a)}</button>)}
+            </div>
+            <p class="dt__error" data-err="amount" hidden>Please enter an amount of at least ৳100.</p>
+          </fieldset>
+
+          <fieldset class="dt__group">
+            <legend class="dt__label">Donation type</legend>
+            <div class="seg" data-dt-type>
+              <button type="button" class="is-on" data-v="Zakat">Zakat</button>
+              <button type="button" data-v="Sadaqa">Sadaqa</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="dt__group">
+            <legend class="dt__label">Payment method</legend>
+            <div class="pt" data-dt-pay>
+              <div class="pt__tabs" role="tablist">
+                <button type="button" role="tab" aria-selected="true" class="pt__tab is-on" data-tab="ssl"><span class="lg lg--ssl" aria-label="SSLCommerz"><b>SSL</b>COMMERZ</span><small>Card, mobile &amp; net banking</small></button>
+                <button type="button" role="tab" aria-selected="false" class="pt__tab" data-tab="bkash"><span class="lg lg--bk" aria-label="bKash">bKash</span><small>Merchant payment</small></button>
+                <button type="button" role="tab" aria-selected="false" class="pt__tab" data-tab="bank"><span class="lg lg--bank" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18" /></svg></span><small><b>Bank transfer</b></small></button>
+              </div>
+              <div class="pt__panel" data-panel="ssl">
+                <p>Pay by card, mobile banking or internet banking on the secure SSLCommerz page. You’ll be taken there when you confirm.</p>
+                <img class="pt__banner" src={IMG.paymentBanner} alt="Visa, Mastercard, Amex, bKash, Nagad, Rocket and more, verified by SSLCommerz" />
+              </div>
+              <div class="pt__panel" data-panel="bkash" hidden>
+                <div class="kv"><span>Merchant no.</span><b>{BKASH}</b></div>
+                <ol class="pt__steps"><li>Open the bKash app and tap <b>Payment</b>.</li><li>Enter merchant number <b>{BKASH}</b>.</li><li>Enter the amount and confirm with your PIN.</li></ol>
+                <input class="input" placeholder="bKash transaction ID (TrxID)" aria-label="bKash transaction ID" />
+              </div>
+              <div class="pt__panel" data-panel="bank" hidden>
+                {BANK.map(([k, v]) => <div class="kv"><span>{k}</span><b>{v}</b></div>)}
+                <p class="pt__note">Please use your name as the payment reference.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="dt__row">
+            <div class="field">
+              <label class="label" for="dt-name">Full name <em>*</em></label>
+              <input id="dt-name" class="input" type="text" autocomplete="name" placeholder="Your full name" data-dt-name />
+              <p class="dt__error" data-err="name" hidden>Please enter your name.</p>
+            </div>
+            <div class="field">
+              <label class="label" for="dt-contact">Phone or email</label>
+              <input id="dt-contact" class="input" type="text" autocomplete="email" placeholder="+8801XXXXXXXXX or you@example.com" />
             </div>
           </div>
-          <label class="check">
-            <input type="checkbox" required />
-            <span>I confirm that I have read &amp; agreed to <a href={ROUTES.terms}>Terms &amp; Conditions</a>, <a href={ROUTES.privacy}>Privacy Policy</a> &amp; Refund-Return Policy.</span>
-          </label>
-          <div class="field">
-            <label class="label" for="dn-comments">Comments (optional)</label>
-            <textarea id="dn-comments" class="textarea" placeholder="Anything you would like us to know?"></textarea>
-          </div>
-          <div><button type="submit" class="btn btn--teal btn-fx">Donate Now<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg></button></div>
-        </form>
-      </div>
+        </div>
 
-      <div class="side" data-reveal="120">
-        <div class="panel side__bank">
-          <h3 class="h3">Bank Information</h3>
-          <div class="side__rows">
-            {BANK.map(([k, v]) => <p><strong>{k}</strong> {v}</p>)}
+        <aside class="dt__sum">
+          <div class="dt__sumIn">
+            <p class="dt__sumH">Your donation</p>
+            <div class="who">
+              <span class="who__mark"><img src={IMG.logoMark} alt="" /></span>
+              <div><b>Ummah Care Foundation</b><small><span data-dt-type-out>Zakat</span> · one-time</small></div>
+            </div>
+            <div data-dt-lines></div>
+            <div class="kv"><span>Fees</span><b>৳0</b></div>
+            <div class="kv kv--total"><span>Total</span><b data-dt-total>{taka(DEFAULT_AMOUNT)}</b></div>
+            <label class="agree">
+              <input type="checkbox" data-dt-agree />
+              <span>I agree to the <a href={ROUTES.terms}>Terms &amp; Conditions</a>, <a href={ROUTES.privacy}>Privacy Policy</a> &amp; Refund-Return Policy.</span>
+            </label>
+            <p class="dt__error" data-err="agree" hidden>Please accept the terms to continue.</p>
+            <button type="submit" class="btn btn--teal btn-fx dt__submit"><span class="roll"><span>Confirm donation</span></span><span class="roll-ico" aria-hidden="true"><i set:html={arrow} /><i set:html={arrow} /></span></button>
           </div>
-        </div>
-        <div class="side__bkash">
-          <h3>bKash</h3>
-          <p>Merchant No: <strong>01310-188834</strong></p>
-          <p class="side__hint">(Send from Payment Option)</p>
-        </div>
-        <img src={IMG.paymentBanner} alt="Accepted payment methods" class="side__payment" />
-      </div>
+        </aside>
+      </form>
     </div>
   </section>
 </Base>
 
 <style>
-  .donate { background: #fff; }
-  .donate__inner { max-width: var(--shell); margin: 0 auto; padding: 88px 24px 104px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 64px; align-items: start; }
-  .donate__title { font-size: 34px; }
-  .donate__notice { margin-top: 34px; }
-  .donate__form { margin-top: 34px; gap: 24px; }
-  .types { display: flex; gap: 12px; flex-wrap: wrap; }
-  .amounts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-  .custom { display: flex; align-items: center; gap: 10px; border: 1.5px solid #E1EAE6; border-radius: 20px; padding: 0 18px; height: 54px; transition: border-color .18s ease; }
-  .custom:focus-within { border-color: #008F76; }
-  .custom span { font: 700 16px/1 var(--font); color: #008F76; }
-  .custom input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font: 400 15px/1 var(--font); color: #1B1E26; }
+  .dt { background: #fff; }
+  .dt__wrap { max-width: var(--shell); margin: 0 auto; padding: 184px 24px 104px; }
+  .dt__notice { margin-bottom: 28px; }
+  /* The form sits on the page with no box, aligned to the page edge; only the summary is a rounded panel. */
+  .dt__card { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr); gap: clamp(88px, 12vw, 176px); align-items: start; }
+  .dt__main { padding: 0; display: flex; flex-direction: column; gap: 30px; min-width: 0; }
+  .dt__title { margin: 0 0 48px; font: 700 clamp(30px, 2.6vw, 38px)/1.1 var(--font); letter-spacing: -.035em; color: var(--ink); }
+  .dt__group { margin: 0; padding: 0; border: 0; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  .dt__label { padding: 0; margin-bottom: 14px; font: 700 16px/1.2 var(--font); color: var(--ink); }
+  .dt__label small { margin-left: 8px; font: 600 14px/1 var(--font); color: var(--teal); }
+  .dt__error { margin: 0; font: 600 13.5px/1.4 var(--font); color: #C2410C; }
+  .dt__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .dt__row .dt__error { margin-top: 8px; }
 
-  .side { display: flex; flex-direction: column; gap: 22px; }
-  .side__bank { padding: 40px 38px; }
-  .side__rows { margin-top: 24px; display: flex; flex-direction: column; gap: 13px; }
-  .side__rows p { margin: 0; font: 400 18px/1.7 var(--font); color: #5E6470; text-wrap: balance; }
-  .side__rows strong { color: #1B1E26; }
-  .side__bkash { padding: 40px 38px; background: #1B1E26; border-radius: 20px; }
-  .side__bkash h3 { margin: 0; font: 700 26px/1.3 var(--font); letter-spacing: -.025em; color: #fff; }
-  .side__bkash p { margin: 22px 0 0; font: 400 18px/1.7 var(--font); color: rgba(255, 255, 255, .72); text-wrap: balance; }
-  .side__bkash strong { color: #fff; }
-  .side__bkash .side__hint { margin: 8px 0 0; font: 600 14px/1.6 var(--font); color: #7FCDBB; font-style: italic; }
-  .side__payment { width: 100%; border-radius: 8px; display: block; }
+  /* Causes: a multi-select dropdown. The trigger shows the chosen photos and names. */
+  .cdrop { position: relative; }
+  .cdrop__btn { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 8px 20px 8px 10px; border: 1.5px solid var(--line-2); border-radius: 16px; background: #fff; font: 600 16px/1.3 var(--font); color: var(--ink); text-align: left; cursor: pointer; transition: border-color .2s ease, box-shadow .2s ease; }
+  .cdrop__btn:hover { border-color: var(--mint-3); }
+  .cdrop__btn[aria-expanded="true"] { border-color: var(--teal); box-shadow: 0 0 0 3px var(--mint-2); }
+  .cdrop__imgs { display: flex; flex: none; }
+  .cdrop__imgs:empty { display: none; }
+  .cdrop__imgs img { width: 38px; height: 38px; border-radius: 999px; object-fit: cover; border: 2px solid #fff; margin-left: -12px; }
+  .cdrop__imgs img:first-child { margin-left: 0; }
+  .cdrop__imgs b { display: grid; place-items: center; width: 38px; height: 38px; margin-left: -12px; border-radius: 999px; border: 2px solid #fff; background: var(--mint-2); color: var(--teal-deep); font: 700 12.5px/1 var(--font); }
+  .cdrop__txt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cdrop__txt.is-empty { color: var(--placeholder); font-weight: 400; padding-left: 10px; }
+  .cdrop__chev { flex: none; color: var(--grey-2); transition: transform .25s var(--ease); }
+  .cdrop__btn[aria-expanded="true"] .cdrop__chev { transform: rotate(180deg); }
+
+  .causes { position: absolute; z-index: 20; top: calc(100% + 8px); left: 0; right: 0; display: flex; flex-direction: column; gap: 2px; padding: 8px; max-height: min(520px, 70vh); overflow-y: auto; background: #fff; border: 1px solid var(--line-3); border-radius: 16px; box-shadow: 0 30px 60px -24px rgba(0, 40, 30, .35), 0 8px 20px -10px rgba(0, 0, 0, .15); animation: megaIn .25s var(--ease) both; }
+  .causes[hidden] { display: none; }
+  .cause { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 6px 12px 6px 6px; border: 0; border-radius: 12px; background: transparent; font: 600 15px/1.2 var(--font); color: var(--ink); text-align: left; cursor: pointer; transition: background .15s ease; }
+  .cause img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; flex: none; }
+  .cause span { flex: 1; }
+  .cause i { display: grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--grey-4); color: transparent; transition: background .15s ease, border-color .15s ease; }
+  .cause:hover { background: var(--bg-soft); }
+  .cause.is-on { background: var(--mint-2); color: var(--teal-deep); }
+  .cause.is-on i { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .causes__foot { position: sticky; bottom: -8px; display: flex; justify-content: space-between; gap: 10px; margin: 6px -8px -8px; padding: 10px 12px; border-top: 1px solid var(--line-3); background: #fff; }
+  .causes__clear { border: 0; background: none; font: 600 14px/1 var(--font); color: var(--muted); cursor: pointer; padding: 10px 6px; }
+  .causes__done { height: 40px; padding: 0 22px; border: 0; border-radius: 999px; background: var(--teal); color: #fff; font: 700 14px/1 var(--font); cursor: pointer; }
+  .cdrop__btn:focus-visible, .cause:focus-visible, .pill:focus-visible, .seg button:focus-visible, .pt__tab:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  /* Amount */
+  .amt { display: flex; align-items: center; gap: 12px; height: 60px; padding: 0 22px; border: 1.5px solid var(--line-2); border-radius: 16px; font: 600 19px/1 var(--font); color: var(--ink); transition: border-color .2s ease; }
+  .amt:focus-within { border-color: var(--teal); }
+  .amt input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font: inherit; color: inherit; }
+  .amt em { font-style: normal; font: 400 15px/1 var(--font); color: var(--muted); }
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill { height: 46px; padding: 0 22px; border: 0; border-radius: 999px; background: var(--bg-soft-2); font: 600 15.5px/1 var(--font); color: var(--ink); cursor: pointer; transition: background .2s ease, box-shadow .2s ease, color .2s ease; }
+  .pill.is-on { background: var(--mint-2); color: var(--teal-deep); box-shadow: inset 0 0 0 1.5px var(--teal); }
+
+  /* Zakat / Sadaqa */
+  .seg { display: grid; grid-template-columns: 1fr 1fr; max-width: 340px; padding: 4px; border-radius: 999px; background: var(--bg-soft-2); }
+  .seg button { height: 44px; border: 0; border-radius: 999px; background: transparent; font: 600 15px/1 var(--font); color: var(--grey-2); cursor: pointer; transition: background .2s ease, color .2s ease, box-shadow .2s ease; }
+  .seg button.is-on { background: #fff; color: var(--teal-deep); box-shadow: 0 2px 8px -2px rgba(0, 0, 0, .15); }
+
+  /* Payment gateway tabs */
+  .pt { display: flex; flex-direction: column; gap: 12px; }
+  .pt__tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .pt__tab { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 8px; min-height: 76px; padding: 12px 14px; border: 1.5px solid var(--line-2); border-radius: 16px; background: #fff; cursor: pointer; text-align: left; transition: border-color .2s ease, box-shadow .2s ease; }
+  .pt__tab small { font: 500 12.5px/1.3 var(--font); color: var(--muted); }
+  .pt__tab small b { font: 700 13.5px/1 var(--font); color: var(--ink); }
+  .pt__tab.is-on { border-color: var(--teal); background: var(--bg-soft-2); box-shadow: 0 0 0 3px var(--mint-2); }
+  .pt__panel { padding: 16px 18px; border-radius: 16px; background: var(--bg-soft); }
+  .pt__panel > p { margin: 0; font: 400 14.5px/1.6 var(--font); color: var(--grey-2); }
+  .pt__banner { display: block; width: 100%; height: auto; margin-top: 12px; border-radius: 6px; background: #fff; }
+  .pt__steps { margin: 10px 0 12px; padding-left: 20px; font: 400 14.5px/1.75 var(--font); color: var(--grey-2); }
+  .pt__note { margin: 10px 0 0 !important; font-size: 13px !important; color: var(--muted) !important; }
+  /* Payment logos are wordmark badges; swap in the providers' official logo files before launch. */
+  .lg { display: inline-flex; align-items: center; height: 26px; font: 800 13.5px/1 var(--font); white-space: nowrap; }
+  .lg--ssl { color: #2B5DA9; font-weight: 600; font-size: 13px; letter-spacing: .02em; }
+  .lg--ssl b { font-weight: 800; color: #1B3F7A; margin-right: 1px; }
+  .lg--bk { padding: 0 10px; border-radius: 6px; background: #E2136E; color: #fff; font-style: italic; letter-spacing: -.01em; }
+  .lg--bank { width: 30px; height: 30px; justify-content: center; border-radius: 8px; background: var(--mint-2); color: var(--teal-deep); }
+
+  .kv { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line-3); font: 400 15.5px/1.4 var(--font); }
+  .kv span { color: var(--muted); }
+  .kv b { color: var(--ink); font-weight: 600; text-align: right; }
+  .pt__panel .kv { padding: 9px 0; font-size: 14.5px; }
+  .kv--total { border-bottom: 0; padding-top: 18px; }
+  .kv--total span, .kv--total b { font-size: 20px; font-weight: 700; color: var(--ink); }
+
+  /* Summary */
+  /* Starts level with the causes field: skips the height of the "Choose causes" label. */
+  .dt__sum { margin-top: var(--field-offset, 33px); position: sticky; top: 24px; background: var(--bg-soft-2); border-radius: 24px; }
+  .dt__sumIn { padding: 44px 40px; display: flex; flex-direction: column; gap: 4px; }
+  .dt__sumH { margin: 0 0 14px; font: 700 16px/1 var(--font); color: var(--ink); }
+  .who { display: flex; gap: 14px; align-items: center; padding-bottom: 18px; margin-bottom: 4px; border-bottom: 1px solid var(--line-3); }
+  .who__mark { width: 52px; height: 52px; border-radius: 999px; background: var(--teal); display: grid; place-items: center; flex: none; }
+  /* The mark file is green; this turns it white on the primary circle. */
+  .who__mark img { width: 28px; height: 28px; display: block; filter: brightness(0) invert(1); }
+  .who b { display: block; font: 700 16px/1.25 var(--font); color: var(--ink); }
+  .who small { font: 400 14px/1.3 var(--font); color: var(--muted); }
+  .agree { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; font: 400 14px/1.55 var(--font); color: var(--muted); cursor: pointer; }
+  .agree input { margin: 3px 0 0; width: 17px; height: 17px; accent-color: var(--teal); flex: none; }
+  .agree a { color: var(--teal); }
+  .dt__submit { margin-top: 18px; width: 100%; justify-content: space-between; }
+
+  @media (max-width: 1020px) {
+    .dt__card { grid-template-columns: 1fr; gap: 48px; }
+    .dt__sum { position: static; margin-top: 0; }
+  }
+  @media (max-width: 640px) {
+    .dt__wrap { padding: 128px 16px 80px; }
+    .dt__sumIn { padding: 32px 22px; }
+    .dt__row { grid-template-columns: 1fr; }
+    .pt__tabs { grid-template-columns: 1fr; }
+    .pt__tab { min-height: 56px; flex-direction: row; align-items: center; justify-content: space-between; }
+  }
 </style>
 
 <script>
-  import '../scripts/forms';
+  const form = document.querySelector<HTMLFormElement>('[data-dt]');
+  if (form) {
+    const fmt = (n: number) => '৳' + Math.round(n).toLocaleString('en-US');
+    const amountIn = form.querySelector<HTMLInputElement>('[data-dt-amount]')!;
+    const presets = [...form.querySelectorAll<HTMLButtonElement>('[data-dt-presets] .pill')];
+    const causes = [...form.querySelectorAll<HTMLButtonElement>('.cause')];
+    const err = (k: string, show: boolean) => { const el = form.querySelector<HTMLElement>(`[data-err="${k}"]`); if (el) el.hidden = !show; };
+    const amount = () => Number(amountIn.value.replace(/[^\d]/g, '')) || 0;
+    const chosen = () => causes.filter((c) => c.classList.contains('is-on')).map((c) => c.dataset.cause!);
+
+    // Split the total across the chosen causes in whole taka; the first causes take any remainder,
+    // so the lines always add up to the total exactly.
+    const render = () => {
+      const total = amount();
+      const names = chosen();
+      const base = names.length ? Math.floor(total / names.length) : 0;
+      const extra = names.length ? total - base * names.length : 0;
+      form.querySelector('[data-dt-count]')!.textContent = names.length ? `${names.length} selected` : '';
+      form.querySelector('[data-dt-lines]')!.innerHTML = names.length
+        ? names.map((n, i) => `<div class="kv"><span>${n}</span><b>${fmt(base + (i < extra ? 1 : 0))}</b></div>`).join('')
+        : '<div class="kv"><span>No cause selected yet</span><b>–</b></div>';
+      form.querySelector('[data-dt-total]')!.textContent = fmt(total);
+      presets.forEach((p) => p.classList.toggle('is-on', Number(p.dataset.v) === total));
+      // Dropdown trigger: up to three photos, then the names (or a prompt when empty).
+      const on = causes.filter((c) => c.classList.contains('is-on'));
+      const imgs = on.slice(0, 3).map((c) => `<img src="${c.dataset.img}" alt="" />`).join('') + (on.length > 3 ? `<b>+${on.length - 3}</b>` : '');
+      form.querySelector('[data-cdrop-imgs]')!.innerHTML = imgs;
+      const txt = form.querySelector<HTMLElement>('[data-cdrop-txt]')!;
+      txt.textContent = names.length ? names.join(', ') : 'Choose one or more causes';
+      txt.classList.toggle('is-empty', !names.length);
+    };
+    // Astro scopes styles by attribute; lines added from script need the same attribute to pick them up.
+    const scope = [...form.attributes].find((a) => a.name.startsWith('data-astro-cid'))?.name;
+    const renderScoped = () => { render(); if (scope) form.querySelectorAll('[data-dt-lines] *, [data-cdrop-imgs] *').forEach((el) => el.setAttribute(scope, '')); };
+
+    causes.forEach((c) => c.addEventListener('click', () => {
+      c.classList.toggle('is-on');
+      c.setAttribute('aria-selected', String(c.classList.contains('is-on')));
+      err('causes', false);
+      renderScoped();
+    }));
+    // Open / close the causes dropdown: trigger, Done, Escape, or a click outside.
+    const drop = form.querySelector<HTMLElement>('[data-cdrop]')!;
+    const dropBtn = drop.querySelector<HTMLButtonElement>('[data-cdrop-btn]')!;
+    const panel = drop.querySelector<HTMLElement>('[data-cdrop-panel]')!;
+    const setOpen = (open: boolean) => { panel.hidden = !open; dropBtn.setAttribute('aria-expanded', String(open)); };
+    dropBtn.addEventListener('click', () => setOpen(panel.hidden));
+    drop.querySelector('[data-cdrop-done]')!.addEventListener('click', () => { setOpen(false); dropBtn.focus(); });
+    drop.querySelector('[data-cdrop-clear]')!.addEventListener('click', () => {
+      causes.forEach((c) => { c.classList.remove('is-on'); c.setAttribute('aria-selected', 'false'); });
+      renderScoped();
+    });
+    document.addEventListener('click', (e) => { if (!panel.hidden && !drop.contains(e.target as Node)) setOpen(false); });
+    drop.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) { setOpen(false); dropBtn.focus(); } });
+
+    presets.forEach((p) => p.addEventListener('click', () => {
+      amountIn.value = Number(p.dataset.v).toLocaleString('en-US');
+      err('amount', false);
+      renderScoped();
+    }));
+    amountIn.addEventListener('input', () => {
+      const n = amount();
+      amountIn.value = n ? n.toLocaleString('en-US') : '';
+      err('amount', false);
+      renderScoped();
+    });
+
+    const typeBtns = [...form.querySelectorAll<HTMLButtonElement>('[data-dt-type] button')];
+    typeBtns.forEach((b) => b.addEventListener('click', () => {
+      typeBtns.forEach((x) => x.classList.toggle('is-on', x === b));
+      form.querySelector('[data-dt-type-out]')!.textContent = b.dataset.v!;
+    }));
+
+    const pay = form.querySelector<HTMLElement>('[data-dt-pay]')!;
+    pay.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('[data-tab]');
+      if (!b) return;
+      pay.querySelectorAll('[data-tab]').forEach((x) => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-selected', String(x === b)); });
+      pay.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== b.dataset.tab));
+    });
+
+    const name = form.querySelector<HTMLInputElement>('[data-dt-name]')!;
+    const agree = form.querySelector<HTMLInputElement>('[data-dt-agree]')!;
+    name.addEventListener('input', () => err('name', false));
+    agree.addEventListener('change', () => err('agree', false));
+
+    // Prototype submit: check the essentials, then show the thank-you note.
+    // Wire the real SSLCommerz / bKash checkout here once merchant accounts are ready.
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const problems = { causes: !chosen().length, amount: amount() < 100, name: !name.value.trim(), agree: !agree.checked };
+      Object.entries(problems).forEach(([k, bad]) => err(k, bad));
+      const first = Object.entries(problems).find(([, bad]) => bad);
+      if (first) {
+        form.querySelector(`[data-err="${first[0]}"]`)?.closest('fieldset, .field, .dt__sumIn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (first[0] === 'causes') setOpen(true);
+        return;
+      }
+      form.hidden = true;
+      const sent = document.querySelector<HTMLElement>('[data-dt-sent]');
+      if (sent) { sent.hidden = false; sent.focus(); }
+    });
+
+    renderScoped();
+  }
 </script>
