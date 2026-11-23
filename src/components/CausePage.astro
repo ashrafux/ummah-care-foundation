@@ -100,7 +100,7 @@ const paragraphs = data.extra.map((t) => t.split(/\s+/).filter(Boolean).map((w) 
 
 <style>
   .cause { background: #fff; }
-  .cause__inner { max-width: 1000px; margin: 0 auto; padding: 80px 24px 104px; }
+  .cause__inner { max-width: calc(952px + 2 * var(--gutter)); margin: 0 auto; padding: 80px var(--gutter) 104px; }
   .cause__intro { margin: 0; font: 400 18px/1.75 var(--font); color: #5E6470; text-wrap: balance; }
   .cause__block { margin-top: 56px; }
   .cause__h3 { margin: 0; font: 700 26px/1.3 var(--font); letter-spacing: -.025em; color: #1B1E26; }

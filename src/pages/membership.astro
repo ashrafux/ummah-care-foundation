@@ -43,7 +43,7 @@ import PageHero from '../components/PageHero.astro';
 
 <style>
   .member { background: #fff; }
-  .member__inner { max-width: 1000px; margin: 0 auto; padding: 88px 24px 104px; }
+  .member__inner { max-width: calc(952px + 2 * var(--gutter)); margin: 0 auto; padding: 88px var(--gutter) 104px; }
   .member__lead { margin-top: 20px; font-size: 18px; }
   .member__cards { margin-top: 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 22px; }
   .member__card { padding: 40px 36px; }

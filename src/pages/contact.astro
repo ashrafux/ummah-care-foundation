@@ -1,15 +1,39 @@
 ---
 import Base from '../layouts/Base.astro';
 import { SITE } from '../data/site';
+
+const ICONS = {
+  mail: 'M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM3 7l9 6 9-6',
+  phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2',
+  heart: 'M12 20s-7-4.4-9.3-9A5.2 5.2 0 0 1 12 5a5.2 5.2 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z',
+  clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
+  pin: 'M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z'
+} as const;
+const ico = (k: keyof typeof ICONS) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[k]}"/></svg>`;
+const INFO: { icon: keyof typeof ICONS; label: string; value: string; href?: string }[] = [
+  { icon: 'mail', label: 'Email', value: SITE.email, href: `mailto:${SITE.email}` },
+  { icon: 'phone', label: 'Phone', value: '+880 1310-188834', href: SITE.phoneHref },
+  { icon: 'clock', label: 'Office hours', value: 'Monday–Friday, 8 AM – 5 PM' },
+  { icon: 'pin', label: 'Office', value: 'Level-3, House-1005,1007 Avenue-11, Road-09,<br />Mirpur DOHS, Dhaka-1216, Bangladesh' },
+  { icon: 'heart', label: 'Where we work', value: 'Serving families across Bangladesh' }
+];
 ---
 <Base title="Contact" active="Contact" description="Have a question or feedback? Get in touch with Ummah Care Foundation.">
   <section class="contact">
     <div class="contact__inner">
       <div class="contact__say" data-reveal="0">
         <h2 class="contact__title">Whether you need support, want to give, or just have a question, we’re happy to talk. No forms to fear. Just people who care.</h2>
-        <p class="contact__meta"><a href={`mailto:${SITE.email}`}>{SITE.email}</a><br /><a href={SITE.phoneHref}>+880 1310-188834</a><br />Serving families across Bangladesh</p>
-        <p class="contact__meta">Office hours<br />Monday–Friday, 8 AM – 5 PM</p>
-        <p class="contact__meta">Level-3, House-1005,1007 Avenue-11, Road-09,<br />Mirpur DOHS, Dhaka-1216, Bangladesh</p>
+        <ul class="contact__list">
+          {INFO.map((i) => (
+            <li>
+              <span class="contact__ico" set:html={ico(i.icon)} />
+              <span class="contact__txt">
+                <small>{i.label}</small>
+                {i.href ? <a href={i.href}>{i.value}</a> : <span set:html={i.value} />}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div data-reveal="120">
@@ -34,7 +58,7 @@ import { SITE } from '../data/site';
             </select>
           </div>
           <div class="field"><label class="label" for="ct-message">Message *</label><textarea id="ct-message" class="soft soft--area" required></textarea></div>
-          <div><button type="submit" class="btn btn--teal btn-fx"><span class="roll"><span>Submit</span></span><span class="roll-ico" aria-hidden="true"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i></span></button></div>
+          <div><button type="submit" class="btn btn--teal btn-fx contact__submit"><span class="roll"><span>Submit</span></span><span class="roll-ico" aria-hidden="true"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i></span></button></div>
         </form>
       </div>
     </div>
@@ -43,12 +67,18 @@ import { SITE } from '../data/site';
 
 <style>
   .contact { background: #fff; }
-  .contact__inner { max-width: var(--shell); margin: 0 auto; padding: 184px 24px 96px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 80px; align-items: start; }
+  .contact__inner { max-width: var(--shell); margin: 0 auto; padding: calc(92px + 144px) var(--gutter) 144px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 80px; align-items: start; }
   /* This heading is a sentence, so it keeps sentence case instead of the site-wide Title Case. */
   .contact__title { margin: 0; font: 700 clamp(24px, 2vw, 28px)/1.35 var(--font); letter-spacing: -.025em; color: var(--ink); text-transform: none; text-wrap: balance; }
-  .contact__meta { margin: 28px 0 0; font: 400 17px/1.75 var(--font); color: var(--grey-2); }
-  .contact__meta a { color: inherit; text-decoration: none; }
-  .contact__meta a:hover { color: var(--teal); }
+  .contact__list { margin: 36px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 22px; }
+  .contact__list li { display: flex; align-items: flex-start; gap: 16px; }
+  .contact__ico { flex: none; width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--mint-2); color: var(--teal); }
+  .contact__txt { display: flex; flex-direction: column; gap: 3px; padding-top: 1px; font: 400 17px/1.6 var(--font); color: var(--grey-2); }
+  .contact__txt small { font: 600 13px/1.3 var(--font); color: var(--grey-4); }
+  .contact__txt a { color: var(--ink); font-weight: 500; text-decoration: none; transition: color .2s ease; }
+  .contact__txt a:hover { color: var(--teal); }
+  /* A slightly wider Submit button, label left and arrow chip right. */
+  .contact__submit { min-width: 220px; justify-content: space-between; padding-left: 36px; }
   .contact__notice { margin-bottom: 24px; }
   .contact__form { display: flex; flex-direction: column; gap: 20px; }
   .contact__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
