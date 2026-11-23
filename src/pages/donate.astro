@@ -142,7 +142,7 @@ const arrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" strok
 
 <style>
   .dt { background: #fff; }
-  .dt__wrap { max-width: var(--shell); margin: 0 auto; padding: 184px 24px 104px; }
+  .dt__wrap { max-width: var(--shell); margin: 0 auto; padding: calc(92px + 144px) var(--gutter) 144px; }
   .dt__notice { margin-bottom: 28px; }
   /* The form sits on the page with no box, aligned to the page edge; only the summary is a rounded panel. */
   .dt__card { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr); gap: clamp(88px, 12vw, 176px); align-items: start; }
@@ -245,7 +245,7 @@ const arrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" strok
     .dt__sum { position: static; margin-top: 0; }
   }
   @media (max-width: 640px) {
-    .dt__wrap { padding: 128px 16px 80px; }
+    .dt__wrap { padding: 128px var(--gutter) 80px; }
     .dt__sumIn { padding: 32px 22px; }
     .dt__row { grid-template-columns: 1fr; }
     .pt__tabs { grid-template-columns: 1fr; }
