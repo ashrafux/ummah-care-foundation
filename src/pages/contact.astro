@@ -1,47 +1,41 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/PageHero.astro';
 import { SITE } from '../data/site';
 ---
 <Base title="Contact" active="Contact" description="Have a question or feedback? Get in touch with Ummah Care Foundation.">
-  <PageHero crumb="Contact" />
-
   <section class="contact">
     <div class="contact__inner">
-      <div data-reveal="0">
-        <p class="kicker">Contact Us</p>
-        <h2 class="h2 contact__title">How can we help?</h2>
-        <p class="lead contact__lead">Have a question or feedback? Fill out the form below, and we'll get back to you.</p>
+      <div class="contact__say" data-reveal="0">
+        <h2 class="contact__title">Whether you need support, want to give, or just have a question, we’re happy to talk. No forms to fear. Just people who care.</h2>
+        <p class="contact__meta"><a href={`mailto:${SITE.email}`}>{SITE.email}</a><br /><a href={SITE.phoneHref}>+880 1310-188834</a><br />Serving families across Bangladesh</p>
+        <p class="contact__meta">Office hours<br />Monday–Friday, 8 AM – 5 PM</p>
+        <p class="contact__meta">Level-3, House-1005,1007 Avenue-11, Road-09,<br />Mirpur DOHS, Dhaka-1216, Bangladesh</p>
+      </div>
 
+      <div data-reveal="120">
         <div class="notice contact__notice" data-form-sent="contact" hidden tabindex="-1">
           <span class="notice__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></span>
           <p>Thanks for reaching out — we'll reply shortly.</p>
         </div>
 
-        <form class="form contact__form" data-form="contact">
-          <div class="field"><label class="label" for="ct-name">Name</label><input id="ct-name" class="input" type="text" required placeholder="Your full name" /></div>
-          <div class="field"><label class="label" for="ct-email">Email address</label><input id="ct-email" class="input" type="email" required placeholder="you@example.com" /></div>
-          <div class="field"><label class="label" for="ct-message">Message</label><textarea id="ct-message" class="textarea contact__textarea" required placeholder="How can we help?"></textarea></div>
-          <div><button type="submit" class="btn btn--teal btn-fx">Send message<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg></button></div>
+        <form class="contact__form" data-form="contact">
+          <div class="contact__row">
+            <div class="field"><label class="label" for="ct-first">First name *</label><input id="ct-first" class="soft" type="text" required autocomplete="given-name" /></div>
+            <div class="field"><label class="label" for="ct-last">Last name *</label><input id="ct-last" class="soft" type="text" required autocomplete="family-name" /></div>
+          </div>
+          <div class="field"><label class="label" for="ct-email">Email address *</label><input id="ct-email" class="soft" type="email" required autocomplete="email" /></div>
+          <div class="field">
+            <label class="label" for="ct-subject">Subject *</label>
+            <select id="ct-subject" class="soft" required>
+              <option>General question</option>
+              <option>Donation</option>
+              <option>Volunteering</option>
+              <option>Partnership</option>
+            </select>
+          </div>
+          <div class="field"><label class="label" for="ct-message">Message *</label><textarea id="ct-message" class="soft soft--area" required></textarea></div>
+          <div><button type="submit" class="btn btn--teal btn-fx"><span class="roll"><span>Submit</span></span><span class="roll-ico" aria-hidden="true"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i></span></button></div>
         </form>
-      </div>
-
-      <div class="panel contact__card" data-reveal="120">
-        <h2 class="h2 contact__cardTitle">We’d love to hear from you. Let’s get in touch.</h2>
-        <div class="contact__blocks">
-          <div>
-            <h5>Address:</h5>
-            <p class="lead">Level-3, House-1005,1007 Avenue-11,Road-09,<br />Mirpur DOHS, Dhaka-1216, Bangladesh</p>
-          </div>
-          <div>
-            <h5>Working hours:</h5>
-            <p class="lead">Monday-Friday: 8AM-5Pm</p>
-          </div>
-          <div>
-            <h5>Contacts:</h5>
-            <p class="lead">Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a><br />Phone: +8801310-188834</p>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -49,18 +43,23 @@ import { SITE } from '../data/site';
 
 <style>
   .contact { background: #fff; }
-  .contact__inner { max-width: var(--shell); margin: 0 auto; padding: 96px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 72px; align-items: start; }
-  .contact__title { font-size: 34px; margin-top: 16px; }
-  .contact__lead { margin-top: 16px; }
-  .contact__notice { margin-top: 32px; }
-  .contact__form { margin-top: 34px; }
-  .contact__textarea { min-height: 140px; }
-  .contact__card { padding: 52px 48px; }
-  .contact__cardTitle { font-size: 32px; }
-  .contact__blocks { margin-top: 38px; display: flex; flex-direction: column; gap: 30px; }
-  .contact__blocks h5 { margin: 0; font: 700 16px/1.3 var(--font); color: #1B1E26; }
-  .contact__blocks p { margin-top: 10px; }
-  @media (max-width: 560px) { .contact__card { padding: 36px 28px; } }
+  .contact__inner { max-width: var(--shell); margin: 0 auto; padding: 184px 24px 96px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 80px; align-items: start; }
+  /* This heading is a sentence, so it keeps sentence case instead of the site-wide Title Case. */
+  .contact__title { margin: 0; font: 700 clamp(24px, 2vw, 28px)/1.35 var(--font); letter-spacing: -.025em; color: var(--ink); text-transform: none; text-wrap: balance; }
+  .contact__meta { margin: 28px 0 0; font: 400 17px/1.75 var(--font); color: var(--grey-2); }
+  .contact__meta a { color: inherit; text-decoration: none; }
+  .contact__meta a:hover { color: var(--teal); }
+  .contact__notice { margin-bottom: 24px; }
+  .contact__form { display: flex; flex-direction: column; gap: 20px; }
+  .contact__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .soft { width: 100%; height: 56px; padding: 0 18px; border: 0; border-radius: 14px; background: var(--bg-soft-2); font: 400 16px/1 var(--font); color: var(--ink); outline: 2px solid transparent; transition: outline-color .2s ease, background .2s ease; }
+  .soft:focus { outline-color: var(--mint); background: #fff; }
+  select.soft { appearance: none; padding-right: 44px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%231B1E26' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; cursor: pointer; }
+  .soft--area { height: 170px; padding: 16px 18px; line-height: 1.6; resize: vertical; }
+  @media (max-width: 900px) {
+    .contact__inner { grid-template-columns: 1fr; gap: 48px; padding: 140px 24px 72px; }
+  }
+  @media (max-width: 560px) { .contact__row { grid-template-columns: 1fr; } }
 </style>
 
 <script>
