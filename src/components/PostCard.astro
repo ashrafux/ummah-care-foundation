@@ -1,0 +1,24 @@
+---
+import { postHref, type Post } from '../data/posts';
+
+interface Props {
+  post: Post;
+  delay?: string;
+}
+const { post, delay = '0' } = Astro.props;
+---
+<a class="post" href={postHref(post)} data-reveal={delay}>
+  <span class="zoom post__img"><img src={post.img} alt="" loading="lazy" /></span>
+  <span class="post__body">
+    <h3>{post.title}</h3>
+  </span>
+</a>
+
+<style>
+  .post { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; color: inherit; text-decoration: none; transition: border-color .25s ease, background .25s ease; }
+  .post:hover { border-color: var(--teal); background: #F7F7F7; }
+  .post:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .post__img { width: 100%; height: 240px; }
+  .post__body { padding: 24px 26px 28px; display: flex; flex-direction: column; flex: 1; }
+  .post h3 { margin: 0; font: 700 17px/1.4 var(--font); letter-spacing: -.015em; color: var(--ink); text-wrap: pretty; }
+</style>

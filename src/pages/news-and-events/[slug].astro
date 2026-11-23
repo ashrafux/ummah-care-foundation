@@ -1,0 +1,170 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { POSTS, postDate, readMinutes, type Post } from '../../data/posts';
+import { CAUSES } from '../../data/causes';
+import { CAUSE_NAV } from '../../data/site';
+import { GALLERY } from '../../data/gallery';
+import { IMG } from '../../data/images';
+
+export function getStaticPaths() {
+  return POSTS.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+const nav = CAUSE_NAV.find((c) => c.slug === post.cause);
+const cause = CAUSES.find((c) => c.slug === post.cause);
+// Field photos from the same cause. The hospital paperwork photo is left out because it shows a patient's details.
+const photos = GALLERY.filter((s) => s.cause === post.cause && s.src !== post.img && s.src !== IMG.aoaMedical).slice(0, 6);
+// Up to three other posts, starting with the ones after this one.
+const at = POSTS.indexOf(post);
+const related = [...POSTS.slice(at + 1), ...POSTS.slice(0, at)].slice(0, 3);
+const arrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg>';
+---
+<Base title={post.title} active="News" description={post.body[0]}>
+  <article class="pd">
+    <header class="pd__head" data-reveal="0">
+      <a class="pd__back" href="/news-and-events">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H6M12 19l-7-7 7-7" /></svg>
+        Blog
+      </a>
+      <h1 class="pd__title">{post.title}</h1>
+      <div class="pd__meta">
+        <div class="pd__by">
+          <span class="pd__mark"><img src={IMG.logoMark} alt="" /></span>
+          <div>
+            <b>Ummah Care Foundation</b>
+            <small>{nav && <a href={nav.href}>{nav.name}</a>}<span aria-hidden="true">•</span><time datetime={post.date}>{postDate(post)}</time></small>
+          </div>
+        </div>
+        <span class="pd__read">{readMinutes(post)} min read</span>
+      </div>
+    </header>
+
+    <figure class="pd__hero" data-reveal="80"><img src={post.img} alt="" /></figure>
+
+    <div class="pd__body">
+      <aside class="pd__aside">
+        <p class="pd__label">Share</p>
+        <div class="pd__share">
+          <a data-share="facebook" href="https://www.facebook.com/sharer/sharer.php" target="_blank" rel="noopener" aria-label="Share on Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8z" /></svg>
+          </a>
+          <button type="button" data-share="copy" aria-label="Copy link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" /></svg>
+          </button>
+          <span class="pd__copied" data-copied hidden>Link copied</span>
+        </div>
+      </aside>
+
+      <div class="pd__content">
+        {post.body.map((p) => <p>{p}</p>)}
+
+        {photos.length > 0 && (
+          <section class="pd__photos">
+            <h2>Photos from the field</h2>
+            <div class="pd__grid">
+              {photos.map((s) => <span class="zoom"><img src={s.src} alt={s.alt} loading="lazy" /></span>)}
+            </div>
+          </section>
+        )}
+
+        {nav && cause && (
+          <section class="pd__cta">
+            <div>
+              <p class="pd__label">{nav.name}</p>
+              <h2>{cause.title}</h2>
+            </div>
+            <div class="pd__cta-btns">
+              <a href="/donate" class="btn btn--teal btn-fx"><span class="roll"><span>Donate</span></span><span class="roll-ico" aria-hidden="true"><i set:html={arrow} /><i set:html={arrow} /></span></a>
+              <a href={nav.href} class="btn btn--outline">About this cause</a>
+            </div>
+          </section>
+        )}
+      </div>
+    </div>
+  </article>
+
+  <section class="more">
+    <div class="more__inner">
+      <h2 class="h2 more__title">Related posts</h2>
+      <div class="more__grid">
+        {related.map((p, i) => <PostCard post={p} delay={String(i * 80)} />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pd { background: #fff; padding: calc(92px + 72px) var(--gutter) 0; }
+  .pd__head { max-width: 860px; margin: 0 auto; }
+  .pd__back { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--font); color: var(--muted); text-decoration: none; transition: color .2s ease; }
+  .pd__back:hover { color: var(--teal); }
+  .pd__title { margin: 24px 0 0; font: 700 clamp(30px, 3.2vw, 44px)/1.2 var(--font); letter-spacing: -.03em; color: var(--ink); text-wrap: balance; }
+  .pd__meta { margin-top: 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .pd__by { display: flex; align-items: center; gap: 14px; }
+  .pd__mark { width: 48px; height: 48px; border-radius: 999px; background: var(--teal); display: grid; place-items: center; flex: none; }
+  /* The mark file is green; this turns it white on the primary circle. */
+  .pd__mark img { width: 26px; height: 26px; display: block; filter: brightness(0) invert(1); }
+  .pd__by b { display: block; font: 700 16px/1.3 var(--font); color: var(--ink); }
+  .pd__by small { display: flex; gap: 8px; margin-top: 3px; font: 400 14px/1.3 var(--font); color: var(--muted); }
+  .pd__by small a { color: var(--teal); text-decoration: none; font-weight: 600; }
+  .pd__by small a:hover { text-decoration: underline; }
+  .pd__read { padding: 8px 14px; border-radius: 999px; background: var(--bg-soft-2); font: 500 13.5px/1 var(--font); color: var(--muted); }
+
+  .pd__hero { margin: 48px auto 0; max-width: 1100px; aspect-ratio: 16 / 8.5; border-radius: 20px; overflow: hidden; }
+  .pd__hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .pd__body { max-width: 1100px; margin: 64px auto 0; display: grid; grid-template-columns: 180px minmax(0, 760px); gap: 60px; justify-content: center; }
+  .pd__aside { position: sticky; top: 120px; align-self: start; }
+  .pd__label { margin: 0 0 14px; font: 700 13px/1 var(--font); letter-spacing: .12em; text-transform: uppercase; color: var(--grey-4); }
+  .pd__share { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .pd__share a, .pd__share button { width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--ink); display: grid; place-items: center; cursor: pointer; padding: 0; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+  .pd__share a:hover, .pd__share button:hover { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .pd__copied { flex-basis: 100%; font: 500 13px/1 var(--font); color: var(--teal); }
+
+  .pd__content > p { margin: 0 0 24px; font: 400 19px/1.8 var(--font); color: var(--grey-2); }
+  .pd__content h2 { margin: 0; font: 700 26px/1.3 var(--font); letter-spacing: -.025em; color: var(--ink); }
+  .pd__photos { margin-top: 48px; }
+  .pd__grid { margin-top: 22px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .pd__grid .zoom { aspect-ratio: 4 / 3; border-radius: 10px; }
+
+  .pd__cta { margin-top: 56px; padding: 32px 34px; border-radius: 20px; background: var(--bg-mint); display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
+  .pd__cta .pd__label { color: var(--teal); }
+  .pd__cta h2 { font-size: 22px; max-width: 380px; text-wrap: balance; }
+  .pd__cta-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .more { background: #fff; }
+  .more__inner { max-width: var(--shell); margin: 0 auto; padding: 112px var(--gutter) 128px; }
+  .more__title { font-size: 32px; }
+  .more__grid { margin-top: 36px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
+
+  @media (max-width: 1020px) {
+    .pd__body { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .pd__aside { position: static; order: 2; }
+    .more__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .pd { padding-top: 128px; }
+    .pd__hero { aspect-ratio: 4 / 3; }
+    .pd__content > p { font-size: 17px; }
+    .pd__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pd__cta { padding: 26px 22px; }
+    .more__inner { padding: 80px var(--gutter) 96px; }
+    .more__grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  // Share: Facebook gets this page's address; the link button copies it.
+  const url = location.href.split('#')[0];
+  const fb = document.querySelector<HTMLAnchorElement>('[data-share="facebook"]');
+  if (fb) fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+  const note = document.querySelector<HTMLElement>('[data-copied]');
+  document.querySelector('[data-share="copy"]')?.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(url); } catch { return; }
+    if (!note) return;
+    note.hidden = false;
+    window.setTimeout(() => { note.hidden = true; }, 2000);
+  });
+</script>
