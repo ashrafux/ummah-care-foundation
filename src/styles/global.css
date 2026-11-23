@@ -82,6 +82,11 @@ main { display: block; }
 .lead { margin: 0; font: 400 18px/1.75 var(--font); color: var(--muted); text-wrap: balance; }
 .lead strong { color: var(--ink); font-weight: 700; }
 
+/* Every heading on the site is shown in Title Case (first letter of each word capitalised).
+   Wrap a brand that must keep its own casing, such as bKash, in <span class="nocap">. */
+h1, h2, h3, h4, h5, h6 { text-transform: capitalize; }
+.nocap { text-transform: none; }
+
 /* Buttons */
 .btn { display: inline-flex; align-items: center; gap: 10px; height: 56px; padding: 0 32px; border: 0; border-radius: 999px; font: 700 15px/1 var(--font); text-decoration: none; cursor: pointer; transition: background .2s ease, color .2s ease, border-color .2s ease; }
 .btn svg { flex: none; }
@@ -90,6 +95,35 @@ main { display: block; }
 .btn--outline { background: transparent; border: 1.5px solid var(--ink); color: var(--ink); }
 .btn--outline:hover { background: var(--ink); color: #fff; }
 .btn--md { height: 52px; padding: 0 28px; }
+
+/* Primary buttons (.btn-fx): on hover the label rolls up and an identical copy rolls in from below,
+   and the arrow chip does the same a beat later. The copy is a text-shadow, so screen readers hear the label once.
+   Markup: <span class="roll"><span>Label</span></span> then, optionally, <span class="roll-ico"><i>svg</i><i>svg</i></span>.
+   :not(#\#) lifts specificity above the per-page scoped button styles so this transition list wins. */
+.btn-fx:not(#\#) { --roll-ease: cubic-bezier(.62, .05, .32, 1); transition: background-color .25s cubic-bezier(.2, .7, .2, 1), color .25s cubic-bezier(.2, .7, .2, 1), border-color .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s ease, scale .12s cubic-bezier(.2, .7, .2, 1); }
+.btn-fx:active { scale: .978; }
+.roll { display: block; height: 1.4em; line-height: 1.4em; overflow: hidden; white-space: nowrap; }
+.roll > span { display: block; text-shadow: 0 1.4em currentColor; transition: transform .42s var(--roll-ease, ease); }
+.roll-ico { flex: none; display: grid; grid-auto-rows: 100%; align-content: start; height: calc(100% - 10px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: currentColor; transition: background-color .25s ease; }
+.roll-ico i { display: grid; place-items: center; color: var(--btn-bg, #fff); transition: transform .42s var(--roll-ease, ease) 40ms, color .25s ease; }
+.btn-fx:not(#\#):has(.roll-ico) { padding-right: 5px; gap: 16px; }
+.btn-fx:hover .roll > span, .btn-fx:focus-visible .roll > span, a:hover .btn-fx .roll > span,
+.btn-fx:hover .roll-ico i, .btn-fx:focus-visible .roll-ico i, a:hover .btn-fx .roll-ico i { transform: translateY(-100%); }
+/* The chip's arrow takes the button's own background colour, in both states. */
+.btn--teal { --btn-bg: var(--teal); }
+.btn--teal:hover { --btn-bg: var(--ink); }
+.hero__cta { --btn-bg: #55B984; }
+.hero__cta:hover { --btn-bg: #00A98C; }
+.cause-cta--white { --btn-bg: #fff; }
+.cause-cta--white:hover { --btn-bg: #95D5B2; }
+.vol__btn--white { --btn-bg: #fff; }
+.vol__btn--white:hover { --btn-bg: #E6F4F0; }
+.bigcause__btn { --btn-bg: #008F76; }
+@media (prefers-reduced-motion: reduce) {
+  .roll > span, .roll-ico i { transition: none; }
+  .btn-fx:hover .roll > span, .btn-fx:focus-visible .roll > span, a:hover .btn-fx .roll > span,
+  .btn-fx:hover .roll-ico i, .btn-fx:focus-visible .roll-ico i, a:hover .btn-fx .roll-ico i { transform: none; }
+}
 
 /* Forms */
 .form { display: flex; flex-direction: column; gap: 22px; }

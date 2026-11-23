@@ -48,7 +48,7 @@ let n = 0;
   <section class="faq">
     <div class="faq__inner">
       <div class="faq__pills">
-        {SECTIONS.map((s) => <a href={`#${s.id}`} class="faq__pill btn-fx">{s.pill}</a>)}
+        {SECTIONS.map((s) => <a href={`#${s.id}`} class="faq__pill btn-fx"><span class="roll"><span>{s.pill}</span></span></a>)}
       </div>
 
       <div class="faq__sections" data-accordion>

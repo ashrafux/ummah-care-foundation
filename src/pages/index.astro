@@ -14,7 +14,7 @@ const HERO_WORDS = HERO_TITLE.split(' ');
 const HERO_FAN = [
   { src: IMG.students, alt: 'A student receiving a gift in the classroom' },
   { src: IMG.sewing, alt: 'A sewing machine handed to a beneficiary' },
-  { src: IMG.fieldWork, alt: 'Relief reaching a flooded village by boat' },
+  { src: IMG.aoaSelfReliance, alt: 'A young man holding up the 2026 gift package list' },
   { src: IMG.goats, alt: 'A goat handed over in the village courtyard' },
   { src: IMG.medicalHospital, alt: 'A father and his child outside the hospital after treatment' }
 ];
@@ -75,9 +75,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
       </h1>
       <p class="hero__sub">Your donation has the power to change lives with impactful projects.</p>
       <div class="hero__ctas">
-        <a href={ROUTES.donate} class="hero__cta">Donate now
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" /></svg>
-        </a>
+        <a href={ROUTES.donate} class="hero__cta btn-fx"><span class="roll"><span>Donate now</span></span><span class="roll-ico" aria-hidden="true"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8" /></svg></i><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8" /></svg></i></span></a>
         <a href={ROUTES.areaOfActivity} class="hero__cta2">See our causes</a>
       </div>
 
@@ -137,7 +135,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
                 <input id="dn-contact" type="text" class="dn__input" placeholder="Mobile number or email" />
                 <p class="dn__err" data-error="contact" hidden></p>
               </div>
-              <button type="submit" class="dn__submit btn-fx">Donate now</button>
+              <button type="submit" class="dn__submit btn-fx"><span class="roll"><span>Donate now</span></span></button>
             </form>
             <p class="dn__note">Eligible for tax rebate. <a href={ROUTES.donate}>See payment details.</a></p>
           </div>
@@ -148,7 +146,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
             <p class="dn__summary">Send <strong data-sum-amount></strong> to the <strong data-sum-fund></strong> using either method below, with <strong data-sum-contact></strong> as the reference.</p>
             <div class="dn__methods">
               <div class="dn__method">
-                <h4>bKash / Mobile Banking</h4>
+                <h4><span class="nocap">bKash</span> / Mobile Banking</h4>
                 <p>Merchant No: <strong>01310-188834</strong></p>
                 <p class="dn__hint">Send from Payment Option</p>
               </div>
@@ -158,7 +156,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
               </div>
             </div>
             <div class="dn__actions">
-              <a href={ROUTES.donate} class="dn__link btn-fx">Full payment details</a>
+              <a href={ROUTES.donate} class="dn__link btn-fx"><span class="roll"><span>Full payment details</span></span></a>
               <button type="button" class="dn__reset" data-donation-reset>Make another donation</button>
             </div>
           </div>
@@ -178,17 +176,17 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
           </div>
           <p>Ummah Care Foundation is a non-profit, non-political charitable organization dedicated to human welfare. Grateful to the Almighty for our success, it's now time to give back to the community around us.</p>
         </div>
-        <span class="zoom story__img"><img src={IMG.fieldWork} alt="Ummah Care Foundation programme" loading="lazy" /></span>
+        <span class="zoom story__img"><img src={IMG.storyCharity} alt="Ummah Care Foundation programme" loading="lazy" /></span>
       </div>
 
       <div class="story__row story__row--flip">
-        <span class="zoom story__img"><img src={IMG.students} alt="Founders of Ummah Care Foundation" loading="lazy" /></span>
+        <span class="zoom story__img"><img src={IMG.students} alt="A student receiving a gift in the classroom" loading="lazy" /></span>
         <div class="story__card">
           <div>
             <h2>History of our Formation</h2>
             <div class="story__rule"></div>
           </div>
-          <p>Founded in 2020 by Md. Tareq Hasan and Md. Nizam Uddin, Ummah Care Foundation is a government-registered non-profit (Reg. S-13339/2020). Md. Tareq Hasan serves as Chairman and Md. Nizam Uddin as General Secretary, guiding our work in serving humanity and social reform.</p>
+          <p>Ummah Care Foundation began its journey in 2020 and is registered with the Government of Bangladesh as a non-profit (Reg. S-13339/2020). Since then, everything we do has grown from one simple purpose: serving humanity and helping build a fairer, kinder society.</p>
         </div>
       </div>
     </div>
@@ -202,7 +200,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
       <div class="aoa__head" data-aoa-head>
         <h2>Area of Activity</h2>
         <p>Committed to bringing hope—small contributions, big impact.</p>
-        <a href={ROUTES.donate} class="aoa__cta btn-fx">Support a cause</a>
+        <a href={ROUTES.donate} class="aoa__cta btn-fx"><span class="roll"><span>Support a cause</span></span></a>
       </div>
     </div>
 
@@ -215,9 +213,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
             <span class="pill">{c.pill}</span>
             <h3>{c.title}</h3>
             <p>{c.text}</p>
-            <span class="bigcause__btn btn-fx">View program
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg>
-            </span>
+            <span class="bigcause__btn btn-fx"><span class="roll"><span>View program</span></span><span class="roll-ico" aria-hidden="true"><i><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i><i><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i></span></span>
           </div>
           <div class="bigcause__media" style={`background:${c.bg}`}>
             <span class="zoom bigcause__img"><img src={c.img} alt={c.alt} loading="lazy" /></span>
@@ -302,9 +298,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
       <h2>Join as volunteer</h2>
       <p>Join us in making a difference! Volunteer with our charity organization and help bring hope and support to those in need. Your time and skills can create a lasting impact.</p>
       <div class="vol__actions">
-        <a href={ROUTES.volunteer} class="vol__btn vol__btn--white btn-fx">Join us
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg>
-        </a>
+        <a href={ROUTES.volunteer} class="vol__btn vol__btn--white btn-fx"><span class="roll"><span>Join us</span></span><span class="roll-ico" aria-hidden="true"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i></span></a>
         <a href={ROUTES.donate} class="vol__btn vol__btn--outline">Donate
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
         </a>
@@ -315,10 +309,14 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
 
 <style>
   /* ---- Hero ---- */
-  .hero { position: relative; overflow: hidden; background: radial-gradient(ellipse 80% 60% at 65% 45%, #95D5B2 0%, #2D6A4F 32%, #0B2B22 68%, #0D0D0D 100%); }
+  /* The hero always fills the screen: svh keeps it steady while mobile browser bars show and hide. */
+  .hero { position: relative; overflow: hidden; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; background: radial-gradient(ellipse 80% 60% at 65% 45%, #95D5B2 0%, #2D6A4F 32%, #0B2B22 68%, #0D0D0D 100%); }
   .hero__mesh { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13, 13, 13, .55) 0%, rgba(0, 62, 51, .1) 30%, rgba(0, 0, 0, 0) 55%); pointer-events: none; }
-  .hero__inner { max-width: var(--shell); margin: 0 auto; padding: 196px 24px 0; position: relative; display: flex; flex-direction: column; align-items: center; }
+  /* Spare height is split above the headline and below the buttons, so the text sits centred and the photo fan stays on the bottom edge. */
+  .hero__inner { flex: 1 0 auto; width: 100%; max-width: var(--shell); margin: 0 auto; padding: clamp(132px, 18vh, 196px) 24px 0; position: relative; display: flex; flex-direction: column; align-items: center; }
+  .hero__inner > .hero__title { margin-top: auto; }
+  .hero__inner > .hero__ctas { margin-bottom: auto; }
   .hero__title { margin: 0; font: 700 clamp(44px, 5.4vw, 72px)/1.08 var(--font); letter-spacing: -.035em; color: #fff; text-align: center; max-width: 1060px; text-wrap: balance; }
   /* Headline reveal. Words are inline-block so they can be transformed; the
      spaces stay plain text, so the line still wraps and balances normally.
@@ -348,7 +346,8 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
   .hero__cta2:hover { background: rgba(255, 255, 255, .1); border-color: #fff; color: #fff; }
   /* Five photos fanned from a pivot below the hero edge; --k runs -2..2 from left to right. */
   /* Spacing and card size scale with the screen so all five cards stay in view down to tablets. */
-  .hfan { --step: clamp(120px, 14.5vw, 230px); --w: clamp(160px, 15vw, 240px); --h: calc(var(--w) * 4 / 3); position: relative; width: 100%; height: calc(var(--h) + 20px); margin-top: 80px; }
+  /* Card size and the gap above follow the screen height too, so the whole fan fits on short laptop screens. */
+  .hfan { --step: clamp(120px, 14.5vw, 230px); --w: clamp(150px, min(15vw, 22vh), 240px); --h: calc(var(--w) * 4 / 3); position: relative; width: 100%; height: calc(var(--h) + 20px); margin-top: clamp(32px, 5vh, 80px); }
   .hfan__card { position: absolute; left: 50%; bottom: -40px; width: var(--w); height: var(--h); object-fit: cover; border-radius: 20px; border: 6px solid #fff; box-shadow: 0 30px 60px -25px rgba(0, 0, 0, .55); transform-origin: 50% 120%;
     transform: translateX(-50%) translateX(calc(var(--k) * var(--step))) translateY(var(--y, 0px)) rotate(calc(var(--k) * 7deg));
     transition: transform .35s var(--ease-out), box-shadow .35s ease;
@@ -510,7 +509,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
   .vol h2 { margin: 40px 0 0; font: 700 clamp(40px, 4.4vw, 56px)/1.1 var(--font); letter-spacing: -.03em; color: #fff; max-width: 820px; text-wrap: balance; }
   .vol__inner > p { margin: 26px 0 0; font: 400 18px/1.75 var(--font); color: rgba(255, 255, 255, .88); max-width: 560px; text-wrap: balance; }
   .vol__actions { margin-top: 44px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
-  .vol__btn { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 28px; border-radius: 20px; font: 600 15.5px/1 var(--font); text-decoration: none; transition: background .2s ease, border-color .2s ease; }
+  .vol__btn { display: inline-flex; align-items: center; gap: 12px; height: 56px; padding: 0 40px; border-radius: 999px; font: 600 15.5px/1 var(--font); text-decoration: none; transition: background .2s ease, border-color .2s ease; }
   .vol__btn--white { background: #fff; color: #00473B; }
   .vol__btn--white:hover { background: #E6F4F0; color: #00473B; }
   .vol__btn--outline { border: 1px solid rgba(255, 255, 255, .5); background: transparent; color: #fff; }
@@ -536,7 +535,8 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
     .smallcauses { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .hfan { --step: 92px; --w: 150px; margin-top: 56px; }
+    .hero__inner { padding-top: clamp(104px, 14vh, 132px); }
+    .hfan { --step: 92px; --w: clamp(112px, 17vh, 150px); margin-top: clamp(24px, 4vh, 56px); }
     .hfan__card { border-width: 4px; bottom: -28px; }
     .hfan__card:nth-child(1), .hfan__card:nth-child(5) { display: none; }
     .hero__ctas > * { flex: 1 1 100%; justify-content: center; }
@@ -545,6 +545,12 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
     .dn__stats { gap: 36px; }
     .stats__grid { grid-template-columns: 1fr; }
     .stat__num { font-size: 52px; }
+  }
+  /* Small, short phones (iPhone SE size): buttons side by side and tighter gaps, so the hero still fits one screen. */
+  @media (max-width: 640px) and (max-height: 720px) {
+    .hero__sub { margin-top: 16px; font-size: 17px; }
+    .hero__ctas { margin-top: 24px; gap: 10px; flex-wrap: nowrap; }
+    .hero__ctas > * { flex: 1 1 0; height: 52px; padding: 0 12px; gap: 8px; font-size: 15px; white-space: nowrap; }
   }
 </style>
 
