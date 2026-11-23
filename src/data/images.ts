@@ -28,18 +28,20 @@ export const IMG = {
 
   // --- Flood relief: food, water and emergency ---
   fieldWork: '/images/flood-relief-village.jpg',
+  // The earlier wide crop, kept for the home "Empowering through Charity" panel.
+  storyCharity: '/images/flood-relief-village-wide.jpg',
   relief: '/images/flood-relief-village.jpg',
   emergency2: '/images/flood-relief-village.jpg',
   waterCheck: '/images/flood-relief-village.jpg',
-  aoaWater: '/images/flood-relief-village.jpg',
+  aoaWater: '/images/flood-relief-truck.jpg',
   foodDistribution: '/images/flood-relief-package.jpg',
   foodCheck: '/images/flood-relief-package.jpg',
   aoaFood: '/images/flood-relief-package.jpg',
 
   // --- Humanitarian aid ---
-  community: '/images/foundation-handover-moment.jpg',
-  humanitarian2: '/images/foundation-handover-moment.jpg',
-  aoaHumanitarian: '/images/office-envelope-handover.jpg',
+  community: '/images/flood-relief-truck.jpg',
+  humanitarian2: '/images/flood-relief-truck.jpg',
+  aoaHumanitarian: '/images/relief-ride-van.jpg',
 
   // --- Success stories ---
   storyRagib1: '/images/wheelchair-campus.jpg',
@@ -49,6 +51,8 @@ export const IMG = {
   // --- Brand and chrome (no photography) ---
   logoDark: '/images/logo-dark.svg',
   logoLight: '/images/logo-light.svg',
+  // Just the leaf-and-cup mark, cut from the full logo, for small round badges.
+  logoMark: '/images/logo-mark.svg',
   paymentBanner: '/images/Payment-Banner_5-1024x34.jpg',
   sunset: '/images/sunset-bg.jpg',
 
