@@ -1,0 +1,98 @@
+---
+// Closing section of a cause page: the cause's achievements light up word by word as
+// the page scrolls, with field photos floating at the sides, then the buttons appear.
+import type { Cause } from '../data/causes';
+import { IMG } from '../data/images';
+import { ROUTES } from '../data/site';
+
+interface Props { data: Cause }
+const { data } = Astro.props;
+
+const FLOAT_IMGS = [IMG.students, IMG.sewing, IMG.wheelchair, IMG.winterDistribution, IMG.foodDistribution, IMG.goats];
+// anchored to the 1000px text column: 50% ± (500px column half + gap + width)
+const FLOAT_POS = [
+  'left:max(24px,calc(50% - 500px - 240px));top:15%',
+  'left:max(24px,calc(50% - 500px - 300px));top:38%',
+  'left:max(24px,calc(50% - 500px - 230px));top:63%',
+  'right:max(24px,calc(50% - 500px - 250px));top:10%',
+  'right:max(24px,calc(50% - 500px - 190px));top:31%',
+  'right:max(24px,calc(50% - 500px - 240px));top:67%'
+];
+
+const totalWords = data.extra.join(' ').split(/\s+/).filter(Boolean).length;
+const scrollHeight = `${100 + Math.min(260, Math.max(140, totalWords * 2.2))}vh`;
+let wi = 0;
+const paragraphs = data.extra.map((t) => t.split(/\s+/).filter(Boolean).map((w) => ({ t: w, i: wi++ })));
+const arrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg>';
+---
+<section class="cause-scroll" data-no-reveal data-cause-scroll style={`height:${scrollHeight}`}>
+  <div class="cause-scroll__sticky">
+    {FLOAT_IMGS.map((src, i) => (
+      <img src={src} alt="" class="cause-float" data-float={i} loading="lazy" style={`animation:causeFloat ${9 + i * 1.3}s ease-in-out ${-i * 2.1}s infinite;${FLOAT_POS[i]}`} />
+    ))}
+    <div class="cause-scroll__content">
+      <h3 class="cause-scroll__title">{data.extraTitle}</h3>
+      <div class="cause-scroll__paras">
+        {paragraphs.map((words) => (
+          <p>{words.map((w) => <span data-word={w.i}>{w.t + ' '}</span>)}</p>
+        ))}
+      </div>
+      <div class="cause-scroll__cta" data-cta>
+        <a href={ROUTES.donate} class="cause-cta cause-cta--white btn-fx"><span class="roll"><span>Donate now</span></span><span class="roll-ico" aria-hidden="true"><i set:html={arrow} /><i set:html={arrow} /></span></a>
+        <a href={ROUTES.home} class="cause-cta cause-cta--outline">All causes</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cause-scroll { position: relative; background: #00473B; }
+  .cause-scroll__sticky { position: sticky; top: 0; min-height: 100vh; overflow: hidden; }
+  .cause-float { position: absolute; width: 120px; aspect-ratio: 1; object-fit: cover; border-radius: 20px; pointer-events: none; }
+  .cause-scroll__content { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; max-width: 1100px; margin: 0 auto; padding: 144px 24px; }
+  .cause-scroll__title { margin: 0; font: 700 clamp(32px, 3.4vw, 44px)/1.15 var(--font); letter-spacing: -.03em; color: #fff; text-wrap: balance; }
+  .cause-scroll__paras { margin-top: 44px; display: flex; flex-direction: column; gap: 32px; max-width: 1000px; }
+  .cause-scroll__paras p { margin: 0; font: 500 clamp(26px, 3vw, 44px)/1.35 var(--font); letter-spacing: -.015em; text-wrap: pretty; color: rgba(255, 255, 255, .22); }
+  .cause-scroll__paras span { color: rgba(255, 255, 255, .22); transition: color .25s ease; }
+  .cause-scroll__paras span.is-lit { color: #fff; }
+  .cause-scroll__cta { margin-top: 56px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+  .cause-scroll__cta.is-on { opacity: 1; transform: none; pointer-events: auto; }
+  .cause-cta { display: inline-flex; align-items: center; gap: 10px; height: 56px; padding: 0 32px; border-radius: 999px; font: 700 15px/1 var(--font); transition: background .2s ease, color .2s ease; }
+  .cause-cta--white { background: #fff; color: #00473B; }
+  .cause-cta--white:hover { background: #95D5B2; color: #00473B; }
+  .cause-cta--outline { border: 1.5px solid rgba(255, 255, 255, .7); color: #fff; }
+  .cause-cta--outline:hover { background: #fff; color: #00473B; }
+
+  @keyframes causeFloat {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(10px, -16px) rotate(2.5deg); }
+    50% { transform: translate(-8px, -6px) rotate(-2deg); }
+    75% { transform: translate(6px, 14px) rotate(1.5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  @media (max-width: 1399px) { .cause-float { display: none; } }
+</style>
+
+<script>
+  // Lights the words in reading order as the section scrolls past, then shows the buttons.
+  const sec = document.querySelector<HTMLElement>('[data-cause-scroll]');
+  if (sec) {
+    const words = [...sec.querySelectorAll<HTMLElement>('[data-word]')];
+    const cta = sec.querySelector<HTMLElement>('[data-cta]');
+    let lit = -1;
+    let ctaOn: boolean | null = null;
+    const onScroll = () => {
+      const r = sec.getBoundingClientRect();
+      const range = sec.offsetHeight - window.innerHeight;
+      const p = Math.min(1, Math.max(0, -r.top / Math.max(1, range)));
+      const l = Math.floor((p / 0.85) * words.length);
+      if (l !== lit) { lit = l; words.forEach((w, i) => w.classList.toggle('is-lit', i < l)); }
+      const on = p > 0.88;
+      if (on !== ctaOn) { ctaOn = on; cta?.classList.toggle('is-on', on); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
+  }
+</script>

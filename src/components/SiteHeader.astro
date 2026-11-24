@@ -6,9 +6,11 @@ import { CAUSES } from '../data/causes';
 interface Props {
   active?: NavKey;
   dark?: boolean;
+  account?: boolean;
 }
 
-const { active = '', dark = false } = Astro.props;
+const { active = '', dark = false, account = false } = Astro.props;
+const userIco = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>';
 const MEGA = CAUSE_NAV.map((c) => ({ ...c, desc: CAUSES.find((x) => x.slug === c.slug)?.title ?? '' }));
 const megaArrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>';
 const NAV = [
@@ -29,7 +31,6 @@ const NAV = [
         <a href="#causes" class="nav-link nav-link--mega" data-mega-toggle aria-haspopup="true" aria-expanded="false">Our Causes
           <svg class="nav-chevron" width="11" height="7" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.5L5.5 5.5L10 1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
         </a>
-        {active === 'Causes' && <span class="nav-dot" />}
         <div class="mega-wrap">
           <div class="mega" data-mega-menu>
             <div class="mega__list">
@@ -57,6 +58,12 @@ const NAV = [
     </nav>
 
     <div class="site-header__cta">
+      {account && (
+        <a href="/account" class="hdr-acct" data-hdr-acct>
+          <span class="hdr-acct__av" data-hdr-av set:html={userIco} />
+          <span data-hdr-label>Sign in</span>
+        </a>
+      )}
       <a href={ROUTES.membership} class="hdr-btn hdr-btn--outline">Get Involved</a>
       <a href={ROUTES.donate} class="hdr-btn hdr-btn--solid btn-fx"><span class="roll"><span>Donate</span></span></a>
     </div>
@@ -74,6 +81,7 @@ const NAV = [
       {CAUSE_NAV.map((c) => <a href={c.href}>{c.name}</a>)}
     </div>
     {NAV.map((n) => <a href={n.href} class="mobile-menu__link">{n.label}</a>)}
+    {account && <a href="/account" class="mobile-menu__link" data-hdr-acct-m>My account</a>}
     <div class="mobile-menu__cta">
       <a href={ROUTES.membership} class="mobile-menu__outline">Get Involved</a>
       <a href={ROUTES.donate} class="mobile-menu__solid btn-fx"><span class="roll"><span>Donate</span></span></a>
@@ -114,6 +122,8 @@ const NAV = [
   .mega-item:nth-child(6) { animation-delay: .26s; }
   .mega-item:nth-child(7) { animation-delay: .295s; }
   .mega-item:nth-child(8) { animation-delay: .33s; }
+  .mega-item:nth-child(9) { animation-delay: .365s; }
+  .mega-item:nth-child(10) { animation-delay: .4s; }
   .mega-item__img { flex: none; width: 52px; height: 52px; border-radius: 12px; overflow: hidden; background: #EDF7F4; }
   .mega-item__img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .55s var(--ease); }
   .mega-item:hover .mega-item__img img { transform: scale(1.1); }
@@ -163,6 +173,14 @@ const NAV = [
   .mobile-menu__outline { border: 1.5px solid #1B1E26; color: #1B1E26; }
   .mobile-menu__solid { background: #008F76; color: #fff; }
 
+  /* My Account: a person icon and label, or the donor's initials once signed in. */
+  .hdr-acct { display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px 0 6px; border-radius: 999px; font: 700 14.5px/1 var(--font); color: #1B1E26; text-decoration: none; transition: background .2s ease, color .2s ease; }
+  .hdr-acct:hover { background: rgba(27, 30, 38, .06); }
+  .hdr-acct__av { width: 36px; height: 36px; border-radius: 999px; background: #EDF7F4; color: #008F76; display: grid; place-items: center; font: 700 13px/1 var(--font); }
+  .site-header--dark .hdr-acct { color: #fff; }
+  .site-header--dark .hdr-acct:hover { background: rgba(255, 255, 255, .1); }
+  .site-header--dark .hdr-acct__av { background: rgba(255, 255, 255, .14); color: #fff; }
+
   @media (max-width: 1139px) {
     .site-header__nav, .site-header__cta { display: none; }
     .burger { display: flex; }
@@ -171,4 +189,17 @@ const NAV = [
 
 <script>
   import '../scripts/header';
+  import { getUser, initials } from '../scripts/account';
+
+  // Signed in: the header shows the donor's initials and "My account".
+  const me = getUser();
+  if (me) {
+    document.querySelectorAll<HTMLElement>('[data-hdr-acct]').forEach((a) => {
+      a.querySelector('[data-hdr-av]')!.textContent = initials(me.name) || '•';
+      a.querySelector('[data-hdr-label]')!.textContent = 'My account';
+    });
+  } else {
+    document.querySelectorAll<HTMLAnchorElement>('[data-hdr-acct], [data-hdr-acct-m]').forEach((a) => { a.href = '/account/login'; });
+    document.querySelectorAll<HTMLElement>('[data-hdr-acct-m]').forEach((a) => { a.textContent = 'Sign in'; });
+  }
 </script>

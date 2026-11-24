@@ -9,9 +9,11 @@ interface Props {
   description?: string;
   active?: NavKey;
   dark?: boolean;
+  /** Show the Sign in / My account link in the header. Off for now; pass account to show it. */
+  account?: boolean;
 }
 
-const { title, description = 'Ummah Care Foundation is a non-profit, non-political charitable organization dedicated to human welfare in Bangladesh.', active = '', dark = false } = Astro.props;
+const { title, description = 'Ummah Care Foundation is a non-profit, non-political charitable organization dedicated to human welfare in Bangladesh.', active = '', dark = false, account = false } = Astro.props;
 const fullTitle = title === 'Home' ? 'Ummah Care Foundation — Committed to human social welfare & progress' : `${title} · Ummah Care Foundation`;
 ---
 <!doctype html>
@@ -33,7 +35,7 @@ const fullTitle = title === 'Home' ? 'Ummah Care Foundation — Committed to hum
   </head>
   <body>
     <div class="site">
-      <SiteHeader active={active} dark={dark} />
+      <SiteHeader active={active} dark={dark} account={account} />
       <main>
         <slot />
       </main>

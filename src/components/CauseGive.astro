@@ -1,0 +1,309 @@
+---
+// The donate box beside each cause page. Step one is the gift and donation type;
+// Continue opens the donor's details below it, in the same box.
+import type { Cause } from '../data/causes';
+import { GIVING, taka } from '../data/cause-giving';
+import { SPONSEES, PROGRAM, monthlyOptions, PROGRAM_OPTIONS } from '../data/imams';
+
+interface Props {
+  cause: Cause;
+  /** Makes the ids unique when two boxes share a page. */
+  id: string;
+  /** The page's "Ways to give" cards choose the gift, so the box shows only the chosen one. */
+  picked?: boolean;
+}
+const { cause, id, picked = false } = Astro.props;
+const g = GIVING[cause.slug];
+// Imam Support sponsors people month by month; "Give once" is a one-off gift to the whole program.
+const isImam = cause.slug === 'imam-support';
+const AMOUNTS = isImam ? [100, 500, 1000, 5000] : [500, 1000, 2000, 5000];
+const first = g.gifts[0];
+const startTotal = isImam ? 1000 : first.price;
+const MONTHS = [1, 3, 6, 12];
+const sponsees = [
+  ...SPONSEES.map((p) => ({ name: p.name, initials: p.initials, photo: p.photo, note: `${taka(p.needed)} a month still needed`, options: monthlyOptions(p.needed) })),
+  { name: PROGRAM.name, initials: '', photo: undefined, note: PROGRAM.meta, options: PROGRAM_OPTIONS }
+];
+const pct = g.impact ? Math.round((g.impact.done / g.impact.goal) * 100) : 0;
+const arrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>';
+---
+<div class:list={['gb', { 'gb--picked': picked }]} id={id} data-cause={cause.crumb}>
+  <div class="gb__top">
+    {g.impact ? (
+      <Fragment>
+        <p class="gb__num">{g.impact.done.toLocaleString('en-US')}+ <small>{g.impact.unit} reached</small></p>
+        <div class="gb__bar" role="img" aria-label={`${pct}% of the goal`}><i style={`width:${pct}%`} /></div>
+        <p class="gb__goal"><span>Goal: {g.impact.goal.toLocaleString('en-US')} {g.impact.unit}</span><span>{pct}% there</span></p>
+      </Fragment>
+    ) : (
+      <div class="gb__who">
+        <div><b>Give to {cause.crumb}</b><small>{g.summary}</small></div>
+      </div>
+    )}
+  </div>
+
+  <div class="notice gb__thanks" data-gb-sent hidden tabindex="-1">
+    <span class="notice__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></span>
+    <p>Thank you. We have your donation details and will confirm once the payment arrives.</p>
+  </div>
+
+  <form class="gb__form" data-gb novalidate>
+    <div class="gb__col gb__col--pick">
+      {isImam ? (
+        <div class="gb__tabs" role="tablist" aria-label="How to give">
+          <button type="button" role="tab" aria-selected="true" class="is-on" data-gb-tab="amount">Give once</button>
+          <button type="button" role="tab" aria-selected="false" data-gb-tab="sponsor">Sponsor monthly</button>
+        </div>
+      ) : (
+        <div class="gb__tabs" role="tablist" aria-label="How to give">
+          <button type="button" role="tab" aria-selected="true" class="is-on" data-gb-tab="gift">Choose a gift</button>
+          <button type="button" role="tab" aria-selected="false" data-gb-tab="amount">Any amount</button>
+        </div>
+      )}
+
+      {isImam && (
+        <div class="gb__panel" data-gb-panel="sponsor" hidden>
+          <p class="gb__hint" data-sp-empty>Choose someone to sponsor from the list, or sponsor the whole program.</p>
+          <div class="sps" role="radiogroup" aria-label="Who to sponsor">
+            {sponsees.map((x, i) => (
+              <label class="sp">
+                <input type="radio" name={`${id}-sp`} value={i} data-sp data-name={x.name} data-options={x.options.join(',')} />
+                {x.photo
+                  ? <img class="sp__av" src={x.photo} alt="" loading="lazy" />
+                  : x.initials
+                  ? <span class="sp__av" aria-hidden="true">{x.initials}</span>
+                  : <span class="sp__av" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8" /></svg></span>}
+                <span class="sp__txt"><b>{x.name}</b><small>{x.note}</small></span>
+              </label>
+            ))}
+          </div>
+          <div class="sp__plan" data-sp-plan hidden>
+            <p class="gb__label">Monthly amount</p>
+            <div class="pills" data-sp-amounts></div>
+            <p class="gb__label">Pay for</p>
+            <div class="sp__months" data-sp-months>
+              {MONTHS.map((m) => <button type="button" class:list={{ 'is-on': m === 1 }} data-m={m}>{m === 1 ? '1 month' : `${m} months`}</button>)}
+            </div>
+            <p class="sp__line"><span data-sp-line></span><b data-sp-total></b></p>
+          </div>
+        </div>
+      )}
+
+      {!isImam && <div class="gb__panel" data-gb-panel="gift">
+        <div class="gb__gifts" role="group" aria-label="Gifts">
+          {g.gifts.map((x, i) => (
+            <div class:list={['gift', { 'is-on': i === 0 }]}>
+              <label class="gift__head">
+                <input type="checkbox" value={i} checked={i === 0} data-gb-gift data-price={x.price} data-name={x.name} />
+                <span class="gift__ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z" /></svg></span>
+                <span class="gift__txt"><b>{x.name}</b><small>{x.desc}</small></span>
+                <span class="gift__price">{taka(x.price)}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>}
+
+      <div class="gb__panel" data-gb-panel="amount" hidden={!isImam}>
+        {isImam && <p class="gb__hint">A one-off gift to the whole program. To give monthly, choose someone to sponsor.</p>}
+        <label class="amt">
+          <span>৳</span>
+          <input type="text" inputmode="numeric" value="1,000" aria-label="Amount in taka" data-gb-amount />
+          <em>one-time</em>
+        </label>
+        <div class="pills">
+          {AMOUNTS.map((a) => <button type="button" class:list={['pill', { 'is-on': a === 1000 }]} data-gb-preset={a}>{taka(a)}</button>)}
+        </div>
+      </div>
+
+      <fieldset class="gb__group">
+        <legend class="gb__label">Donation type</legend>
+        <div class="gb__type" data-gb-type>
+          <button type="button" class="is-on" data-v="Sadaqa">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.4A4.3 4.3 0 0112 7.4a4.3 4.3 0 017.5 2.7c0 5.8-7.5 10.4-7.5 10.4z" /></svg>
+            Sadaqa
+          </button>
+          <button type="button" data-v="Zakat">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z" /></svg>
+            Zakat
+          </button>
+        </div>
+      </fieldset>
+      <p class="gb__err" data-gb-err="amount" hidden>Please give at least ৳100.</p>
+      <button type="button" class="btn btn--teal btn-fx gb__next" data-gb-next><span class="roll"><span data-gb-next-label>Continue · {taka(startTotal)}</span></span><span class="roll-ico" aria-hidden="true"><i set:html={arrow} /><i set:html={arrow} /></span></button>
+    </div>
+
+    <div class="gb__col gb__col--you">
+      <div class="field">
+        <label class="label" for={`${id}-name`}>Your name <em>*</em></label>
+        <input id={`${id}-name`} class="input" type="text" autocomplete="name" placeholder="Full name" data-gb-name />
+        <p class="gb__err" data-gb-err="name" hidden>Please enter your name.</p>
+      </div>
+      <div class="field">
+        <label class="label" for={`${id}-contact`}>Phone or email</label>
+        <input id={`${id}-contact`} class="input" type="text" autocomplete="email" placeholder="+8801XXXXXXXXX or you@example.com" />
+      </div>
+      <fieldset class="gb__pay">
+        <legend class="label">Pay with</legend>
+        <div class="pay" role="radiogroup" aria-label="Payment method">
+          <label class="pay__opt" title="Card or mobile banking (SSLCommerz)">
+            <input type="radio" name={`${id}-pay`} value="SSLCommerz" checked />
+            <img class="pay__logo pay__logo--ssl" src="/images/payments/sslcommerz.png" alt="SSLCommerz: card or mobile banking" width="462" height="100" />
+          </label>
+          <label class="pay__opt" title="bKash">
+            <input type="radio" name={`${id}-pay`} value="bKash" />
+            <span class="lg lg--bk" aria-label="bKash">bKash</span>
+          </label>
+          <label class="pay__opt" title="Bank transfer">
+            <input type="radio" name={`${id}-pay`} value="Bank transfer" />
+            <span class="lg lg--bank" aria-label="Bank transfer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18" /></svg>Bank</span>
+          </label>
+        </div>
+      </fieldset>
+      <button type="button" class="gb__more" data-gb-more aria-expanded="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+        Give on behalf of someone
+      </button>
+      <div class="field" data-gb-behalf hidden>
+        <label class="label" for={`${id}-behalf`}>On behalf of <span class="gb__opt">(optional)</span></label>
+        <input id={`${id}-behalf`} class="input" type="text" placeholder="e.g. my late father" />
+      </div>
+      <label class="check gb__anon"><input type="checkbox" /><span>Donate anonymously</span></label>
+      <button type="submit" class="btn btn--teal btn-fx gb__submit"><span class="roll"><span data-gb-btn>Donate {taka(startTotal)}</span></span><span class="roll-ico" aria-hidden="true"><i set:html={arrow} /><i set:html={arrow} /></span></button>
+      <p class="gb__safe">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5" /><path d="M8 10V7a4 4 0 018 0v3" /></svg>
+        Secure payment. Every taka goes to {cause.crumb}.
+      </p>
+    </div>
+  </form>
+</div>
+
+<style>
+  /* Same soft grey panel as the Donate page summary. Everything you pick sits on it in white. */
+  .gb { background: var(--bg-soft-2); border-radius: 24px; }
+  .gb__top { padding: 28px 32px 22px; border-bottom: 1px solid rgba(27, 30, 38, .08); }
+  .gb__num { margin: 0; font: 700 30px/1 var(--font); letter-spacing: -.035em; color: var(--ink); }
+  .gb__num small { margin-left: 4px; font: 500 15px/1 var(--font); letter-spacing: 0; color: var(--muted); }
+  .gb__bar { margin-top: 14px; height: 6px; border-radius: 999px; background: #E2E2E6; overflow: hidden; }
+  .gb__bar i { display: block; height: 100%; border-radius: inherit; background: var(--teal); }
+  .gb__goal { margin: 10px 0 0; display: flex; justify-content: space-between; gap: 12px; font: 500 13.5px/1.3 var(--font); color: var(--muted); }
+  .gb__goal span:last-child { color: var(--grey-2); font-weight: 600; }
+  .gb__who { display: flex; gap: 14px; align-items: center; }
+  .gb__who b { display: block; font: 700 17px/1.3 var(--font); color: var(--ink); }
+  .gb__who small { display: block; margin-top: 3px; font: 400 14px/1.45 var(--font); color: var(--muted); text-wrap: pretty; }
+
+  .gb__thanks { margin: 24px 28px 0; }
+  .gb__form { padding: 24px 32px 30px; display: grid; gap: 24px; }
+  .gb__col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  /* Narrow: the donor's details open below the gift once Continue is pressed. */
+  .gb__form:not(.is-two) .gb__col--you, .gb__form.is-two .gb__next { display: none; }
+  .gb__form.is-two .gb__col--you { padding-top: 24px; border-top: 1px solid rgba(27, 30, 38, .08); }
+  .gb__next { margin-top: 12px; width: 100%; justify-content: space-between; padding-left: 28px; }
+  .gb__more { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; font: 600 14px/1 var(--font); color: var(--teal); cursor: pointer; }
+  .gb__more:hover { color: var(--ink); }
+  .gb__more[hidden] { display: none; }
+
+  .gb__tabs { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: #E0E0E5; }
+  .gb__tabs button { height: 40px; border: 0; border-radius: 999px; background: transparent; font: 600 14.5px/1 var(--font); color: var(--grey-2); cursor: pointer; transition: background .2s ease, color .2s ease, box-shadow .2s ease; }
+  .gb__tabs button.is-on { background: #fff; color: var(--ink); box-shadow: 0 2px 8px -2px rgba(0, 0, 0, .15); }
+  .gb__panel { display: flex; flex-direction: column; gap: 12px; }
+  .gb__panel[hidden] { display: none; }
+
+  .gb__gifts { display: flex; flex-direction: column; gap: 8px; }
+  /* Gifts are checkboxes: pick one or several. */
+  .gift { border: 1.5px solid var(--line-2); border-radius: 16px; background: #fff; transition: border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+  .gift:hover { border-color: var(--mint-3); }
+  .gift.is-on { border-color: var(--teal); background: var(--bg-mint); box-shadow: 0 0 0 3px var(--mint-2); }
+  .gift__head { position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 16px 9px 9px; cursor: pointer; }
+  .gift__head input { position: absolute; opacity: 0; pointer-events: none; }
+  .gift:has(input:focus-visible) { outline: 2px solid var(--teal); outline-offset: 2px; }
+  /* Same gift icon as the "Ways to give" cards: green when chosen, grey when not. */
+  .gift__ico { flex: none; width: 32px; height: 32px; border-radius: 10px; background: var(--bg-soft-2); color: var(--grey-4); display: grid; place-items: center; transition: background .15s ease, color .15s ease, box-shadow .15s ease; }
+  .gift.is-on .gift__price { color: var(--teal); }
+  .gift.is-on .gift__ico { background: #fff; color: var(--teal); box-shadow: 0 6px 14px -6px rgba(27, 30, 38, .18), 0 1px 3px rgba(27, 30, 38, .05); }
+  .gift__txt { flex: 1; min-width: 0; }
+  .gift__txt b { display: block; font: 700 15px/1.3 var(--font); color: var(--ink); }
+  .gift__txt small { display: none; margin-top: 3px; font: 400 13.5px/1.45 var(--font); color: var(--muted); text-wrap: pretty; }
+  .gift__price { flex: none; font: 600 14.5px/1.3 var(--font); color: var(--muted); }
+
+  .amt { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 20px; border: 1.5px solid var(--line-2); border-radius: 16px; font: 600 18px/1 var(--font); color: var(--ink); background: #fff; transition: border-color .2s ease; }
+  .amt:focus-within { border-color: var(--teal); }
+  .amt input { flex: 1; min-width: 0; border: 0; outline: none; background: none; font: inherit; color: inherit; }
+  .amt em { font: 400 14px/1 var(--font); font-style: normal; color: var(--muted); }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill { height: 42px; padding: 0 18px; border: 0; border-radius: 999px; background: #fff; font: 600 14.5px/1 var(--font); color: var(--ink); cursor: pointer; transition: background .2s ease, box-shadow .2s ease, color .2s ease; }
+  .pill.is-on { background: var(--mint-2); color: var(--teal-deep); box-shadow: inset 0 0 0 1.5px var(--teal); }
+
+  /* Extra space between groups: the gift, the donation type, then the button. */
+  .gb__group { margin: 12px 0 0; padding: 0; border: 0; min-width: 0; }
+  .gb__label { padding: 0; margin-bottom: 9px; font: 600 13.5px/1 var(--font); color: var(--grey-3); }
+  /* Sized to the label, not the box. */
+  .gb__type { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gb__type button { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1.5px solid var(--line-2); border-radius: 16px; background: #fff; font: 600 15px/1 var(--font); color: var(--grey-2); cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
+  .gb__type button svg { color: var(--grey-4); transition: color .2s ease; }
+  .gb__type button.is-on { border-color: var(--teal); background: var(--bg-mint); color: var(--teal-deep); }
+  .gb__type button.is-on svg { color: var(--teal); fill: currentColor; }
+
+  .gb .input { height: 50px; border-radius: 16px; }
+  .gb__opt { font-weight: 400; color: var(--grey-4); }
+  /* Imam Support: who to sponsor, the monthly amount and how many months. */
+  .gb__hint { margin: 0; font: 400 13.5px/1.5 var(--font); color: var(--muted); text-wrap: pretty; }
+  .sps { display: flex; flex-direction: column; gap: 8px; }
+  .sp { position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 16px 9px 9px; border: 1.5px solid var(--line-2); border-radius: 16px; background: #fff; cursor: pointer; transition: border-color .2s ease, background .2s ease; }
+  .sp:hover { border-color: var(--mint-3); }
+  .sp input { position: absolute; opacity: 0; pointer-events: none; }
+  .sp:has(input:checked) { border-color: var(--teal); background: var(--bg-mint); }
+  .sp:has(input:focus-visible) { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .sp__av { flex: none; width: 36px; height: 36px; border-radius: 999px; object-fit: cover; background: var(--mint-2); color: var(--teal-deep); display: grid; place-items: center; font: 700 13px/1 var(--font); }
+  .sp:has(input:checked) .sp__av { background: #fff; }
+  .sp__txt { min-width: 0; }
+  .sp__txt b { display: block; font: 700 14.5px/1.3 var(--font); color: var(--ink); }
+  .sp__txt small { display: block; margin-top: 2px; font: 400 13px/1.3 var(--font); color: var(--muted); }
+  .sp__plan { display: flex; flex-direction: column; gap: 10px; }
+  .sp__plan[hidden] { display: none; }
+  .sp__plan .gb__label { margin: 4px 0 0; }
+  /* The monthly-amount pills are added by the script, so they need unscoped styles. */
+  .sp__plan :global([data-sp-amounts] button) { height: 42px; padding: 0 16px; border: 0; border-radius: 999px; background: #fff; font: 600 14px/1 var(--font); color: var(--ink); cursor: pointer; transition: background .2s ease, box-shadow .2s ease, color .2s ease; }
+  .sp__plan :global([data-sp-amounts] button.is-on) { background: var(--mint-2); color: var(--teal-deep); box-shadow: inset 0 0 0 1.5px var(--teal); }
+  .sp__plan :global([data-sp-amounts] button:focus-visible) { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .sp__months { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 4px; border-radius: 999px; background: #E0E0E5; }
+  .sp__months button { height: 36px; border: 0; border-radius: 999px; background: transparent; font: 600 13.5px/1 var(--font); color: var(--grey-2); cursor: pointer; transition: background .2s ease, color .2s ease, box-shadow .2s ease; }
+  .sp__months button.is-on { background: #fff; color: var(--ink); box-shadow: 0 2px 8px -2px rgba(0, 0, 0, .15); }
+  .sp__line { margin: 2px 0 0; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font: 400 13.5px/1.4 var(--font); color: var(--muted); }
+  .sp__line b { font: 700 17px/1.2 var(--font); color: var(--teal); }
+
+  /* Payment method: logo tiles. Swap the wordmarks for the providers' official logo files before launch. */
+  .gb__pay { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .pay { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .pay__opt { position: relative; display: grid; place-items: center; height: 54px; border: 1.5px solid var(--line-2); border-radius: 16px; background: #fff; cursor: pointer; transition: border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+  .pay__opt:hover { border-color: var(--mint-3); }
+  .pay__opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .pay__opt:has(input:checked) { border-color: var(--teal); background: var(--bg-mint); box-shadow: 0 0 0 3px var(--mint-2); }
+  .pay__opt:has(input:focus-visible) { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .lg { display: inline-flex; align-items: center; gap: 6px; height: 26px; font: 800 13.5px/1 var(--font); white-space: nowrap; }
+  .pay__logo { display: block; width: auto; max-width: 82%; object-fit: contain; }
+  .pay__logo--ssl { height: 20px; }
+  .lg--bk { padding: 0 10px; border-radius: 6px; background: #E2136E; color: #fff; font-style: italic; letter-spacing: -.01em; }
+  .lg--bank { font: 700 14px/1 var(--font); color: var(--teal-deep); }
+  .lg--bank svg { color: var(--teal); }
+  .gb__anon span { font-size: 14.5px; color: var(--grey-2); }
+  .gb__err { margin: 8px 0 0; font: 600 13.5px/1.4 var(--font); color: #C2410C; }
+  .gb__col > .gb__err { margin: 0; }
+  .gb__submit { width: 100%; justify-content: space-between; padding-left: 28px; }
+  .gb__safe { margin: -4px 0 0; display: flex; align-items: center; justify-content: center; gap: 7px; font: 500 13px/1.3 var(--font); color: var(--muted); text-align: center; }
+
+  .gb__tabs button:focus-visible, .pill:focus-visible, .gb__type button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  /* Beside the "Ways to give" cards, only the chosen gift shows. In one column the box
+     comes before the cards, so it keeps the whole list there. */
+  @media (min-width: 1021px) {
+    .gb--picked .gift:not(.is-on) { display: none; }
+    .gb--picked .gift { box-shadow: none; }
+    .gb--picked .sp:not(:has(input:checked)) { display: none; }
+  }
+
+</style>
+
+<script>
+  import '../scripts/cause-give';
+</script>

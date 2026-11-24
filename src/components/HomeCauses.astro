@@ -1,0 +1,211 @@
+---
+// Home page v2 "Area of Activity": one featured cause, the ongoing causes, then every
+// area as a compact tile. Figures come from the causes' own data, never invented here.
+import { CAUSES } from '../data/causes';
+import { GIVING } from '../data/cause-giving';
+import { CAUSE_NAV, causeHref } from '../data/site';
+import { SPONSEES, PROGRAM_MIN } from '../data/imams';
+
+const nav = (slug: string) => CAUSE_NAV.find((c) => c.slug === slug)!;
+const cause = (slug: string) => CAUSES.find((c) => c.slug === slug)!;
+const fmt = (n: number) => n.toLocaleString('en-US');
+
+// Winter leads in the cold season; the rest are the causes running now.
+const card = (f: { slug: string }) => {
+  const g = GIVING[f.slug];
+  const c = cause(f.slug);
+  return { ...f, name: nav(f.slug).name, title: c.title, img: c.tiles[0], summary: g.summary, impact: g.impact, href: causeHref(f.slug) };
+};
+const FEATURE = card({ slug: 'winter-clothes' });
+const ONGOING = [
+  { slug: 'imam-support' },
+  { slug: 'educational-aid' },
+  { slug: 'medical-care' },
+  { slug: 'food-assistance' },
+  { slug: 'self-reliance' },
+  { slug: 'emergency-assistance' }
+].map(card);
+const waiting = SPONSEES.filter((p) => p.needed > 0).length;
+
+const AREAS = CAUSE_NAV.map((c) => ({ ...c, summary: GIVING[c.slug]?.summary ?? '' }));
+const arrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>';
+---
+<section class="hc" id="causes">
+  <div class="hc__inner hc__inner--top">
+    <header class="hc__head" data-reveal="0">
+      <div>
+        <p class="eyebrow">Area of Activity</p>
+        <h2 class="h2 hc__title">Where your gift goes</h2>
+        <p class="lead hc__lead">Ten areas of work across Bangladesh. Start with the causes that need you most right now.</p>
+      </div>
+      <a href="#all-areas" class="btn btn--outline hc__all">See all 10 areas</a>
+    </header>
+
+    <article class="feature" data-reveal="0">
+      <a href={FEATURE.href} class="feature__img zoom" tabindex="-1" aria-hidden="true"><img src={FEATURE.img} alt="" loading="lazy" /></a>
+      <div class="feature__body">
+        <span class="fcard__badge fcard__badge--warm">{FEATURE.name}</span>
+        <h3 class="feature__title"><a href={FEATURE.href}>{FEATURE.title}</a></h3>
+        <p class="fcard__sum">{FEATURE.summary}</p>
+        {FEATURE.impact ? (
+              <div class="fcard__prog">
+                <div class="fcard__row"><span><b>{fmt(FEATURE.impact.done)}+</b> {FEATURE.impact.unit} reached</span><span>Goal {fmt(FEATURE.impact.goal)}</span></div>
+                <span class="fcard__bar"><i style={`width:${Math.round((FEATURE.impact.done / FEATURE.impact.goal) * 100)}%`} /></span>
+              </div>
+            ) : FEATURE.slug === 'imam-support' ? (
+              <div class="fcard__prog">
+                <div class="fcard__row"><span><b>{waiting} imams</b> waiting for a sponsor</span><span>From ৳{PROGRAM_MIN} a month</span></div>
+              </div>
+            ) : null}
+        <div class="fcard__cta"><a href={FEATURE.href} class="btn btn--teal btn-fx fcard__btn"><span class="roll"><span>{FEATURE.slug === 'imam-support' ? 'Sponsor an imam' : 'Donate now'}</span></span><span class="roll-ico" aria-hidden="true"><i set:html={arrow} /><i set:html={arrow} /></span></a></div>
+      </div>
+    </article>
+
+    <div class="sub-head" data-reveal="0">
+      <h3 class="hc__h3">Ongoing causes</h3>
+      <p class="hc__sub">Running now. Every gift goes straight to this work.</p>
+    </div>
+    <div class="ongoing">
+      {ONGOING.map((F, i) => (
+        <article class="fcard" data-reveal={String((i % 3) * 80)}>
+          <div class="fcard__media">
+            <a href={F.href} class="fcard__img zoom" tabindex="-1" aria-hidden="true"><img src={F.img} alt="" loading="lazy" /></a>
+            <span class="fcard__badge fcard__badge--mint fcard__badge--on-img">{F.name}</span>
+          </div>
+          <div class="fcard__body">
+            <h3 class:list={["fcard__title", { "fcard__title--short": F.title.length < 42 }]}><a href={F.href}>{F.title}</a></h3>
+            {F.impact ? (
+              <div class="fcard__prog">
+                <div class="fcard__row"><span><b>{fmt(F.impact.done)}+</b> {F.impact.unit} reached</span><span>Goal {fmt(F.impact.goal)}</span></div>
+                <span class="fcard__bar"><i style={`width:${Math.round((F.impact.done / F.impact.goal) * 100)}%`} /></span>
+              </div>
+            ) : F.slug === 'imam-support' ? (
+              <div class="fcard__prog">
+                <div class="fcard__row"><span><b>{waiting} imams</b> waiting for a sponsor</span><span>From ৳{PROGRAM_MIN} a month</span></div>
+              </div>
+            ) : null}
+            <div class="fcard__cta"><a href={F.href} class="fcard__link">{F.slug === 'imam-support' ? 'Sponsor an imam' : 'Donate now'}<i aria-hidden="true" set:html={arrow} /></a></div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+  </div>
+
+  <slot />
+
+  <div class="hc__inner hc__inner--areas">
+    <div class="areas-head" id="all-areas" data-reveal="0">
+      <h3 class="hc__h3">Browse by area</h3>
+      <p class="hc__sub">See everything we do in one area of our work.</p>
+    </div>
+    <div class="areas">
+      {AREAS.map((a) => (
+        <a href={a.href} class="area">
+          <span class="area__img" aria-hidden="true"><img src={a.img} alt="" loading="lazy" /></span>
+          <b class="area__name">{a.name}</b>
+          <small class="area__sum">{a.summary}</small>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hc { background: #fff; }
+  .hc__inner { max-width: var(--shell); margin: 0 auto; padding: 144px var(--gutter) 128px; }
+  .hc__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+  .hc__title { margin-top: 18px; }
+  .hc__lead { margin-top: 14px; max-width: 560px; }
+  .hc__all { flex: none; height: 52px; }
+
+  /* Featured: one wide card, photo on the left. */
+  .feature { margin-top: 48px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); border-radius: 28px; overflow: hidden; background: var(--bg-soft-2); }
+  .feature__img { display: block; min-height: 560px; }
+  /* Tag, title and summary sit at the top; progress and the button drop to the bottom. */
+  .feature__body { display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; padding: 48px 52px; min-width: 0; }
+  .feature__body > .fcard__prog { margin-top: auto; padding-top: 32px; }
+  .feature__title { margin: 10px 0 0; font: 700 clamp(28px, 2.6vw, 36px)/1.15 var(--font); letter-spacing: -.03em; color: var(--ink); text-wrap: balance; }
+  .feature__title a { color: inherit; text-decoration: none; }
+  .feature__title a:hover { color: var(--teal); }
+  .feature .fcard__cta { margin-top: 0; padding-top: 28px; }
+
+  /* Ongoing: three to a row, photo on top. */
+  .sub-head { margin-top: 96px; }
+  .ongoing { margin-top: 28px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .fcard { display: flex; flex-direction: column; border-radius: 24px; overflow: hidden; background: var(--bg-soft-2); min-width: 0; transition: background-color .25s ease; }
+  .fcard:hover { background: #EBEBED; }
+  .fcard__img { display: block; height: 220px; }
+  .fcard__body { flex: 1; display: flex; flex-direction: column; align-items: flex-start; padding: 26px; min-width: 0; }
+  .fcard__badge { padding: 7px 12px; border-radius: 999px; font: 700 12px/1 var(--font); letter-spacing: .04em; }
+  .fcard__badge--warm { background: #fff; color: #4B505B; }
+  .fcard__badge--mint { background: #fff; color: #4B505B; }
+  /* Ongoing cards: the cause tag sits on the photo, 20px in from its bottom-left corner. */
+  .fcard__media { position: relative; }
+  .fcard__badge--on-img { position: absolute; left: 20px; bottom: 20px; pointer-events: none; }
+  .fcard__badge + .fcard__title { margin-top: 14px; }
+  .fcard__badge + .feature__title { margin-top: 16px; }
+  .fcard__title { margin: 8px 0 0; font: 700 20px/1.3 var(--font); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+  /* The title opens the card body, so its top gap equals the 26px side gap. */
+  .fcard__body > .fcard__title:first-child { margin-top: 0; }
+  /* Short titles would sit on one line on wide screens; cap them so every card reads in two lines. */
+  .fcard__title--short { max-width: 24ch; }
+  .fcard__title a { color: inherit; text-decoration: none; }
+  .fcard__title a:hover { color: var(--teal); }
+  .fcard__sum { margin: 12px 0 0; font: 400 17px/1.65 var(--font); color: var(--grey-2); text-wrap: balance; }
+  .fcard__prog { width: 100%; margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+  /* Ongoing cards: more room between the title and the progress figures. */
+  .fcard .fcard__prog { margin-top: 44px; }
+  .fcard__row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font: 400 13.5px/1.3 var(--font); color: var(--muted); }
+  .fcard__row b { color: var(--ink); font-weight: 700; }
+  .fcard__bar { display: block; height: 6px; border-radius: 999px; background: #E0E0E5; overflow: hidden; }
+  .fcard__bar i { display: block; height: 100%; border-radius: inherit; background: var(--teal); }
+  .fcard__cta { margin-top: auto; padding-top: 22px; }
+  .fcard__btn { height: 48px; }
+  /* Ongoing cards: tertiary action, black text with an arrow that nudges right on card hover. */
+  .fcard__link { display: inline-flex; align-items: center; gap: 8px; padding: 6px 0; font: 700 15px/1 var(--font); color: var(--ink); text-decoration: none; transition: color .2s ease; }
+  .fcard__link i { display: inline-flex; font-style: normal; transition: transform .25s ease; }
+  .fcard:hover .fcard__link i, .fcard__link:focus-visible i { transform: translateX(4px); }
+
+  .areas-head { margin-top: 96px; }
+  /* The page slots a full-width section between the two halves, so each half pads itself. */
+  .hc__inner--top { padding-bottom: 120px; }
+  .hc__inner--areas { padding-top: 120px; }
+  .hc__inner--areas .areas-head { margin-top: 0; }
+  .hc__h3 { margin: 0; font: 700 28px/1.25 var(--font); letter-spacing: -.025em; color: var(--ink); }
+  .hc__sub { margin: 8px 0 0; font: 400 16.5px/1.5 var(--font); color: var(--muted); }
+  .areas { margin-top: 28px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+  /* Same card as the home page feature cards: soft grey, a rounded photo top left,
+     the name and summary at the foot. */
+  .area { position: relative; display: flex; flex-direction: column; align-items: flex-start; min-height: 264px; padding: 22px 22px 26px; border-radius: 20px; background: #F7F7F7; text-decoration: none; min-width: 0; transition: background .25s ease; }
+  .area:hover { background: #EDEDEF; }
+  .area__img { display: block; overflow: hidden; width: 88px; height: 88px; border-radius: 16px; flex: none; }
+  .area__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .area__name { margin-top: auto; padding-top: 24px; font: 700 19px/1.3 var(--font); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+  .area__sum { margin-top: 8px; font: 400 15px/1.6 var(--font); color: var(--muted); text-wrap: balance; }
+
+
+  @media (max-width: 1180px) {
+    .areas { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 1020px) {
+    .feature { grid-template-columns: 1fr; }
+    .feature__img { min-height: 300px; }
+    .feature__body { padding: 32px 30px 36px; }
+    .ongoing { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  @media (max-width: 640px) {
+    .hc__inner { padding: 96px var(--gutter) 88px; }
+    .hc__inner--top { padding-bottom: 88px; }
+    .hc__inner--areas { padding-top: 88px; }
+    .ongoing { grid-template-columns: 1fr; }
+    .feature__img { min-height: 240px; }
+    .feature__body { padding: 26px 22px 30px; }
+    .fcard__img { height: 200px; }
+        .areas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .area { min-height: 224px; padding: 18px 18px 22px; }
+    .area__img { width: 72px; height: 72px; border-radius: 14px; }
+    .area__name { font-size: 17px; }
+    .area__sum { font-size: 14px; }
+  }
+</style>

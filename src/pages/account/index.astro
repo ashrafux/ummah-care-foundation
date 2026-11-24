@@ -1,0 +1,223 @@
+---
+// My Account. Preview only: the donor's details and gifts are kept in this browser
+// (see src/scripts/account.ts). Not signed in → the sign-in page.
+import Base from '../../layouts/Base.astro';
+const ico = {
+  home: 'M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9z',
+  gift: 'M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z',
+  moon: 'M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z',
+  user: 'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z',
+  out: 'M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9'
+};
+const TABS = [['overview', 'Overview', ico.home], ['donations', 'My donations', ico.gift], ['sponsorships', 'My sponsorships', ico.moon], ['profile', 'Profile', ico.user]];
+const svg = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+---
+<Base title="My account" description="Your donations and sponsorships with Ummah Care Foundation.">
+  <section class="acc" data-acc hidden>
+    <div class="acc__inner">
+      <header class="acc__head">
+        <span class="acc__av" data-acc-initials></span>
+        <div class="acc__who">
+          <p class="acc__hello">Assalamu alaikum,</p>
+          <h1 class="acc__name" data-acc-name></h1>
+          <p class="acc__contact" data-acc-contact></p>
+        </div>
+        <a href="/donate" class="btn btn--teal acc__give">Make a donation</a>
+      </header>
+
+      <div class="acc__grid">
+        <nav class="acc__nav" aria-label="Account">
+          {TABS.map(([k, label, d], i) => (
+            <button type="button" class:list={['acc__tab', { 'is-on': i === 0 }]} data-tab={k}><span set:html={svg(d)} />{label}</button>
+          ))}
+          <button type="button" class="acc__tab acc__tab--out" data-signout><span set:html={svg(ico.out)} />Sign out</button>
+        </nav>
+
+        <div class="acc__panels">
+          <div data-panel="overview">
+            <div class="stats">
+              <div class="stat"><small>Total given</small><b data-stat="total">৳0</b></div>
+              <div class="stat"><small>Donations</small><b data-stat="count">0</b></div>
+              <div class="stat"><small>Sponsorships</small><b data-stat="spons">0</b></div>
+            </div>
+            <div class="box">
+              <div class="box__head"><h2>Recent gifts</h2><button type="button" class="box__link" data-go="donations">See all</button></div>
+              <div data-list="recent"></div>
+            </div>
+          </div>
+
+          <div data-panel="donations" hidden>
+            <div class="box">
+              <div class="box__head"><h2>My donations</h2></div>
+              <div data-list="all"></div>
+            </div>
+          </div>
+
+          <div data-panel="sponsorships" hidden>
+            <div class="box">
+              <div class="box__head"><h2>My sponsorships</h2></div>
+              <div data-list="monthly"></div>
+            </div>
+          </div>
+
+          <div data-panel="profile" hidden>
+            <form class="box profile" data-profile novalidate>
+              <div class="box__head"><h2>Profile</h2></div>
+              <div class="field"><label class="label" for="pf-name">Full name</label><input id="pf-name" class="input" type="text" autocomplete="name" /></div>
+              <div class="field"><label class="label" for="pf-contact">Email or phone</label><input id="pf-contact" class="input" type="text" autocomplete="email" /></div>
+              <div class="profile__foot"><button type="submit" class="btn btn--teal">Save changes</button><span class="profile__saved" data-saved hidden>Saved</span></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <template id="tpl-empty">
+    <div class="empty">
+      <span class="empty__ico" data-empty-ico></span>
+      <p class="empty__t" data-empty-t></p>
+      <p class="empty__s" data-empty-s></p>
+      <a class="btn btn--outline empty__btn" data-empty-a></a>
+    </div>
+  </template>
+</Base>
+
+<style>
+  .acc { background: #fff; }
+  .acc[hidden] { display: none; }
+  .acc__inner { max-width: var(--shell); margin: 0 auto; padding: calc(92px + 56px) var(--gutter) 120px; }
+  .acc__head { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding-bottom: 32px; border-bottom: 1px solid var(--line-3); }
+  .acc__av { width: 72px; height: 72px; border-radius: 999px; background: var(--teal); color: #fff; display: grid; place-items: center; font: 700 24px/1 var(--font); flex: none; }
+  .acc__who { flex: 1; min-width: 0; }
+  .acc__hello { margin: 0; font: 500 15px/1 var(--font); color: var(--muted); }
+  .acc__name { margin: 8px 0 0; font: 700 32px/1.15 var(--font); letter-spacing: -.03em; color: var(--ink); }
+  .acc__contact { margin: 6px 0 0; font: 400 15px/1.3 var(--font); color: var(--muted); }
+  .acc__give { height: 52px; }
+
+  .acc__grid { margin-top: 32px; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 40px; align-items: start; }
+  .acc__nav { position: sticky; top: 112px; display: flex; flex-direction: column; gap: 4px; }
+  .acc__tab { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px; border: 0; border-radius: 14px; background: none; font: 600 15px/1 var(--font); color: var(--grey-2); text-align: left; cursor: pointer; transition: background .2s ease, color .2s ease; }
+  .acc__tab span { display: grid; color: var(--grey-4); transition: color .2s ease; }
+  .acc__tab:hover { background: var(--bg-soft); }
+  .acc__tab.is-on { background: var(--bg-mint); color: var(--teal-deep); }
+  .acc__tab.is-on span { color: var(--teal); }
+  .acc__tab--out { margin-top: 12px; color: var(--muted); }
+  .acc__panels [hidden] { display: none; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .stat { padding: 22px 24px; border-radius: 20px; background: var(--bg-soft-2); }
+  .stat small { display: block; font: 500 14px/1 var(--font); color: var(--muted); }
+  .stat b { display: block; margin-top: 12px; font: 700 30px/1 var(--font); letter-spacing: -.03em; color: var(--ink); }
+  .box { padding: 26px 28px; border: 1px solid var(--line-3); border-radius: 22px; }
+  .box__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .box__head h2 { margin: 0; font: 700 20px/1.3 var(--font); letter-spacing: -.02em; color: var(--ink); }
+  .box__link { border: 0; background: none; padding: 0; font: 700 14px/1 var(--font); color: var(--teal); cursor: pointer; }
+
+  .acc__panels :global(.gift) { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 16px 0; border-top: 1px solid var(--line-3); }
+  .acc__panels :global(.gift:first-child) { border-top: 0; }
+  .acc__panels :global(.gift__ico) { width: 42px; height: 42px; border-radius: 12px; background: var(--mint-2); color: var(--teal); display: grid; place-items: center; }
+  .acc__panels :global(.gift__t) { display: block; font: 700 15.5px/1.3 var(--font); color: var(--ink); }
+  .acc__panels :global(.gift__s) { display: block; margin-top: 3px; font: 400 13.5px/1.3 var(--font); color: var(--muted); }
+  .acc__panels :global(.gift__a) { font: 700 16px/1 var(--font); color: var(--ink); text-align: right; }
+  .acc__panels :global(.gift__a small) { display: block; margin-top: 4px; font: 500 12px/1 var(--font); color: var(--teal); }
+
+  .acc__panels :global(.empty) { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 36px 16px 20px; }
+  .acc__panels :global(.empty__ico) { width: 56px; height: 56px; border-radius: 16px; background: var(--bg-soft-2); color: var(--grey-4); display: grid; place-items: center; }
+  .acc__panels :global(.empty__t) { margin: 18px 0 0; font: 700 17px/1.3 var(--font); color: var(--ink); }
+  .acc__panels :global(.empty__s) { margin: 6px 0 0; max-width: 360px; font: 400 15px/1.55 var(--font); color: var(--muted); }
+  .acc__panels :global(.empty__btn) { margin-top: 20px; height: 48px; padding: 0 24px; }
+
+  .profile { display: flex; flex-direction: column; gap: 18px; max-width: 560px; }
+  .profile__foot { display: flex; align-items: center; gap: 14px; }
+  .profile__foot .btn { height: 50px; }
+  .profile__saved { font: 600 14px/1 var(--font); color: var(--teal); }
+
+  @media (max-width: 900px) {
+    .acc__grid { grid-template-columns: 1fr; gap: 20px; }
+    .acc__nav { position: static; flex-direction: row; overflow-x: auto; gap: 6px; }
+    .acc__tab { flex: none; height: 42px; }
+    .acc__tab--out { margin-top: 0; }
+  }
+  @media (max-width: 640px) {
+    .acc__inner { padding: 120px var(--gutter) 88px; }
+    .stats { grid-template-columns: 1fr; }
+    .box { padding: 20px; }
+    .acc__give { width: 100%; justify-content: center; }
+  }
+</style>
+
+<script>
+  import { getUser, signIn, signOut, getGifts, initials, type Gift } from '../../scripts/account';
+
+  const user = getUser();
+  if (!user) location.replace('/account/login');
+  else {
+    const taka = (n: number) => '৳' + n.toLocaleString('en-US');
+    const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
+    const gift = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>';
+    const moon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg>';
+    const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+
+    const showUser = () => {
+      const u = getUser()!;
+      $('[data-acc-initials]').textContent = initials(u.name) || '•';
+      $('[data-acc-name]').textContent = u.name;
+      $('[data-acc-contact]').textContent = u.contact;
+      $<HTMLInputElement>('#pf-name').value = u.name;
+      $<HTMLInputElement>('#pf-contact').value = u.contact;
+    };
+
+    const row = (g: Gift) => `<div class="gift"><span class="gift__ico">${g.monthly ? moon : gift}</span><span><b class="gift__t">${esc(g.what)}</b><span class="gift__s">${esc(g.cause)} · ${esc(g.type)} · ${new Date(g.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span></span><span class="gift__a">${taka(g.amount)}${g.monthly ? '<small>Monthly</small>' : ''}</span></div>`;
+    const empty = (el: HTMLElement, icon: string, t: string, s: string, label: string, href: string) => {
+      const n = ($('#tpl-empty') as HTMLTemplateElement).content.cloneNode(true) as DocumentFragment;
+      n.querySelector('[data-empty-ico]')!.innerHTML = icon;
+      n.querySelector('[data-empty-t]')!.textContent = t;
+      n.querySelector('[data-empty-s]')!.textContent = s;
+      const a = n.querySelector<HTMLAnchorElement>('[data-empty-a]')!;
+      a.textContent = label;
+      a.href = href;
+      el.replaceChildren(n);
+    };
+
+    const gifts = getGifts();
+    const monthly = gifts.filter((g) => g.monthly);
+    $('[data-stat="total"]').textContent = taka(gifts.reduce((s, g) => s + g.amount, 0));
+    $('[data-stat="count"]').textContent = String(gifts.length);
+    $('[data-stat="spons"]').textContent = String(monthly.length);
+    const recent = $('[data-list="recent"]');
+    const all = $('[data-list="all"]');
+    const spons = $('[data-list="monthly"]');
+    if (gifts.length) { recent.innerHTML = gifts.slice(0, 3).map(row).join(''); all.innerHTML = gifts.map(row).join(''); }
+    else {
+      empty(recent, gift, 'No donations yet', 'Your gifts will appear here, with the cause, the date and the amount.', 'Find a cause', '/#causes');
+      empty(all, gift, 'No donations yet', 'Your gifts will appear here, with the cause, the date and the amount.', 'Find a cause', '/#causes');
+    }
+    if (monthly.length) spons.innerHTML = monthly.map(row).join('');
+    else empty(spons, moon, 'No sponsorships yet', 'Sponsor an imam or muezzin each month and follow your support here.', 'Sponsor an imam', '/causes/imam-support');
+
+    const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const go = (k: string) => {
+      tabs.forEach((t) => t.classList.toggle('is-on', t.dataset.tab === k));
+      document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== k; });
+    };
+    tabs.forEach((t) => t.addEventListener('click', () => go(t.dataset.tab!)));
+    document.querySelectorAll<HTMLElement>('[data-go]').forEach((b) => b.addEventListener('click', () => go(b.dataset.go!)));
+
+    $('[data-profile]').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = $<HTMLInputElement>('#pf-name').value.trim();
+      const contact = $<HTMLInputElement>('#pf-contact').value.trim();
+      if (!name || !contact) return;
+      signIn({ name, contact });
+      showUser();
+      const s = $('[data-saved]');
+      s.hidden = false;
+      window.setTimeout(() => { s.hidden = true; }, 2000);
+    });
+    document.querySelector('[data-signout]')!.addEventListener('click', () => { signOut(); location.href = '/'; });
+
+    showUser();
+    $('[data-acc]').hidden = false;
+  }
+</script>

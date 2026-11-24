@@ -1,10 +1,11 @@
 ---
+// Home page: hero, foundation stats, Area of Activity (featured and ongoing causes,
+// Who we are, Browse by area) and the volunteer call to action.
 import Base from '../layouts/Base.astro';
+import HomeCauses from '../components/HomeCauses.astro';
+import AboutWork from '../components/AboutWork.astro';
 import { IMG } from '../data/images';
-import { ROUTES, causeHref } from '../data/site';
-
-// The donation box sits directly under the hero.
-const SHOW_DONATION_BOX = true;
+import { ROUTES } from '../data/site';
 
 // Hero headline, split per word so each one can be revealed on a stagger.
 const HERO_TITLE = 'Committed to human social welfare & progress.';
@@ -19,45 +20,9 @@ const HERO_FAN = [
   { src: IMG.medicalHospital, alt: 'A father and his child outside the hospital after treatment' }
 ];
 
-const BIG_CAUSES = [
-  { href: causeHref('educational-aid'), pill: 'Education', title: 'Educational Aid', text: 'Education is a gateway to hope and solace for children in unfortunate circumstances. We provide monthly scholarships so that no child is held back by poverty.', img: IMG.students, alt: 'Students receiving educational aid', bg: '#1F3D3B' },
-  { href: causeHref('medical-care'), pill: 'Healthcare', title: 'Medical Care', text: 'We help extremely low-income & poor people in Bangladesh get proper treatment, covering medicine, surgery and hospital costs they could never afford alone.', img: IMG.medicalHospital, alt: 'A father and his child outside the hospital after treatment', bg: '#5C91A4' },
-  { href: causeHref('self-reliance'), pill: 'Livelihood', title: 'Self-Reliance', text: 'We support & empower ambitious individuals by providing tools like sewing machines, rickshaws and small capital so they can earn a dignified living.', img: IMG.sewing, alt: 'Self-reliance programme', bg: '#495B29' }
-];
-
-const SMALL_CAUSES = [
-  { href: causeHref('winter-clothes'), pill: 'Seasonal relief', title: 'Winter Clothing', text: 'Winter is joyous for some but harsh for the poor. We have supplied warm clothes to over 300 families.', img: IMG.winterClothing, alt: 'Winter clothing distribution' },
-  { href: causeHref('food-assistance'), pill: 'Nutrition', title: 'Basic Food Assistance', text: 'Food is essential for growth, repair and energy. We provide basic food assistance to those in need.', img: IMG.foodCheck, alt: 'Food assistance' },
-  { href: causeHref('water-aid'), pill: 'Clean water', title: 'Water Aid', text: 'Clean water prevents disease. We have installed tubewells in several areas to provide safe drinking water.', img: IMG.waterCheck, alt: 'Water aid tubewell' }
-];
 
 const STATS: [number, string][] = [[200, 'Students Helping'], [3000, 'Serving Poor People'], [100, 'Self-reliance'], [45, 'Volunteers']];
 
-const FEATURES = [
-  { img: IMG.students, alt: 'Scholarship recipients', title: 'We seek to unlock the possibility', text: 'Monthly scholarships keep talented children from low-income families in the classroom.' },
-  { img: IMG.fieldWork, alt: 'Relief distribution', title: 'We seek to drive change on large scale', text: 'Food, winter clothing and clean water reach thousands of families across Bangladesh every year.' },
-  { img: IMG.sewing, alt: 'Sewing machine handover', title: 'We are focused on results', text: 'Sewing machines, rickshaws and seed capital help individuals earn a dignified living.' }
-];
-
-const GALLERY: [string, string][] = [
-  [IMG.foodDistribution, 'Food distribution'], [IMG.wheelchair, 'Aid recipient in wheelchair'], [IMG.relief, 'Relief distribution'],
-  [IMG.goats, 'Self-reliance goat programme'], [IMG.sewing, 'Sewing machine handover'], [IMG.fieldWork, 'Field work'],
-  [IMG.students, 'Scholarship recipients'], [IMG.winterDistribution, 'Distribution programme'], [IMG.community, 'Community support']
-];
-
-// Fund list for the donation box. Icons match the programme icons on the About page.
-const FUNDS = [
-  { name: 'General Fund', icon: 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z' },
-  { name: 'Educational Aid', icon: 'M3 6.5A2.5 2.5 0 0 1 5.5 4H11v15H5.5A2.5 2.5 0 0 0 3 21zM21 6.5A2.5 2.5 0 0 0 18.5 4H13v15h5.5A2.5 2.5 0 0 1 21 21z' },
-  { name: 'Self-Reliance', icon: 'M4 20V10l8-6 8 6v10M9 20v-6h6v6' },
-  { name: 'Medical Care', icon: 'M12 21s-7-4.6-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.4-7 10-7 10zM8 12h2l1-2 2 4 1-2h2' },
-  { name: 'Winter Clothing', icon: 'M12 3v18M3 12h18M6 6l12 12M18 6L6 18' },
-  { name: 'Food Assistance', icon: 'M5 8h14l-1 12H6zM8 8V6a4 4 0 0 1 8 0v2' },
-  { name: 'Water Aid', icon: 'M12 3s6 7 6 11.5A6 6 0 0 1 6 14.5C6 10 12 3 12 3z' },
-  { name: 'Humanitarian Aid', icon: 'M4 14l4-4 4 4 4-4 4 4M8 10V6a4 4 0 0 1 8 0v4M4 14v3a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-3' },
-  { name: 'Emergency Assistance', icon: 'M12 3l9 16H3zM12 10v4M12 17h.01' }
-];
-const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 ---
 <Base title="Home" active="Home" dark>
   <!-- Hero -->
@@ -87,163 +52,10 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
     </div>
   </section>
 
-  <!-- Donation -->
-  {SHOW_DONATION_BOX && (
-    <section class="dn" data-donation-box>
-      <div class="dn__card">
-        <div class="dn__say">
-          <p class="dn__kicker">Every taka reaches a person</p>
-          <h2 class="dn__title">Give once. Change a year.</h2>
-          <p class="dn__text">Ummah Care Foundation runs on small gifts from ordinary people. Pick a fund and we will tell you exactly where your money went.</p>
-          <div class="dn__stats">
-            <div><strong>100+</strong><span>patients treated</span></div>
-            <div><strong>500+</strong><span>members giving</span></div>
-          </div>
-        </div>
-
-        <div class="dn__panel">
-          <div class="dn__stage">
-            <form class="dn__form" data-donation-form novalidate>
-              <div class="dn__field">
-                <label id="dn-fund-label" for="dn-fund-btn">Fund</label>
-                <div class="dn__pick" data-fund-picker>
-                  <input type="hidden" id="dn-fund" value="" />
-                  <button type="button" id="dn-fund-btn" class="dn__input dn__pickBtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="dn-fund-list" aria-labelledby="dn-fund-label dn-fund-value" data-fund-btn>
-                    <span class="dn__pickIco" data-fund-ico hidden></span>
-                    <span id="dn-fund-value" class="dn__pickValue is-empty" data-fund-value>Select a fund</span>
-                    <svg class="dn__pickChev" width="14" height="9" viewBox="0 0 11 7" fill="none" aria-hidden="true"><path d="M1 1.5L5.5 5.5L10 1.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                  </button>
-                  <ul id="dn-fund-list" class="dn__list" role="listbox" aria-labelledby="dn-fund-label" tabindex="-1" data-fund-list hidden>
-                    {FUNDS.map((f, i) => (
-                      <li id={`dn-fund-opt-${i}`} class="dn__opt" role="option" aria-selected="false" data-value={f.name}>
-                        <span class="dn__optIco" set:html={fundIcon(f.icon)} />
-                        <span class="dn__optName">{f.name}</span>
-                        <svg class="dn__optTick" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <p class="dn__err" data-error="fund" hidden></p>
-              </div>
-              <div class="dn__field">
-                <label for="dn-amount">Amount</label>
-                <input id="dn-amount" type="text" inputmode="numeric" class="dn__input" placeholder="৳ Enter amount" />
-                <p class="dn__err" data-error="amount" hidden></p>
-              </div>
-              <div class="dn__field">
-                <label for="dn-contact">Mobile / Email</label>
-                <input id="dn-contact" type="text" class="dn__input" placeholder="Mobile number or email" />
-                <p class="dn__err" data-error="contact" hidden></p>
-              </div>
-              <button type="submit" class="dn__submit btn-fx"><span class="roll"><span>Donate now</span></span></button>
-            </form>
-            <p class="dn__note">Eligible for tax rebate. <a href={ROUTES.donate}>See payment details.</a></p>
-          </div>
-
-          <div class="dn__done" data-donation-done hidden>
-            <span class="dn__check"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg></span>
-            <h3 class="dn__doneTitle">Thank you for your generosity!</h3>
-            <p class="dn__summary">Send <strong data-sum-amount></strong> to the <strong data-sum-fund></strong> using either method below, with <strong data-sum-contact></strong> as the reference.</p>
-            <div class="dn__methods">
-              <div class="dn__method">
-                <h4><span class="nocap">bKash</span> / Mobile Banking</h4>
-                <p>Merchant No: <strong>01310-188834</strong></p>
-                <p class="dn__hint">Send from Payment Option</p>
-              </div>
-              <div class="dn__method">
-                <h4>Bank Transfer</h4>
-                <p>Standard Chartered Bank Limited<br />A/C Name: <strong>UMMAH CARE FOUNDATION</strong><br />A/C No: <strong>01-2375033-01</strong><br />Routing: <strong>215261726</strong></p>
-              </div>
-            </div>
-            <div class="dn__actions">
-              <a href={ROUTES.donate} class="dn__link btn-fx"><span class="roll"><span>Full payment details</span></span></a>
-              <button type="button" class="dn__reset" data-donation-reset>Make another donation</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Story -->
-  <section class="story">
-    <div class="story__inner">
-      <div class="story__row">
-        <div class="story__card">
-          <div>
-            <h2>Empowering through Charity</h2>
-            <div class="story__rule"></div>
-          </div>
-          <p>Ummah Care Foundation is a non-profit, non-political charitable organization dedicated to human welfare. Grateful to the Almighty for our success, it's now time to give back to the community around us.</p>
-        </div>
-        <span class="zoom story__img"><img src={IMG.storyCharity} alt="Ummah Care Foundation programme" loading="lazy" /></span>
-      </div>
-
-      <div class="story__row story__row--flip">
-        <span class="zoom story__img"><img src={IMG.students} alt="A student receiving a gift in the classroom" loading="lazy" /></span>
-        <div class="story__card">
-          <div>
-            <h2>History of our Formation</h2>
-            <div class="story__rule"></div>
-          </div>
-          <p>Ummah Care Foundation began its journey in 2020 and is registered with the Government of Bangladesh as a non-profit (Reg. S-13339/2020). Since then, everything we do has grown from one simple purpose: serving humanity and helping build a fairer, kinder society.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Area of Activity -->
-  <section class="aoa">
-    <div class="aoa__bg" data-no-zoom></div>
-    <div class="aoa__shade"></div>
-    <div class="aoa__sticky">
-      <div class="aoa__head" data-aoa-head>
-        <h2>Area of Activity</h2>
-        <p>Committed to bringing hope—small contributions, big impact.</p>
-        <a href={ROUTES.donate} class="aoa__cta btn-fx"><span class="roll"><span>Support a cause</span></span></a>
-      </div>
-    </div>
-
-    <div class="aoa__body" data-aoa-body>
-      <div class="aoa__spacer"></div>
-
-      {BIG_CAUSES.map((c) => (
-        <a href={c.href} class="bigcause">
-          <div class="bigcause__text">
-            <span class="pill">{c.pill}</span>
-            <h3>{c.title}</h3>
-            <p>{c.text}</p>
-            <span class="bigcause__btn btn-fx"><span class="roll"><span>View program</span></span><span class="roll-ico" aria-hidden="true"><i><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i><i><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></i></span></span>
-          </div>
-          <div class="bigcause__media" style={`background:${c.bg}`}>
-            <span class="zoom bigcause__img"><img src={c.img} alt={c.alt} loading="lazy" /></span>
-          </div>
-        </a>
-      ))}
-
-      <div class="smallcauses">
-        {SMALL_CAUSES.map((c) => (
-          <a href={c.href} class="smallcause">
-            <span class="zoom smallcause__img"><img src={c.img} alt={c.alt} loading="lazy" /></span>
-            <div class="smallcause__body">
-              <span class="pill">{c.pill}</span>
-              <h3>{c.title}</h3>
-              <p>{c.text}</p>
-              <span class="smallcause__link">View program
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7" /></svg>
-              </span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- Stats -->
   <section class="stats">
     <div class="stats__inner">
       <div class="stats__copy">
-        <p class="stats__eyebrow"><span></span>About the Foundation</p>
         <h2>We make it easy for anyone to change a life.</h2>
         <p class="stats__lead">We stand beside underprivileged communities in Bangladesh with education support, healthcare, and self-reliance programs that help families overcome poverty.</p>
       </div>
@@ -258,33 +70,11 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
     </div>
   </section>
 
-  <!-- Feature cards -->
-  <section class="features">
-    <div class="features__inner">
-      <div class="features__grid">
-        {FEATURES.map((f) => (
-          <div class="feature">
-            <span class="zoom feature__img"><img src={f.img} alt={f.alt} loading="lazy" /></span>
-            <h3>{f.title}</h3>
-            <p>{f.text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Gallery -->
-  <section class="gallery" data-lightbox="gallery">
-    <div class="gallery__pad">
-      <div class="gallery__track" data-gallery-track>
-        {GALLERY.map(([src, alt]) => (
-          <span class="zoom gallery__item"><img src={src} alt={alt} loading="lazy" /></span>
-        ))}
-      </div>
-    </div>
-    <div class="gallery__fade gallery__fade--l"></div>
-    <div class="gallery__fade gallery__fade--r"></div>
-  </section>
+  <!-- Area of Activity: featured causes, all areas and recent activity -->
+  <HomeCauses>
+    <!-- Who we are: the About Us story as cards, between Ongoing causes and Browse by area -->
+    <AboutWork />
+  </HomeCauses>
 
   <!-- Volunteer CTA -->
   <section class="vol">
@@ -338,7 +128,7 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
     [data-hero-reveal] .hw { opacity: 1; filter: none; transform: none; transition: none; }
     .hfan__card { animation: none; transition: none; }
   }
-  .hero__sub { margin: 30px 0 0; font: 400 19px/1.65 var(--font); color: rgba(255, 255, 255, .78); text-align: center; max-width: 620px; text-wrap: pretty; }
+  .hero__sub { margin: 30px 0 0; font: 400 19px/1.65 var(--font); color: rgba(255, 255, 255, .78); text-align: center; max-width: 620px; text-wrap: balance; }
   .hero__cta { display: inline-flex; align-items: center; gap: 11px; height: 60px; padding: 0 36px; border-radius: 999px; color: #fff; font: 700 17px/1 var(--font); letter-spacing: -.01em; box-shadow: 0 22px 44px -18px rgba(0, 143, 118, .6); transition: background .2s ease; background: #55B984; }
   .hero__cta:hover { background: #00A98C; color: #fff; }
   .hero__ctas { margin-top: 42px; display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
@@ -357,116 +147,14 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
   .hfan__card:nth-child(3):hover { --y: -40px; }
   @keyframes hfanIn { from { opacity: 0; transform: translateX(-50%) translateY(140px) rotate(0deg); } }
 
-  /* ---- Donation box (optional) ---- */
-  .dn { max-width: var(--shell); margin: 0 auto; padding: 100px var(--gutter) 0; position: relative; }
-  .dn__card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: 56px; align-items: center; background: #0D0D0D; border-radius: 20px; padding: 56px; }
-  .dn__kicker { margin: 0; font: 700 13.5px/1 var(--font); letter-spacing: .14em; text-transform: uppercase; color: #7FCDBB; }
-  .dn__title { margin: 16px 0 0; font: 700 clamp(34px, 3.4vw, 48px)/1.1 var(--font); letter-spacing: -.035em; color: #fff; text-wrap: balance; }
-  .dn__text { margin: 18px 0 0; font: 400 18px/1.7 var(--font); color: rgba(255, 255, 255, .72); max-width: 480px; text-wrap: balance; }
-  .dn__stats { margin-top: 34px; display: flex; gap: 56px; flex-wrap: wrap; }
-  .dn__stats div { display: flex; flex-direction: column; gap: 6px; }
-  .dn__stats strong { font: 700 38px/1 var(--font); letter-spacing: -.03em; color: #fff; }
-  .dn__stats span { font: 500 18px/1 var(--font); color: rgba(255, 255, 255, .58); }
-  .dn__panel { background: #fff; border-radius: 20px; padding: 36px; }
-  .dn__form { display: flex; flex-direction: column; gap: 18px; }
-  .dn__field { display: flex; flex-direction: column; gap: 9px; }
-  .dn__field label { font: 600 15px/1 var(--font); color: #1B1E26; }
-  .dn__input { height: 58px; padding: 0 18px; border: 1.5px solid #E1EAE6; border-radius: 20px; background: #fff; font: 500 16px/1 var(--font); color: #1B1E26; width: 100%; transition: border-color .2s ease, box-shadow .2s ease; }
-  .dn__input:focus { outline: none; border-color: #008F76; box-shadow: 0 0 0 4px rgba(0, 143, 118, .12); }
-  .dn__pick { position: relative; }
-  .dn__pickBtn { display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer; }
-  .dn__pickBtn:hover { border-color: #C9D8D2; }
-  .dn__pickBtn[aria-expanded="true"] { border-color: #008F76; box-shadow: 0 0 0 4px rgba(0, 143, 118, .12); }
-  .dn__pickIco { display: flex; color: #5E6470; }
-  .dn__pickIco[hidden] { display: none; }
-  .dn__pickValue { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .dn__pickValue.is-empty { color: #9AA0AE; }
-  .dn__pickChev { flex: none; color: #8B92A0; transition: transform .2s ease, color .2s ease; }
-  .dn__pickBtn[aria-expanded="true"] .dn__pickChev { transform: rotate(180deg); color: #008F76; }
-  .dn__list { position: absolute; z-index: 30; top: calc(100% + 8px); left: 0; right: 0; margin: 0; padding: 8px; list-style: none; max-height: min(520px, 62vh); overflow-y: auto; background: #fff; border: 1px solid #ECECEF; border-radius: 20px; box-shadow: 0 24px 48px -12px rgba(16, 24, 40, .18), 0 4px 10px rgba(16, 24, 40, .05); outline: none; animation: dnListIn .16s ease-out; }
-  .dn__list[hidden] { display: none; }
   @keyframes dnListIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
-  .dn__opt { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 12px; font: 500 16px/1.3 var(--font); color: #1B1E26; cursor: pointer; user-select: none; transition: background .15s ease, color .15s ease; }
-  .dn__optIco { flex: none; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 12px; background: #F4F4F5; color: #5E6470; transition: background .15s ease, color .15s ease; }
-  .dn__optName { flex: 1; min-width: 0; }
-  .dn__optTick { flex: none; color: #008F76; opacity: 0; }
   /* Chosen fund: tinted row, teal name and tick; its icon stays neutral like the rest. */
-  .dn__opt[aria-selected="true"] { background: #EDF7F4; color: #008F76; font-weight: 600; }
-  .dn__opt[aria-selected="true"] .dn__optTick { opacity: 1; }
   /* Hover and keyboard focus carry the full primary colour. */
-  .dn__opt:hover, .dn__opt.is-active { background: rgba(0, 143, 118, .1); color: #008F76; }
-  .dn__opt:hover .dn__optIco, .dn__opt.is-active .dn__optIco { background: #008F76; color: #fff; }
-  .dn__err { margin: 0; font: 500 14px/1.4 var(--font); color: #C4321C; }
-  .dn__submit { margin-top: 6px; height: 58px; border: 0; border-radius: 20px; background: #008F76; color: #fff; font: 700 16px/1 var(--font); letter-spacing: -.01em; cursor: pointer; transition: background .2s ease; width: 100%; }
-  .dn__submit:hover { background: #00A98C; }
-  .dn__note { margin: 20px 0 0; font: 400 18px/1.6 var(--font); color: #5E6470; text-align: center; text-wrap: balance; }
-  .dn__note a { color: #008F76; text-decoration: underline; }
-  .dn__done { display: flex; flex-direction: column; align-items: center; text-align: center; }
-  .dn__check { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: #008F76; }
-  .dn__doneTitle { margin: 20px 0 0; font: 700 26px/1.2 var(--font); letter-spacing: -.025em; color: #1B1E26; text-wrap: balance; }
-  .dn__summary { margin: 12px 0 0; font: 400 18px/1.65 var(--font); color: #5E6470; text-wrap: balance; }
-  .dn__summary strong { color: #1B1E26; }
-  .dn__methods { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; width: 100%; text-align: left; }
-  .dn__method { background: #F7F7F7; border: 1px solid #ECECEF; border-radius: 20px; padding: 20px 22px; }
-  .dn__method h4 { margin: 0; font: 700 17px/1.3 var(--font); color: #1B1E26; }
-  .dn__method p { margin: 8px 0 0; font: 400 18px/1.65 var(--font); color: #5E6470; text-wrap: balance; }
-  .dn__method strong { color: #1B1E26; }
-  .dn__hint { margin: 4px 0 0 !important; font: 600 14px/1.5 var(--font) !important; color: #008F76 !important; font-style: italic; }
-  .dn__actions { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; width: 100%; }
-  .dn__link { display: inline-flex; align-items: center; justify-content: center; height: 54px; border-radius: 20px; background: #008F76; color: #fff; font: 700 15.5px/1 var(--font); transition: background .2s ease; }
-  .dn__link:hover { background: #00A98C; color: #fff; }
-  .dn__reset { height: 54px; border: 1.5px solid #E1EAE6; border-radius: 20px; background: #fff; color: #1B1E26; font: 700 15.5px/1 var(--font); cursor: pointer; transition: background .2s ease; }
-  .dn__reset:hover { background: #F7F7F7; }
-  select.dn__input { cursor: pointer; }
-
-  /* ---- Story ---- */
-  .story { background: #fff; }
-  .story__inner { max-width: var(--shell); margin: 0 auto; padding: 100px var(--gutter); display: flex; flex-direction: column; gap: 50px; }
-  .story__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.9fr); grid-template-rows: 530px; gap: 30px; align-items: stretch; height: 530px; }
-  .story__row--flip { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); }
-  .story__card { background: #F7F7F7; border-radius: 20px; padding: 44px 48px 40px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; min-width: 0; min-height: 0; height: 530px; overflow: hidden; }
-  .story__card h2 { margin: 0; font: 700 40px/1.15 var(--font); letter-spacing: -.02em; color: #1B1E26; text-wrap: balance; }
-  .story__rule { margin-top: 22px; width: 74%; border-top: 1.5px dashed #C9C9CC; }
-  .story__card p { margin: 0; font: 400 19px/1.65 var(--font); color: #1B1E26; text-wrap: pretty; }
-  .story__img { width: 100%; height: 530px; border-radius: 20px; }
-
-  /* ---- Area of Activity ---- */
-  .aoa { position: relative; background: #0A0A0A; overflow: clip; overflow-clip-margin: 0; }
-  .aoa__bg { position: absolute; inset: -40px; pointer-events: none; background: url('/images/sunset-bg.jpg') center 42% / cover no-repeat; filter: blur(18px); transform: scale(1.04); }
-  .aoa__shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(10, 10, 10, .5) 0%, rgba(10, 10, 10, .3) 40%, rgba(10, 10, 10, .62) 100%); }
-  .aoa__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-  .aoa__head { position: relative; max-width: var(--shell); margin: 0 auto; padding: 30vh var(--gutter) 0; display: flex; flex-direction: column; align-items: center; text-align: center; will-change: opacity, transform; }
-  .aoa__head h2 { margin: 0; font: 700 clamp(40px, 4.4vw, 56px)/1.1 var(--font); letter-spacing: -.03em; color: #fff; text-wrap: balance; }
-  .aoa__head p { margin: 18px 0 0; font: 400 18px/1.75 var(--font); color: rgba(255, 255, 255, .78); max-width: 520px; text-wrap: balance; }
-  .aoa__cta { margin-top: 26px; display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border-radius: 999px; background: #008F76; color: #fff; font: 700 14px/1 var(--font); text-decoration: none; transition: background .2s ease; }
-  .aoa__cta:hover { background: #00A98C; color: #fff; }
-  .aoa__body { position: relative; max-width: var(--shell); margin: -100vh auto 0; padding: 0 var(--gutter) 14vh; }
-  .aoa__spacer { height: 80vh; }
-
-  .pill { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #F3F3F4; border: 1px solid #E2E2E5; font: 600 12.5px/1 var(--font); color: #4B505B; }
-
-  .bigcause { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); height: 500px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .6); text-decoration: none; color: inherit; margin-bottom: 22px; }
-  .bigcause__text { padding: 28px 44px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
-  .bigcause h3 { margin: 18px 0 0; font: 700 30px/1.2 var(--font); letter-spacing: -.025em; color: #1B1E26; }
-  .bigcause p { margin: 12px 0 0; font: 400 18px/1.7 var(--font); color: #5E6470; max-width: 440px; text-wrap: balance; }
-  .bigcause__btn { margin-top: 20px; display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 22px; border-radius: 20px; background: #008F76; color: #fff; font: 700 14px/1 var(--font); }
-  .bigcause__media { height: 500px; padding: 34px; display: flex; align-items: center; justify-content: center; min-width: 0; }
-  .bigcause__img { width: min(280px, 70%); aspect-ratio: 1; border-radius: 20px; }
-
-  .smallcauses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
-  .smallcause { display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .6); text-decoration: none; color: inherit; min-width: 0; }
-  .smallcause__img { width: 100%; height: 220px; }
-  .smallcause__body { padding: 30px 30px 32px; display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
-  .smallcause h3 { margin: 18px 0 0; font: 700 24px/1.3 var(--font); letter-spacing: -.02em; color: #1B1E26; }
-  .smallcause p { margin: 12px 0 0; font: 400 18px/1.7 var(--font); color: #5E6470; text-wrap: balance; }
-  .smallcause__link { margin-top: auto; padding-top: 24px; display: inline-flex; align-items: center; gap: 8px; font: 700 14px/1 var(--font); color: #008F76; }
 
   /* ---- Stats ---- */
   .stats { background: #fff; }
   .stats__inner { max-width: var(--shell); margin: 0 auto; padding: 120px var(--gutter); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 64px 96px; align-items: start; }
   .stats__copy { display: flex; flex-direction: column; min-width: 0; }
-  .stats__eyebrow { margin: 0 0 42px; display: flex; align-items: center; gap: 10px; font: 500 18px/1 var(--font); color: #1B1E26; }
-  .stats__eyebrow span { width: 9px; height: 9px; border-radius: 50%; background: #008F76; display: inline-block; }
   .stats__copy h2 { margin: 0; font: 700 clamp(40px, 4.4vw, 56px)/1.1 var(--font); letter-spacing: -.03em; color: #1B1E26; text-align: left; text-wrap: balance; }
   .stats__lead { margin: 40px 0 0; font: 400 18px/1.75 var(--font); color: #5E6470; max-width: 640px; text-wrap: balance; }
   .stats__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; align-self: center; min-width: 0; }
@@ -474,24 +162,6 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
   .stat__num { margin: 0; font: 700 64px/1 var(--font); letter-spacing: -.04em; color: #1B1E26; display: flex; align-items: baseline; gap: 3px; }
   .stat__plus { color: #008F76; }
   .stat__label { margin: 0; font: 400 18px/1.4 var(--font); color: #5E6470; }
-
-  /* ---- Feature cards ---- */
-  .features { background: #fff; }
-  .features__inner { max-width: var(--shell); margin: 0 auto; padding: 0 var(--gutter) 120px; }
-  .features__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-  .feature { background: #F7F7F7; border-radius: 20px; padding: 26px 26px 34px; display: flex; flex-direction: column; min-width: 0; height: 520px; }
-  .feature__img { width: 140px; height: 140px; border-radius: 20px; flex: none; }
-  .feature h3 { margin: auto 0 0; padding-top: 28px; font: 700 24px/1.3 var(--font); letter-spacing: -.02em; color: #1B1E26; text-wrap: balance; }
-  .feature p { margin: 14px 0 0; font: 400 18px/1.75 var(--font); color: #5E6470; text-wrap: balance; }
-
-  /* ---- Gallery ---- */
-  .gallery { background: #fff; position: relative; overflow: hidden; }
-  .gallery__pad { padding: 96px 0; }
-  .gallery__track { display: flex; gap: 18px; width: max-content; will-change: transform; }
-  .gallery__item { flex: 0 0 auto; width: clamp(240px, 22vw, 340px); height: clamp(320px, 30vw, 460px); border-radius: 20px; }
-  .gallery__fade { position: absolute; top: 0; bottom: 0; width: clamp(80px, 12vw, 220px); pointer-events: none; }
-  .gallery__fade--l { left: 0; background: linear-gradient(90deg, #fff 0%, rgba(255, 255, 255, 0) 100%); }
-  .gallery__fade--r { right: 0; background: linear-gradient(270deg, #fff 0%, rgba(255, 255, 255, 0) 100%); }
 
   /* ---- Volunteer CTA ---- */
   .vol { position: relative; background: #00473B; overflow: hidden; }
@@ -516,23 +186,8 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
   .vol__btn--outline:hover { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .8); color: #fff; }
 
   /* ---- Responsive ---- */
-  @media (max-width: 1099px) {
-    .story__row, .story__row--flip { display: flex; flex-direction: column; gap: 24px; height: auto; }
-    .story__row--flip { flex-direction: column-reverse; }
-    .story__img { height: 360px; flex: none; }
-    .story__card { padding: 40px 32px; gap: 32px; height: auto; flex: none; }
-  }
-  @media (max-width: 1020px) {
-    .dn__card { grid-template-columns: 1fr; padding: 44px 36px; }
-  }
   @media (max-width: 960px) {
     .stats__inner { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 900px) {
-    .bigcause { grid-template-columns: 1fr; height: auto; }
-    .bigcause__text { padding: 32px 28px; }
-    .bigcause__media { height: 320px; padding: 28px; }
-    .smallcauses { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
     .hero__inner { padding-top: clamp(104px, 14vh, 132px); }
@@ -540,9 +195,6 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
     .hfan__card { border-width: 4px; bottom: -28px; }
     .hfan__card:nth-child(1), .hfan__card:nth-child(5) { display: none; }
     .hero__ctas > * { flex: 1 1 100%; justify-content: center; }
-    .dn__card { padding: 32px 20px; gap: 32px; }
-    .dn__panel { padding: 26px 20px; }
-    .dn__stats { gap: 36px; }
     .stats__grid { grid-template-columns: 1fr; }
     .stat__num { font-size: 52px; }
   }
@@ -557,6 +209,5 @@ const fundIcon = (d: string) => `<svg width="18" height="18" viewBox="0 0 24 24"
 <script>
   import '../scripts/mesh-gradient';
   import '../scripts/hero-reveal';
-  import '../scripts/fund-picker';
   import '../scripts/home';
 </script>

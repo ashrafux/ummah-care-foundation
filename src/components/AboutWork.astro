@@ -1,0 +1,108 @@
+---
+// Home v2 "Who we are": the About Us story and promises, laid out like the main home's
+// Area of Activity (blurred sunset backdrop, sticky heading, white cards rising over it).
+// The heading fade is driven by src/scripts/home.ts through data-aoa-head / data-aoa-body.
+import { IMG } from '../data/images';
+import { ROUTES } from '../data/site';
+
+const BIG = [
+  { pill: 'Our purpose', title: 'Empowering through Charity', text: "Ummah Care Foundation is a non-profit, non-political charitable organization dedicated to human welfare. Grateful to the Almighty for our success, it's now time to give back to the community around us.", img: IMG.storyCharity, alt: 'Relief handed over by boat in a flooded village', bg: '#1F3D3B' },
+  { pill: 'Since 2020', title: 'History of our Formation', text: 'Ummah Care Foundation began its journey in 2020 and is registered with the Government of Bangladesh as a non-profit (Reg. S-13339/2020). Since then, everything we do has grown from one simple purpose: serving humanity and helping build a fairer, kinder society.', img: IMG.students, alt: 'A student receiving a gift in the classroom', bg: '#5C91A4' }
+];
+
+const SMALL = [
+  { pill: 'Education', title: 'We seek to unlock the possibility', text: 'Monthly scholarships keep talented children from low-income families in the classroom.', img: IMG.wheelchair, alt: 'A student in a wheelchair on campus' },
+  { pill: 'Relief at scale', title: 'We seek to drive change on large scale', text: 'Food, winter clothing and clean water reach thousands of families across Bangladesh every year.', img: IMG.winterClothing, alt: 'Winter quilts handed out to families' },
+  { pill: 'Livelihoods', title: 'We are focused on results', text: 'Sewing machines, rickshaws and seed capital help individuals earn a dignified living.', img: IMG.sewing, alt: 'A sewing machine handed over to a woman' }
+];
+
+const arrow = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>';
+---
+<section class="aw" id="who-we-are">
+  <div class="aw__bg" data-no-zoom></div>
+  <div class="aw__shade"></div>
+  <div class="aw__sticky">
+    <div class="aw__head" data-aoa-head>
+      <h2>Who we are</h2>
+      <p>A registered non-profit since 2020, giving back to the communities around us with care, trust and dignity.</p>
+      <a href={ROUTES.about} class="aw__cta btn-fx"><span class="roll"><span>About us</span></span></a>
+    </div>
+  </div>
+
+  <div class="aw__body" data-aoa-body>
+    <div class="aw__spacer"></div>
+
+    {BIG.map((c) => (
+      <a href={ROUTES.about} class="big">
+        <div class="big__text">
+          <span class="pill">{c.pill}</span>
+          <h3>{c.title}</h3>
+          <p>{c.text}</p>
+          <span class="big__btn btn-fx"><span class="roll"><span>Read our story</span></span><span class="roll-ico" aria-hidden="true"><i set:html={arrow} /><i set:html={arrow} /></span></span>
+        </div>
+        <div class="big__media" style={`background:${c.bg}`}>
+          <span class="zoom big__img"><img src={c.img} alt={c.alt} loading="lazy" /></span>
+        </div>
+      </a>
+    ))}
+
+    <div class="smalls">
+      {SMALL.map((c) => (
+        <a href={ROUTES.about} class="small">
+          <span class="zoom small__img"><img src={c.img} alt={c.alt} loading="lazy" /></span>
+          <div class="small__body">
+            <span class="pill">{c.pill}</span>
+            <h3>{c.title}</h3>
+            <p>{c.text}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .aw { position: relative; background: #0A0A0A; overflow: clip; overflow-clip-margin: 0; }
+  .aw__bg { position: absolute; inset: -40px; pointer-events: none; background: url('/images/sunset-bg.jpg') center 42% / cover no-repeat; filter: blur(18px); transform: scale(1.04); }
+  .aw__shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(10, 10, 10, .5) 0%, rgba(10, 10, 10, .3) 40%, rgba(10, 10, 10, .62) 100%); }
+  .aw__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .aw__head { position: relative; max-width: var(--shell); margin: 0 auto; padding: 30vh var(--gutter) 0; display: flex; flex-direction: column; align-items: center; text-align: center; will-change: opacity, transform; }
+  .aw__head h2 { margin: 0; font: 700 clamp(40px, 4.4vw, 56px)/1.1 var(--font); letter-spacing: -.03em; color: #fff; text-wrap: balance; }
+  .aw__head p { margin: 18px 0 0; font: 400 18px/1.75 var(--font); color: rgba(255, 255, 255, .78); max-width: 520px; text-wrap: balance; }
+  .aw__cta { margin-top: 26px; display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border-radius: 999px; background: #008F76; color: #fff; font: 700 14px/1 var(--font); text-decoration: none; transition: background .2s ease; }
+  .aw__cta:hover { background: #00A98C; color: #fff; }
+  .aw__body { position: relative; max-width: var(--shell); margin: -100vh auto 0; padding: 0 var(--gutter) 14vh; }
+  .aw__spacer { height: 80vh; }
+
+  .pill { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #F3F3F4; border: 1px solid #E2E2E5; font: 600 12.5px/1 var(--font); color: #4B505B; }
+
+  .big { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); height: 500px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .6); text-decoration: none; color: inherit; margin-bottom: 22px; }
+  .big__text { padding: 28px 44px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+  .big h3 { margin: 18px 0 0; font: 700 30px/1.2 var(--font); letter-spacing: -.025em; color: #1B1E26; }
+  .big p { margin: 12px 0 0; font: 400 18px/1.7 var(--font); color: #5E6470; max-width: 460px; text-wrap: balance; }
+  /* Secondary at rest: white with an off-white stroke, light grey circle, dark arrow.
+     The whole card's hover turns it primary teal. */
+  .big__btn { --btn-bg: #fff; margin-top: 20px; display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 22px; border-radius: 20px; background: var(--btn-bg); border: 1px solid #E6E6E9; color: #1B1E26; font: 700 14px/1 var(--font); transition: background-color .25s ease, border-color .25s ease, color .25s ease; }
+  .big:hover .big__btn, .big:focus-visible .big__btn { --btn-bg: #008F76; border-color: #008F76; color: #fff; }
+  /* Light grey circle with a dark arrow at rest; white circle with a teal arrow on card hover. */
+  .big__btn .roll-ico { background: #E6E7EC; }
+  .big__btn .roll-ico i { color: #1B1E26; }
+  .big:hover .big__btn .roll-ico, .big:focus-visible .big__btn .roll-ico { background: #fff; }
+  .big:hover .big__btn .roll-ico i, .big:focus-visible .big__btn .roll-ico i { color: #008F76; }
+  .big__media { height: 500px; padding: 34px; display: flex; align-items: center; justify-content: center; min-width: 0; }
+  .big__img { width: min(280px, 70%); aspect-ratio: 1; border-radius: 20px; }
+
+  .smalls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .small { display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .6); text-decoration: none; color: inherit; min-width: 0; }
+  .small__img { width: 100%; height: 220px; }
+  .small__body { padding: 30px 30px 32px; display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
+  .small h3 { margin: 18px 0 0; font: 700 24px/1.3 var(--font); letter-spacing: -.02em; color: #1B1E26; text-wrap: balance; }
+  .small p { margin: 12px 0 0; font: 400 18px/1.7 var(--font); color: #5E6470; text-wrap: balance; }
+
+  @media (max-width: 900px) {
+    .big { grid-template-columns: 1fr; height: auto; }
+    .big__text { padding: 32px 28px; }
+    .big__media { height: 320px; padding: 28px; }
+    .smalls { grid-template-columns: 1fr; }
+  }
+</style>
