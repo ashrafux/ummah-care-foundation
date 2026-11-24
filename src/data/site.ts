@@ -36,7 +36,9 @@ export const CAUSE_NAV = [
   { name: 'Food Assistance', slug: 'food-assistance', img: IMG.foodDistribution },
   { name: 'Water Aid', slug: 'water-aid', img: IMG.goats },
   { name: 'Humanitarian Aid', slug: 'humanitarian-aid', img: IMG.community },
-  { name: 'Emergency Assistance', slug: 'emergency-assistance', img: IMG.relief }
+  { name: 'Emergency Assistance', slug: 'emergency-assistance', img: IMG.relief },
+  { name: 'Orphan Care', slug: 'orphan-care', img: IMG.orphanCare },
+  { name: 'Imam Support', slug: 'imam-support', img: IMG.imamSupport }
 ].map((c) => ({ ...c, href: `/causes/${c.slug}` }));
 
 export const causeHref = (slug: string) => `/causes/${slug}`;

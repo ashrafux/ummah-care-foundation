@@ -1,0 +1,297 @@
+---
+// Cause page: the story on the left and the donate box held on the
+// right while the page scrolls.
+import CauseGive from './CauseGive.astro';
+import type { Cause } from '../data/causes';
+import { GIVING, taka } from '../data/cause-giving';
+import { POSTS, postHref, postDate } from '../data/posts';
+import { GALLERY } from '../data/gallery';
+import { IMG } from '../data/images';
+import { SPONSEES, PROGRAM, IMAM_ABOUT, MAX_SPONSORS } from '../data/imams';
+
+interface Props { cause: Cause }
+const { cause } = Astro.props;
+const g = GIVING[cause.slug];
+// Imam Support is a monthly sponsorship, so its page lists people to sponsor instead of gifts.
+const isImam = cause.slug === 'imam-support';
+const BOX = 'give-2';
+// The source text has stray quote marks and a missing space after one full stop.
+const intro = cause.intro.replace(/^["“]|["”]$/g, '').replace(/\.(?=[A-Z])/g, '. ');
+const updates = POSTS.filter((p) => p.cause === cause.slug);
+// The hospital paperwork photo is left out because it shows a patient's details.
+const photos = GALLERY.filter((s) => s.cause === cause.slug && s.src !== IMG.aoaMedical && !cause.tiles.includes(s.src)).slice(0, 6);
+const GOAL_ICONS = [
+  { d: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 16.5a4.5 4.5 0 100-9 4.5 4.5 0 000 9zM12 12h.01', c: '#F26B5B' },
+  { d: 'M4 19V5M4 19h16M8 15l4-6 3 4 5-7', c: '#3B82F6' },
+  { d: 'M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9L12 3z', c: '#F5A524' },
+  { d: 'M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8', c: '#008F76' }
+];
+---
+<section class="cs">
+  <div class="cs__inner">
+    <div class="cs__grid">
+      <header class="cs__head" data-reveal="0">
+        <span class="cs__tag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={g.icon} /></svg>
+          {cause.crumb}
+        </span>
+        <h1 class="cs__title">{cause.title}</h1>
+        <p class="cs__sum">{g.summary}</p>
+      </header>
+
+      <div class="cs__main">
+        <div class="cs__media" data-reveal="80">
+          {cause.tiles.map((src) => <figure class="zoom"><img src={src} alt="" /></figure>)}
+        </div>
+
+        <section class="cs__sec">
+          <h2 class="cs__h2">About this cause</h2>
+          {isImam ? IMAM_ABOUT.map((t) => <p class="cs__p">{t}</p>) : <p class="cs__p">{intro}</p>}
+        </section>
+
+        {isImam && (
+          <section class="cs__sec">
+            <h2 class="cs__h2">Choose someone to sponsor</h2>
+            <p class="cs__sub">Your monthly gift gives steady support. You can pay for several months at once.</p>
+            <div class="iml" data-iml>
+              {SPONSEES.map((p, i) => (
+                <div class="iml__item">
+                  <button type="button" class="iml__head" aria-expanded="false" data-iml-head data-sp-for={BOX} data-sp-pick={i}>
+                    {p.photo ? <img class="iml__av" src={p.photo} alt="" loading="lazy" /> : <span class="iml__av" aria-hidden="true">{p.initials}</span>}
+                    <span class="iml__who"><b>{p.name}</b><small>{taka(p.needed)} a month still needed · {p.sponsors}/{MAX_SPONSORS} sponsors</small></span>
+                    <span class="iml__chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg></span>
+                  </button>
+                  <div class="iml__body">
+                    <p class="iml__bio">{p.bio}</p>
+                    <p class="iml__meta">{p.meta} · {p.id}</p>
+                    <button type="button" class="iml__btn" data-sp-for={BOX} data-sp-pick={i}>Sponsor {p.name} <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></button>
+                  </div>
+                </div>
+              ))}
+              <div class="iml__item">
+                <button type="button" class="iml__head" aria-expanded="false" data-iml-head data-sp-for={BOX} data-sp-pick={SPONSEES.length}>
+                  <span class="iml__av iml__av--ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8" /></svg></span>
+                  <span class="iml__who"><b>{PROGRAM.name}</b><small>{PROGRAM.meta}</small></span>
+                  <span class="iml__chev" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg></span>
+                </button>
+                <div class="iml__body">
+                  <p class="iml__bio">{PROGRAM.bio}</p>
+                  <button type="button" class="iml__btn" data-sp-for={BOX} data-sp-pick={SPONSEES.length}>Sponsor the program <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7" /></svg></button>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {!isImam && <section class="cs__sec">
+          <h2 class="cs__h2">Ways to give</h2>
+          <p class="cs__sub">Pick one or more things to fund, or give any amount.</p>
+          <div class="ways">
+            {g.gifts.map((x, i) => (
+              <button type="button" class:list={['way', { 'is-on': i === 0 }]} aria-pressed={i === 0 ? 'true' : 'false'} data-gb-for={BOX} data-gb-pick={i}>
+                <span class="way__ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z" /></svg></span>
+                <b class="way__name">{x.name}</b>
+                <small class="way__desc">{x.desc}</small>
+                <span class="way__foot"><span class="way__price">{taka(x.price)}</span><span class="way__pick"><span class="way__pick-off">Choose</span><span class="way__pick-on">Selected</span></span></span>
+              </button>
+            ))}
+          </div>
+        </section>}
+
+        <section class="cs__sec">
+          <h2 class="cs__h2">Our goals</h2>
+          <div class="cs__goals">
+            {cause.goals.map(([k, v], i) => (
+              <div class="cgoal">
+                <span class="cgoal__ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={GOAL_ICONS[i % 4].c} stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={GOAL_ICONS[i % 4].d} /></svg></span>
+                <h3>{k}</h3>
+                <p>{v}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section class="cs__sec">
+          <h2 class="cs__h2">Future plans</h2>
+          <ol class="cs__plans">
+            {cause.plans.map(([k, v], i) => (
+              <li><span class="cs__n">{String(i + 1).padStart(2, '0')}</span><div><h3>{k}</h3><p>{v}</p></div></li>
+            ))}
+          </ol>
+        </section>
+
+        {updates.length > 0 && (
+          <section class="cs__sec">
+            <h2 class="cs__h2">Updates</h2>
+            <ol class="cs__updates">
+              {updates.map((p) => (
+                <li>
+                  <time datetime={p.date}>{postDate(p)}</time>
+                  <a href={postHref(p)}>{p.title}</a>
+                  <p>{p.body[0]}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {photos.length > 0 && (
+          <section class="cs__sec">
+            <h2 class="cs__h2">From the field</h2>
+            <div class="cs__photos">
+              {photos.map((s) => <span class="zoom"><img src={s.src} alt={s.alt} loading="lazy" /></span>)}
+            </div>
+          </section>
+        )}
+      </div>
+
+      <aside class="cs__side" aria-label={`Donate to ${cause.crumb}`}>
+        <CauseGive cause={cause} id={BOX} picked />
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cs { background: #fff; }
+  .cs__inner { max-width: var(--shell); margin: 0 auto; padding: calc(92px + 72px) var(--gutter) 128px; }
+
+  /* The title sits above the left column only, so the donate box starts level with the photos. */
+  .cs__grid { display: grid; grid-template-columns: minmax(0, 1fr) 440px; column-gap: clamp(48px, 6vw, 96px); row-gap: 40px; align-items: start; }
+  .cs__head { grid-column: 1; }
+  .cs__main { grid-column: 1; grid-row: 2; }
+  .cs__side { grid-column: 2; grid-row: 2; }
+  .cs__main { min-width: 0; }
+  .cs__side { position: sticky; top: 112px; }
+  .cs__side :global(.gb) { scroll-margin-top: 112px; }
+
+  .cs__tag { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 999px; background: var(--mint-2); font: 600 14px/1 var(--font); color: var(--teal-deep); }
+  .cs__tag svg { color: var(--teal); }
+  .cs__title { margin: 20px 0 0; font: 700 clamp(32px, 3.4vw, 48px)/1.12 var(--font); letter-spacing: -.035em; color: var(--ink); text-wrap: balance; }
+  .cs__sum { margin: 16px 0 0; max-width: 640px; font: 400 18px/1.65 var(--font); color: var(--muted); text-wrap: pretty; }
+
+  .cs__media { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: clamp(280px, 30vw, 440px); }
+  .cs__media figure { margin: 0; border-radius: 20px; background: var(--bg-soft); }
+  .cs__media figure:first-child { grid-row: span 2; }
+
+  .cs__sec { margin-top: 64px; }
+  .cs__h2 { margin: 0; font: 700 26px/1.3 var(--font); letter-spacing: -.025em; color: var(--ink); }
+  .cs__sub { margin: 8px 0 0; font: 400 16px/1.5 var(--font); color: var(--muted); }
+  .cs__p { margin: 18px 0 0; font: 400 18px/1.8 var(--font); color: var(--grey-2); text-wrap: pretty; }
+
+  .ways { margin-top: 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .way { display: flex; flex-direction: column; align-items: flex-start; padding: 22px 22px 20px; border: 1.5px solid var(--line-3); border-radius: 20px; background: #fff; text-align: left; cursor: pointer; transition: border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+  .way:hover { border-color: var(--mint-3); }
+  .way.is-on { border-color: var(--teal); background: var(--bg-mint); box-shadow: 0 0 0 3px var(--mint-2); }
+  .way:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .way__ico { width: 44px; height: 44px; border-radius: 14px; background: #fff; color: var(--teal); display: grid; place-items: center; box-shadow: 0 8px 20px -8px rgba(27, 30, 38, .18), 0 1px 3px rgba(27, 30, 38, .05); }
+  .way__name { margin-top: 28px; font: 700 17px/1.3 var(--font); color: var(--ink); text-wrap: balance; }
+  .way__desc { margin-top: 6px; font: 400 14.5px/1.5 var(--font); color: var(--muted); text-wrap: pretty; }
+  .way__foot { margin-top: auto; padding-top: 20px; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .way__price { font: 700 18px/1 var(--font); color: var(--ink); }
+  .way__pick { height: 34px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center; background: var(--bg-soft-2); font: 600 13.5px/1 var(--font); color: var(--ink); transition: background .2s ease, color .2s ease; }
+  .way__pick-on { display: none; }
+  .way.is-on .way__pick { background: var(--ink); color: #fff; }
+  .way.is-on .way__pick-on { display: inline; }
+  .way.is-on .way__pick-off { display: none; }
+
+  /* Imam Support: an expandable list of people to sponsor. Opening one shows their
+     story and chooses them in the donate box. */
+  .iml { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .iml__item { border: 1.5px solid var(--line-3); border-radius: 20px; background: #fff; transition: border-color .2s ease, background .2s ease, box-shadow .2s ease; }
+  .iml__item:hover { border-color: var(--mint-3); }
+  .iml__item.is-open, .iml__item:has(.is-on) { border-color: var(--teal); background: var(--bg-mint); }
+  .iml__item:has(.is-on) { box-shadow: 0 0 0 3px var(--mint-2); }
+  .iml__head { display: flex; align-items: center; gap: 14px; width: 100%; padding: 16px 20px 16px 16px; border: 0; border-radius: 20px; background: none; text-align: left; font: inherit; cursor: pointer; }
+  .iml__head:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .iml__av { flex: none; width: 48px; height: 48px; border-radius: 999px; object-fit: cover; background: var(--mint-2); color: var(--teal-deep); display: grid; place-items: center; font: 700 15px/1 var(--font); }
+  .iml__av--ico { color: var(--teal); }
+  .iml__who { flex: 1; min-width: 0; }
+  .iml__who b { display: block; font: 700 17px/1.3 var(--font); color: var(--ink); }
+  .iml__who small { display: block; margin-top: 3px; font: 400 14px/1.35 var(--font); color: var(--muted); }
+  .iml__chev { display: grid; color: var(--grey-2); transition: transform .25s var(--ease); }
+  .iml__item.is-open .iml__chev { transform: rotate(180deg); }
+  .iml__body { display: none; flex-direction: column; align-items: flex-start; gap: 12px; padding: 0 20px 20px 78px; }
+  .iml__item.is-open .iml__body { display: flex; }
+  .iml__bio { margin: 0; font: 400 16px/1.65 var(--font); color: var(--grey-2); text-wrap: pretty; }
+  .iml__meta { margin: -4px 0 0; font: 400 13.5px/1.3 var(--font); color: var(--muted); }
+  .iml__btn { margin-top: 6px; display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 26px; border: 0; border-radius: 999px; background: var(--teal); color: #fff; font: 700 14.5px/1 var(--font); cursor: pointer; transition: background .2s ease; }
+  .iml__btn:hover { background: var(--ink); }
+
+  .cs__goals { margin-top: 24px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .cgoal { padding: 28px 28px 30px; border-radius: 20px; background: #F7F7F7; }
+  .cgoal__ico { width: 48px; height: 48px; border-radius: 14px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 24px -8px rgba(27, 30, 38, .16), 0 2px 4px rgba(27, 30, 38, .04); }
+  .cgoal h3 { margin: 40px 0 0; font: 700 18px/1.3 var(--font); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+  .cgoal p { margin: 8px 0 0; font: 400 16px/1.65 var(--font); color: var(--grey-2); text-wrap: pretty; }
+
+  .cs__plans { margin: 20px 0 0; padding: 0; list-style: none; }
+  .cs__plans li { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; padding: 22px 0; border-bottom: 1px solid var(--line-3); }
+  .cs__plans li:last-child { border-bottom: 0; }
+  .cs__n { font: 700 15px/1.6 var(--font); color: var(--teal); }
+  .cs__plans h3 { margin: 0; font: 700 18px/1.4 var(--font); letter-spacing: -.02em; color: var(--ink); }
+  .cs__plans p { margin: 6px 0 0; font: 400 16px/1.65 var(--font); color: var(--grey-2); text-wrap: pretty; }
+
+  .cs__updates { margin: 24px 0 0; padding: 0 0 0 22px; list-style: none; border-left: 2px solid var(--mint-4); display: flex; flex-direction: column; gap: 28px; }
+  .cs__updates li { position: relative; }
+  .cs__updates li::before { content: ""; position: absolute; left: -29px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px #fff; }
+  .cs__updates time { font: 500 13.5px/1 var(--font); color: var(--grey-4); }
+  .cs__updates a { display: block; margin-top: 8px; font: 700 18px/1.4 var(--font); color: var(--ink); text-decoration: none; text-wrap: pretty; transition: color .2s ease; }
+  .cs__updates a:hover { color: var(--teal); }
+  .cs__updates p { margin: 6px 0 0; font: 400 16px/1.65 var(--font); color: var(--grey-2); text-wrap: pretty; }
+
+  .cs__photos { margin-top: 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .cs__photos .zoom { aspect-ratio: 4 / 3; border-radius: 10px; }
+
+  @media (max-width: 1180px) {
+    .cs__grid { grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; }
+    .ways { grid-template-columns: 1fr; }
+  }
+  /* One column: the donate box moves up to sit straight after the photos. */
+  @media (max-width: 1020px) {
+    .cs__grid { grid-template-columns: 1fr; row-gap: 0; }
+    .cs__head, .cs__main, .cs__side { grid-column: auto; grid-row: auto; }
+    .cs__main { display: contents; }
+    .cs__head { order: 1; }
+    .cs__media { order: 2; margin-top: 40px; }
+    .cs__side { order: 3; position: static !important; margin-top: 40px; }
+    .cs__sec { order: 4; }
+    .ways { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 700px) {
+    .cs__inner { padding: 128px var(--gutter) 88px; }
+    .ways, .cs__goals { grid-template-columns: 1fr; }
+    .iml__body { padding-left: 16px; }
+    .cs__media { grid-template-columns: 1fr 1fr; grid-template-rows: 2fr 1fr; height: 360px; }
+    .cs__media figure:first-child { grid-row: auto; grid-column: span 2; }
+    .cs__photos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+
+<script>
+  // A box taller than the screen would hide its Donate button while stuck at the top.
+  // Instead it scrolls with the page until its bottom is in view, then holds there.
+  document.querySelectorAll<HTMLElement>('.cs__side').forEach((side) => {
+    const fit = () => { side.style.top = `${Math.min(112, window.innerHeight - side.offsetHeight - 24)}px`; };
+    new ResizeObserver(fit).observe(side);
+    window.addEventListener('resize', fit, { passive: true });
+    fit();
+  });
+</script>
+
+<script>
+  // Imam Support list: one person open at a time. Opening a person also chooses them
+  // in the donate box (that part is handled by the box's own script).
+  document.querySelectorAll<HTMLElement>('[data-iml]').forEach((list) => {
+    const items = [...list.querySelectorAll<HTMLElement>('.iml__item')];
+    items.forEach((it) => {
+      const head = it.querySelector<HTMLButtonElement>('[data-iml-head]')!;
+      head.addEventListener('click', () => {
+        const open = !it.classList.contains('is-open');
+        items.forEach((x) => {
+          x.classList.toggle('is-open', open && x === it);
+          x.querySelector('[data-iml-head]')!.setAttribute('aria-expanded', String(open && x === it));
+        });
+      });
+    });
+  });
+</script>

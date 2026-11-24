@@ -1,0 +1,160 @@
+---
+// Sign in or create an account. Preview only: see src/scripts/account.ts.
+import Base from '../../layouts/Base.astro';
+import { IMG } from '../../data/images';
+const arrow = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg>';
+---
+<Base title="Sign in" description="Sign in to see your donations and sponsorships with Ummah Care Foundation.">
+  <section class="auth">
+    <div class="auth__inner">
+      <div class="auth__side">
+        <img src={IMG.winterDistribution} alt="" />
+        <div class="auth__quote">
+          <p>“Every gift you give is recorded here, so you can see the families you have stood beside.”</p>
+          <span>Ummah Care Foundation</span>
+        </div>
+      </div>
+
+      <div class="auth__main">
+        <div class="auth__card">
+          <span class="auth__mark"><img src={IMG.logoMark} alt="" /></span>
+          <h1 class="auth__title" data-auth-title>Welcome back</h1>
+          <p class="auth__lead" data-auth-lead>Sign in to see your donations, sponsorships and receipts.</p>
+
+          <div class="auth__tabs" role="tablist">
+            <button type="button" role="tab" aria-selected="true" class="is-on" data-auth-tab="in">Sign in</button>
+            <button type="button" role="tab" aria-selected="false" data-auth-tab="up">Create account</button>
+          </div>
+
+          <button type="button" class="auth__google" data-auth-google>
+            <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+            Continue with Google
+          </button>
+          <p class="auth__or"><span>or</span></p>
+
+          <form class="auth__form" data-auth-form novalidate>
+            <div class="field" data-up hidden>
+              <label class="label" for="au-name">Full name <em>*</em></label>
+              <input id="au-name" class="input" type="text" autocomplete="name" placeholder="Your full name" />
+            </div>
+            <div class="field">
+              <label class="label" for="au-contact">Email or phone <em>*</em></label>
+              <input id="au-contact" class="input" type="text" autocomplete="username" placeholder="you@example.com or 01XXXXXXXXX" />
+            </div>
+            <div class="field">
+              <span class="auth__pwrow"><label class="label" for="au-pass">Password <em>*</em></label><a href="#" class="auth__forgot" data-in>Forgot password?</a></span>
+              <span class="auth__pw">
+                <input id="au-pass" class="input" type="password" autocomplete="current-password" placeholder="At least 8 characters" />
+                <button type="button" class="auth__eye" aria-label="Show password" data-auth-eye><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg></button>
+              </span>
+            </div>
+            <p class="auth__err" data-auth-err hidden></p>
+            <button type="submit" class="btn btn--teal btn-fx auth__submit"><span class="roll"><span data-auth-submit>Sign in</span></span><span class="roll-ico" aria-hidden="true"><i set:html={arrow} /><i set:html={arrow} /></span></button>
+          </form>
+
+          <p class="auth__fine" data-up hidden>By creating an account you agree to our <a href="/terms-and-conditions">Terms</a> and <a href="/privacy-policy">Privacy Policy</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .auth { background: #fff; }
+  .auth__inner { max-width: var(--shell); margin: 0 auto; padding: calc(92px + 40px) var(--gutter) 96px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: stretch; }
+  .auth__side { position: relative; border-radius: 28px; overflow: hidden; min-height: 640px; background: var(--teal-deep); }
+  .auth__side img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .auth__side::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 30, 24, 0) 40%, rgba(0, 30, 24, .82) 100%); }
+  .auth__quote { position: absolute; z-index: 1; left: 36px; right: 36px; bottom: 36px; color: #fff; }
+  .auth__quote p { margin: 0; font: 600 24px/1.4 var(--font); letter-spacing: -.02em; text-wrap: balance; }
+  .auth__quote span { display: block; margin-top: 14px; font: 500 14px/1 var(--font); color: rgba(255, 255, 255, .75); }
+  .auth__main { display: flex; align-items: center; justify-content: center; }
+  .auth__card { width: min(440px, 100%); }
+  .auth__mark { width: 52px; height: 52px; border-radius: 999px; background: var(--teal); display: grid; place-items: center; }
+  .auth__mark img { width: 28px; height: 28px; filter: brightness(0) invert(1); }
+  .auth__title { margin: 24px 0 0; font: 700 34px/1.15 var(--font); letter-spacing: -.035em; color: var(--ink); }
+  .auth__lead { margin: 10px 0 0; font: 400 16.5px/1.55 var(--font); color: var(--muted); }
+  .auth__tabs { margin-top: 28px; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: var(--bg-soft-2); }
+  .auth__tabs button { height: 42px; border: 0; border-radius: 999px; background: transparent; font: 600 14.5px/1 var(--font); color: var(--grey-2); cursor: pointer; transition: background .2s ease, color .2s ease, box-shadow .2s ease; }
+  .auth__tabs button.is-on { background: #fff; color: var(--ink); box-shadow: 0 2px 8px -2px rgba(0, 0, 0, .15); }
+  .auth__google { margin-top: 20px; width: 100%; height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1.5px solid var(--line-2); border-radius: 999px; background: #fff; font: 600 15px/1 var(--font); color: var(--ink); cursor: pointer; transition: border-color .2s ease, background .2s ease; }
+  .auth__google:hover { border-color: var(--ink); }
+  .auth__or { margin: 20px 0; display: flex; align-items: center; gap: 14px; font: 500 13px/1 var(--font); color: var(--grey-4); }
+  .auth__or::before, .auth__or::after { content: ""; flex: 1; height: 1px; background: var(--line-3); }
+  .auth__form { display: flex; flex-direction: column; gap: 18px; }
+  .auth__form .input { height: 52px; border-radius: 16px; }
+  .auth__pwrow { display: flex; justify-content: space-between; align-items: baseline; }
+  .auth__forgot { font: 600 13px/1 var(--font); color: var(--teal); text-decoration: none; margin-bottom: 9px; }
+  .auth__forgot[hidden] { display: none; }
+  .auth__pw { position: relative; display: block; }
+  .auth__pw .input { padding-right: 50px; }
+  .auth__eye { position: absolute; right: 8px; top: 50%; translate: 0 -50%; width: 38px; height: 38px; border: 0; border-radius: 999px; background: none; color: var(--grey-2); display: grid; place-items: center; cursor: pointer; }
+  .auth__eye:hover { background: var(--bg-soft-2); }
+  .auth__err { margin: -4px 0 0; font: 600 13.5px/1.4 var(--font); color: #C2410C; }
+  .auth__submit { width: 100%; justify-content: space-between; padding-left: 28px; margin-top: 4px; }
+  .auth__fine { margin: 16px 0 0; font: 400 13px/1.5 var(--font); color: var(--muted); }
+  .auth__fine a { color: var(--teal); }
+  [data-up][hidden] { display: none; }
+
+  @media (max-width: 960px) {
+    .auth__inner { grid-template-columns: 1fr; }
+    .auth__side { display: none; }
+  }
+  @media (max-width: 640px) {
+    .auth__inner { padding: 120px var(--gutter) 72px; }
+  }
+</style>
+
+<script>
+  import { getUser, signIn } from '../../scripts/account';
+
+  // Already signed in: go straight to the account.
+  if (getUser()) location.replace('/account');
+
+  const form = document.querySelector<HTMLFormElement>('[data-auth-form]')!;
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-auth-tab]')];
+  const err = document.querySelector<HTMLElement>('[data-auth-err]')!;
+  const name = document.querySelector<HTMLInputElement>('#au-name')!;
+  const contact = document.querySelector<HTMLInputElement>('#au-contact')!;
+  const pass = document.querySelector<HTMLInputElement>('#au-pass')!;
+  let mode = location.hash === '#create' ? 'up' : 'in';
+
+  const setMode = (m: string) => {
+    mode = m;
+    tabs.forEach((t) => { const on = t.dataset.authTab === m; t.classList.toggle('is-on', on); t.setAttribute('aria-selected', String(on)); });
+    document.querySelectorAll<HTMLElement>('[data-up]').forEach((el) => { el.hidden = m !== 'up'; });
+    document.querySelectorAll<HTMLElement>('[data-in]').forEach((el) => { el.hidden = m !== 'in'; });
+    document.querySelector('[data-auth-title]')!.textContent = m === 'up' ? 'Create your account' : 'Welcome back';
+    document.querySelector('[data-auth-lead]')!.textContent = m === 'up' ? 'Keep every donation and sponsorship in one place, with receipts.' : 'Sign in to see your donations, sponsorships and receipts.';
+    document.querySelector('[data-auth-submit]')!.textContent = m === 'up' ? 'Create account' : 'Sign in';
+    pass.autocomplete = m === 'up' ? 'new-password' : 'current-password';
+    err.hidden = true;
+  };
+  tabs.forEach((t) => t.addEventListener('click', () => setMode(t.dataset.authTab!)));
+  setMode(mode);
+
+  document.querySelector('[data-auth-eye]')!.addEventListener('click', (e) => {
+    const show = pass.type === 'password';
+    pass.type = show ? 'text' : 'password';
+    (e.currentTarget as HTMLElement).setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+
+  // Google sign-in needs a real sign-in service; until then it just explains.
+  document.querySelector('[data-auth-google]')!.addEventListener('click', () => {
+    err.textContent = 'Google sign-in will be available soon. Please use your email or phone for now.';
+    err.hidden = false;
+  });
+
+  const fail = (msg: string, el: HTMLInputElement) => { err.textContent = msg; err.hidden = false; el.focus(); };
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const c = contact.value.trim();
+    if (mode === 'up' && !name.value.trim()) return fail('Please enter your name.', name);
+    if (!/^\S+@\S+\.\S+$/.test(c) && !/^\+?\d[\d\s-]{9,}$/.test(c)) return fail('Please enter a valid email or phone number.', contact);
+    if (pass.value.length < 8) return fail('Your password needs at least 8 characters.', pass);
+    // Preview: the password is checked for length only and never stored.
+    const fromContact = c.includes('@') ? c.split('@')[0].replace(/[._-]+/g, ' ') : 'Friend';
+    signIn({ name: mode === 'up' ? name.value.trim() : (getUser()?.name ?? fromContact.replace(/\b\w/g, (m) => m.toUpperCase())), contact: c });
+    location.href = '/account';
+  });
+</script>

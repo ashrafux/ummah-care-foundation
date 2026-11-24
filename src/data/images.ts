@@ -43,6 +43,11 @@ export const IMG = {
   humanitarian2: '/images/flood-relief-truck.jpg',
   aoaHumanitarian: '/images/relief-ride-van.jpg',
 
+  // --- Orphan care and imam support ---
+  // Stand-ins from the field archive until the foundation sends photos of these two causes.
+  orphanCare: '/images/gallery/self-reliance-13.jpg',
+  imamSupport: '/images/gallery/humanitarian-aid-04.jpg',
+
   // --- Success stories ---
   storyRagib1: '/images/wheelchair-campus.jpg',
   storyRagib2: '/images/classroom-gift.jpg',

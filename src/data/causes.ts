@@ -203,5 +203,53 @@ export const CAUSES: Cause[] = [
     extra: [
       'Providing vital food, financial aid, and essential services to families affected by natural disasters like floods and earthquakes, helping them rebuild their lives.'
     ]
+  },
+  {
+    slug: 'orphan-care',
+    crumb: 'Orphan Care',
+    title: 'A safe and hopeful childhood for every orphaned child',
+    tiles: [IMG.orphanCare, IMG.students, IMG.community],
+    intro: 'Children who lose a parent often lose their place in school and their next meal along with them. Ummah Care Foundation stands beside orphaned children and the relatives who raise them, covering food, school costs and basic care so that every child can grow up healthy, keep learning and look ahead with hope. We work with local families and community members to find the children who need us most, and we stay with them as they grow.',
+    goals: [
+      ['Meet Daily Needs', 'Provide regular food and essentials so that orphaned children never go to bed hungry.'],
+      ['Keep Children in School', 'Cover tuition, books, uniforms and exam fees so that losing a parent never means losing an education.'],
+      ['Support Caregivers', 'Help the grandparents, uncles and aunts raising orphaned children with the means to care for them at home.'],
+      ['Care for Health', 'Arrange check-ups and treatment so that every child grows up healthy and strong.']
+    ],
+    plans: [
+      ['Monthly Sponsorship', 'Let donors sponsor a child each month, with regular updates on how the child is doing.'],
+      ['Mentorship and Guidance', 'Pair older children with mentors who guide them through school, careers and life choices.'],
+      ['Skills for the Future', 'Offer vocational training to older children so they can earn a living when they leave school.'],
+      ['Regular Follow-up', 'Visit every child regularly to make sure support reaches them, and respond quickly to new needs.']
+    ],
+    extraTitle: 'A Childhood Full of Hope',
+    extra: [
+      'Every orphaned child deserves food on the table, a seat in the classroom and someone who cares about their future.',
+      'With your support, we stand beside them until they can stand on their own.'
+    ]
+  },
+  {
+    slug: 'imam-support',
+    crumb: 'Imam Support',
+    title: 'Standing beside the imams and muezzins who serve our communities',
+    tiles: [IMG.imamSupport, IMG.community, IMG.students],
+    intro: 'Many village imams lead five daily prayers, teach children the Quran and serve their community on a salary of a few thousand taka. Each imam needs ৳8,000 a month. Up to four sponsors can share one imam, so you can give a part of his salary, or sponsor the whole program.',
+    goals: [
+      ['Steady Monthly Support', 'Provide regular monthly assistance to imams and muezzins who serve on very low salaries.'],
+      ['Reach Rural Mosques', 'Prioritize mosques in remote villages, where salaries are lowest and support is hardest to find.'],
+      ['Support in Hard Times', 'Help with medical costs, Eid expenses and emergencies for imams, muezzins and their families.'],
+      ['Honour Their Service', 'Recognize the vital role they play in teaching children and guiding their communities.']
+    ],
+    plans: [
+      ['Mosque Partnerships', 'Work with mosque committees to identify imams and muezzins in need and deliver support fairly.'],
+      ['Skills and Income', 'Offer training and small-business support so that families can add a second source of income.'],
+      ['Education for Their Children', 'Help the children of imams and muezzins continue their studies through our scholarship program.'],
+      ['Transparent Follow-up', 'Keep clear records of every payment and visit, and share regular updates with donors.']
+    ],
+    extraTitle: 'Supporting Those Who Serve',
+    extra: [
+      'Imams and muezzins serve their communities every day, often for very little in return.',
+      'Your monthly support helps them care for their families with dignity.'
+    ]
   }
 ];
